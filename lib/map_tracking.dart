@@ -5,18 +5,18 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'constants.dart';
 
-class OrderTrackingPage extends StatefulWidget {
-  const OrderTrackingPage({Key? key}) : super(key: key);
+class MapTrackingPage extends StatefulWidget {
+  const MapTrackingPage({Key? key}) : super(key: key);
 
   @override
-  State<OrderTrackingPage> createState() => OrderTrackingPageState();
+  State<MapTrackingPage> createState() => MapTrackingPageState();
 }
 
-class OrderTrackingPageState extends State<OrderTrackingPage> {
+class MapTrackingPageState extends State<MapTrackingPage> {
   final Completer<GoogleMapController> _controller = Completer();
 
-  static const LatLng sourceLocation = LatLng(37.33500926, -122.03272188);
-  static const LatLng destination = LatLng(37.33429383, -122.06600055);
+  static const LatLng sourceLocation = LatLng(35.118339, 32.850870);
+  static const LatLng destination = LatLng(35.106985, 32.856650);
 
   List<LatLng> polylineCoordinates = [];
   LocationData? currentLocation;
@@ -31,6 +31,7 @@ class OrderTrackingPageState extends State<OrderTrackingPage> {
     location.getLocation().then(
       (location) {
         currentLocation = location;
+        setState(() {});
       },
     );
 
@@ -90,59 +91,51 @@ class OrderTrackingPageState extends State<OrderTrackingPage> {
   @override
   void initState() {
     getCurrentLocation();
-    setCustomMarkerIcon();
+    //setCustomMarkerIcon();
     getPolylinePoints();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Track order",
-          style: TextStyle(color: Colors.black, fontSize: 16),
-        ),
-      ),
-      body: currentLocation == null
-          ? const Center(
-              child: Text("Loading"),
-            )
-          : Center(
-              child: GoogleMap(
-                initialCameraPosition: CameraPosition(
-                    target: LatLng(currentLocation!.latitude!,
-                        currentLocation!.longitude!),
-                    zoom: 13.5),
-                polylines: {
-                  Polyline(
-                    polylineId: PolylineId("route"),
-                    points: polylineCoordinates,
-                    color: primaryColor,
-                    width: 6,
-                  )
-                },
-                markers: {
-                  Marker(
-                    markerId: MarkerId("currentlocation"),
-                    icon: currentLocationIcon,
-                    position: LatLng(currentLocation!.latitude!,
-                        currentLocation!.longitude!),
-                  ),
-                  Marker(
-                    markerId: MarkerId("source"),
-                    position: sourceLocation,
-                  ),
-                  Marker(
-                    markerId: MarkerId("destination"),
-                    position: destination,
-                  ),
-                },
-                onMapCreated: ((mapController) {
-                  _controller.complete(mapController);
-                }),
-              ),
+    return currentLocation == null
+        ? const Center(
+            child: Text("Loading"),
+          )
+        : Center(
+            child: GoogleMap(
+              initialCameraPosition: CameraPosition(
+                  target: LatLng(
+                      currentLocation!.latitude!, currentLocation!.longitude!),
+                  zoom: 13.5),
+              polylines: {
+                Polyline(
+                  polylineId: PolylineId("route"),
+                  points: polylineCoordinates,
+                  color: primaryColor,
+                  width: 6,
+                )
+              },
+              markers: {
+                Marker(
+                  markerId: MarkerId("currentlocation"),
+                  icon: currentLocationIcon,
+                  position: LatLng(
+                      currentLocation!.latitude!, currentLocation!.longitude!),
+                ),
+                Marker(
+                  markerId: MarkerId("source"),
+                  position: sourceLocation,
+                ),
+                Marker(
+                  markerId: MarkerId("destination"),
+                  position: destination,
+                ),
+              },
+              onMapCreated: ((mapController) {
+                _controller.complete(mapController);
+              }),
             ),
-    );
+          );
   }
 }
