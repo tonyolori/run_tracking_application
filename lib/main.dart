@@ -3,6 +3,8 @@
 
 import 'package:fit_work/activity_recognition.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'constants.dart';
 import 'run_tracking.dart';
 import 'package:flutter/material.dart';
 import 'map_tracking.dart';
@@ -21,13 +23,18 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-      appBar: AppBar(
-        title: const Text('Pedometer example app'),
-      ),
-      body: Homepage(),
-    ));
+    return StreamProvider(
+      initialData: UserLocation(latitude: 0, longitude: 0),
+      create: (context) => LocationService().locationStream,
+      child: MaterialApp(
+          theme: darkTheme,
+          home: Scaffold(
+            appBar: AppBar(
+              title: const Text('Pedometer example app'),
+            ),
+            body: Homepage(),
+          )),
+    );
   }
 }
 
@@ -39,45 +46,6 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const MapTrackingPage(),
-                ),
-              );
-            },
-            child: const Text('Launch maps'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => PermissionAsking(),
-                ),
-              );
-            },
-            child: const Text('Launch steps'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class PermissionAsking extends StatefulWidget {
-  const PermissionAsking({super.key});
-
-  @override
-  State<PermissionAsking> createState() => _PermissionAskingState();
-}
-
-class _PermissionAskingState extends State<PermissionAsking> {
   askPermission() async {
     // var status = await Permission.camera.status;
     var status = await Permission.activityRecognition.request();
@@ -106,15 +74,32 @@ class _PermissionAskingState extends State<PermissionAsking> {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-        child: const Text('Open route'),
-        onPressed: () async {
+    return Center(
+      child: Column(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const MapTrackingPage(),
+                ),
+              );
+            },
+            child: const Text('Launch maps'),
+          ),
+          ElevatedButton(
+             onPressed: () async {
           await askPermission();
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => runTracking()),
-          );
-          //  Navigate to second route when tapped.
-        });
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => runTracking()),
+            );
+             },
+            child: const Text('Launch steps'),
+          ),
+        ],
+      ),
+    );
   }
 }
+

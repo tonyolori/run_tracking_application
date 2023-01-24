@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:pedometer/pedometer.dart';
 
-String formatDate(DateTime d) {
-  return d.toString().substring(0, 19);
-}
 
 class runTracking extends StatefulWidget {
   @override
@@ -24,14 +21,12 @@ class _runTrackingState extends State<runTracking> {
   }
 
   void onStepCount(StepCount event) {
-    print(event);
     setState(() {
       _steps = event.steps.toString();
     });
   }
 
   void onPedestrianStatusChanged(PedestrianStatus event) {
-    print(event);
     setState(() {
       _status = event.status;
     });
@@ -42,7 +37,6 @@ class _runTrackingState extends State<runTracking> {
     setState(() {
       _status = 'Pedestrian Status not available';
     });
-    print(_status);
   }
 
   void onStepCountError(error) {
@@ -63,6 +57,7 @@ class _runTrackingState extends State<runTracking> {
 
     if (!mounted) return;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +95,7 @@ class _runTrackingState extends State<runTracking> {
               _status,
               style: _status == 'walking' || _status == 'stopped'
                   ? const TextStyle(fontSize: 30)
-                  : const TextStyle(fontSize: 20, color: Colors.red),
+                  : const TextStyle(fontSize: 20, color: Colors.white),
             ),
           ),
           //ElevatedButton(onPressed: onPressed, child: child)
