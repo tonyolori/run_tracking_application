@@ -6,11 +6,13 @@ import 'package:location/location.dart';
 import 'constants.dart';
 import 'package:provider/provider.dart';
 
+late GoogleMapController googleMapController;
+
 class LocationService {
   late UserLocation _currentLocation;
 
   var location = Location();
-  StreamController<UserLocation> _locationController =
+  final StreamController<UserLocation> _locationController =
       StreamController<UserLocation>();
 
   Stream<UserLocation> get locationStream => _locationController.stream;
@@ -21,12 +23,20 @@ class LocationService {
       if (permissionStatus == PermissionStatus.granted) {
         // If granted listen to the onLocationChanged stream and emit over our controller
         location.onLocationChanged.listen((locationData) {
-          if (locationData != null) {
-            _locationController.add(UserLocation(
-              latitude: locationData.latitude!,
-              longitude: locationData.longitude!,
-            ));
-          }
+          _locationController.add(UserLocation(
+            latitude: locationData.latitude!,
+            longitude: locationData.longitude!,
+          ));
+
+          googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+            CameraPosition(
+              zoom: 13.5,
+              target: LatLng(
+                locationData.latitude!,
+                locationData.longitude!,
+              ),
+            ),
+          ));
         });
       }
     });
@@ -47,12 +57,14 @@ class LocationService {
   }
 }
 
-
 class UserLocation {
   final double latitude;
   final double longitude;
 
   UserLocation({required this.latitude, required this.longitude});
+  LatLng latLng() {
+    return LatLng(latitude, longitude);
+  }
 }
 
 class MapTrackingPage extends StatefulWidget {
@@ -75,36 +87,28 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
 
-  late GoogleMapController googleMapController;
   late Location location;
   void getCurrentLocation() async {
-    location = Location();
-
-    location.getLocation().then(
-      (location) {
-        currentLocation = location;
-        setState(() {});
-      },
-    );
-
     googleMapController = await _controller.future;
-
-    location.onLocationChanged.listen((newloc) {
-      currentLocation = newloc;
-      googleMapController.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            zoom: 13.5,
-            target: LatLng(
-              newloc.latitude!,
-              newloc.longitude!,
-            ),
-          ),
-        ),
-      );
-      setState(() {});
+    LocationService().locationStream.listen((newloc) {
+      print(newloc);
     });
-    setState(() {});
+    //   location.onLocationChanged.listen((newloc) {
+    //     currentLocation = newloc;
+    //     googleMapController.animateCamera(
+    //       CameraUpdate.newCameraPosition(
+    //         CameraPosition(
+    //           zoom: 13.5,
+    //           target: LatLng(
+    //             newloc.latitude!,
+    //             newloc.longitude!,
+    //           ),
+    //         ),
+    //       ),
+    //     );
+    //     setState(() {});
+    //   });
+    //   setState(() {});
   }
 
   void getPolylinePoints() async {
@@ -150,51 +154,46 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     googleMapController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return currentLocation == null
-        ? const Center(
-            child: Text("Loading"),
+    var userLocation = Provider.of<UserLocation>(context);
+    return Center(
+      child: GoogleMap(
+        initialCameraPosition: CameraPosition(
+          target: userLocation.latLng(),
+          zoom: 13.5,
+        ),
+        polylines: {
+          Polyline(
+            polylineId: PolylineId("route"),
+            points: polylineCoordinates,
+            color: primaryColor,
+            width: 6,
           )
-        : Center(
-            child: GoogleMap(
-              initialCameraPosition: CameraPosition(
-                  target: LatLng(
-                      currentLocation!.latitude!, currentLocation!.longitude!),
-                  zoom: 13.5),
-              polylines: {
-                Polyline(
-                  polylineId: PolylineId("route"),
-                  points: polylineCoordinates,
-                  color: primaryColor,
-                  width: 6,
-                )
-              },
-              markers: {
-                Marker(
-                  markerId: MarkerId("currentlocation"),
-                  icon: currentLocationIcon,
-                  position: LatLng(
-                      currentLocation!.latitude!, currentLocation!.longitude!),
-                ),
-                Marker(
-                  markerId: MarkerId("source"),
-                  position: sourceLocation,
-                ),
-                Marker(
-                  markerId: MarkerId("destination"),
-                  position: destination,
-                ),
-              },
-              onMapCreated: ((mapController) {
-                _controller.complete(mapController);
-              }),
-            ),
-          );
+        },
+        markers: {
+          Marker(
+            markerId: MarkerId("currentlocation"),
+            icon: currentLocationIcon,
+            position: userLocation.latLng(),
+          ),
+          Marker(
+            markerId: MarkerId("source"),
+            position: sourceLocation,
+          ),
+          Marker(
+            markerId: MarkerId("destination"),
+            position: destination,
+          ),
+        },
+        onMapCreated: ((mapController) {
+          _controller.complete(mapController);
+        }),
+      ),
+    );
   }
 }
