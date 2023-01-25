@@ -23,18 +23,14 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider(
-      initialData: UserLocation(latitude: 0, longitude: 0),
-      create: (context) => LocationService().locationStream,
-      child: MaterialApp(
-          theme: darkTheme,
-          home: Scaffold(
-            appBar: AppBar(
-              title: const Text('Pedometer example app'),
-            ),
-            body: Homepage(),
-          )),
-    );
+    return MaterialApp(
+        theme: darkTheme,
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Pedometer example app'),
+          ),
+          body: Homepage(),
+        ));
   }
 }
 

@@ -88,27 +88,27 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
 
   late Location location;
+  UserLocation? userLocation; 
   void getCurrentLocation() async {
+
     googleMapController = await _controller.future;
-    LocationService().locationStream.listen((newloc) {
-      print(newloc);
-    });
-    //   location.onLocationChanged.listen((newloc) {
-    //     currentLocation = newloc;
-    //     googleMapController.animateCamera(
-    //       CameraUpdate.newCameraPosition(
-    //         CameraPosition(
-    //           zoom: 13.5,
-    //           target: LatLng(
-    //             newloc.latitude!,
-    //             newloc.longitude!,
-    //           ),
-    //         ),
-    //       ),
-    //     );
-    //     setState(() {});
-    //   });
-    //   setState(() {});
+    
+      location.onLocationChanged.listen((newloc) {
+        currentLocation = newloc;
+        googleMapController.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              zoom: 13.5,
+              target: LatLng(
+                newloc.latitude!,
+                newloc.longitude!,
+              ),
+            ),
+          ),
+        );
+        setState(() {});
+      });
+      setState(() {});
   }
 
   void getPolylinePoints() async {
@@ -160,11 +160,13 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
   @override
   Widget build(BuildContext context) {
-    var userLocation = Provider.of<UserLocation>(context);
-    return Center(
+    return currentLocation == null ? const Center(
+      child: Text("Loading"),
+    )
+    : Center(
       child: GoogleMap(
         initialCameraPosition: CameraPosition(
-          target: userLocation.latLng(),
+          target: userLocation!.latLng(),
           zoom: 13.5,
         ),
         polylines: {
@@ -179,7 +181,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
           Marker(
             markerId: MarkerId("currentlocation"),
             icon: currentLocationIcon,
-            position: userLocation.latLng(),
+            position: userLocation!.latLng(),
           ),
           Marker(
             markerId: MarkerId("source"),
