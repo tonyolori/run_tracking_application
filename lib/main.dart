@@ -23,14 +23,19 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        theme: darkTheme,
-        home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Pedometer example app'),
-          ),
-          body: Homepage(),
-        ));
+    //dynamic locator = LocationService();
+    return StreamProvider(
+      initialData: UserLocation(latitude: 0, longitude: 0),
+      create: (context) => LocationService().locationStream,
+      child: MaterialApp(
+          theme: darkTheme,
+          home: Scaffold(
+            appBar: AppBar(
+              title: const Text('Pedometer example app'),
+            ),
+            body: Homepage(),
+          )),
+    );
   }
 }
 
@@ -45,6 +50,7 @@ class _HomepageState extends State<Homepage> {
   askPermission() async {
     // var status = await Permission.camera.status;
     var status = await Permission.activityRecognition.request();
+
 
     if (status.isDenied) {
       // We didn't ask for permission yet or the permission has been denied before but not permanently.
@@ -84,13 +90,13 @@ class _HomepageState extends State<Homepage> {
             child: const Text('Launch maps'),
           ),
           ElevatedButton(
-             onPressed: () async {
-          await askPermission();
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => runTracking()),
-            );
-             },
+            onPressed: () async {
+              await askPermission();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => runTracking()),
+              );
+            },
             child: const Text('Launch steps'),
           ),
         ],
@@ -98,4 +104,3 @@ class _HomepageState extends State<Homepage> {
     );
   }
 }
-

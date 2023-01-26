@@ -28,15 +28,17 @@ class LocationService {
             longitude: locationData.longitude!,
           ));
 
-          googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(
-              zoom: 13.5,
-              target: LatLng(
-                locationData.latitude!,
-                locationData.longitude!,
-              ),
-            ),
-          ));
+          //googleMapController = await _controller.future;
+
+          // googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+          //   CameraPosition(
+          //     zoom: 13.5,
+          //     target: LatLng(
+          //       locationData.latitude!,
+          //       locationData.longitude!,
+          //     ),
+          //   ),
+          // ));
         });
       }
     });
@@ -88,27 +90,41 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
 
   late Location location;
-  UserLocation? userLocation; 
-  void getCurrentLocation() async {
-
+  void setController() async {
+    //location = Location();
     googleMapController = await _controller.future;
-    
-      location.onLocationChanged.listen((newloc) {
-        currentLocation = newloc;
-        googleMapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              zoom: 13.5,
-              target: LatLng(
-                newloc.latitude!,
-                newloc.longitude!,
-              ),
-            ),
-          ),
-        );
-        setState(() {});
-      });
-      setState(() {});
+    updateMaps();
+  }
+
+  void updateMaps() {
+    //location = Location();
+    // location.onLocationChanged.listen((locationData) {
+    googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        zoom: 13.5,
+        target: LatLng(
+          Provider.of<UserLocation>(context, listen: false).latitude,
+          Provider.of<UserLocation>(context, listen: false).longitude,
+        ),
+      ),
+    ));
+
+    //   location.onLocationChanged.listen((newloc) {
+    //     currentLocation = newloc;
+    //     googleMapController.animateCamera(
+    //       CameraUpdate.newCameraPosition(
+    //         CameraPosition(
+    //           zoom: 13.5,
+    //           target: LatLng(
+    //             newloc.latitude!,
+    //             newloc.longitude!,
+    //           ),
+    //         ),
+    //       ),
+    //     );
+    //     setState(() {});
+    //   });
+    //   setState(() {});
   }
 
   void getPolylinePoints() async {
@@ -146,7 +162,8 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
   @override
   void initState() {
-    getCurrentLocation();
+    setController();
+    //updateMaps();
     //setCustomMarkerIcon();
     getPolylinePoints();
     super.initState();
@@ -160,13 +177,11 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return currentLocation == null ? const Center(
-      child: Text("Loading"),
-    )
-    : Center(
+    var userLocation = Provider.of<UserLocation>(context);
+    return Center(
       child: GoogleMap(
         initialCameraPosition: CameraPosition(
-          target: userLocation!.latLng(),
+          target: userLocation.latLng(),
           zoom: 13.5,
         ),
         polylines: {
@@ -181,7 +196,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
           Marker(
             markerId: MarkerId("currentlocation"),
             icon: currentLocationIcon,
-            position: userLocation!.latLng(),
+            position: userLocation.latLng(),
           ),
           Marker(
             markerId: MarkerId("source"),
