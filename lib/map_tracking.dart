@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 late GoogleMapController googleMapController;
 
-class LocationService {
+class LocationService with ChangeNotifier{
   late UserLocation _currentLocation;
 
   var location = Location();
@@ -27,6 +27,8 @@ class LocationService {
             latitude: locationData.latitude!,
             longitude: locationData.longitude!,
           ));
+          //notifyListeners();
+          
 
           //googleMapController = await _controller.future;
 
@@ -59,7 +61,7 @@ class LocationService {
   }
 }
 
-class UserLocation {
+class UserLocation with ChangeNotifier {
   final double latitude;
   final double longitude;
 
@@ -93,17 +95,17 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   void setController() async {
     //location = Location();
     googleMapController = await _controller.future;
-    updateMaps();
+    updateMap();
   }
 
-  void updateMaps() {
+  void updateMap() {
     //location = Location();
     // location.onLocationChanged.listen((locationData) {
     googleMapController.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(
         zoom: 13.5,
         target: LatLng(
-          Provider.of<UserLocation>(context, listen: false).latitude,
+          Provider.of<UserLocation>(context, listen: true).latitude,
           Provider.of<UserLocation>(context, listen: false).longitude,
         ),
       ),
