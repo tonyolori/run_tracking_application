@@ -24,9 +24,11 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     //dynamic locator = LocationService();
-    return StreamProvider(
-      initialData: UserLocation(latitude: 0, longitude: 0),
-      create: (context) => LocationService().locationStream,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_)=> LocationService()),
+        
+      ],
       child: MaterialApp(
           theme: darkTheme,
           home: Scaffold(

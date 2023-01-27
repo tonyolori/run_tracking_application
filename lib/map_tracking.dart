@@ -7,15 +7,18 @@ import 'constants.dart';
 import 'package:provider/provider.dart';
 
 late GoogleMapController googleMapController;
+final Completer<GoogleMapController> _controller = Completer();
 
-class LocationService with ChangeNotifier{
-  late UserLocation _currentLocation;
+class LocationService with ChangeNotifier {
+  UserLocation _currentLocation = UserLocation(latitude: 0, longitude: 0);
 
   var location = Location();
-  final StreamController<UserLocation> _locationController =
-      StreamController<UserLocation>();
 
-  Stream<UserLocation> get locationStream => _locationController.stream;
+  UserLocation get currentlocation => _currentLocation;
+
+  // Completer<GoogleMapController> getcontroller() {
+  //   return _controller;
+  // }
 
   LocationService() {
     // Request permission to use location
@@ -23,12 +26,10 @@ class LocationService with ChangeNotifier{
       if (permissionStatus == PermissionStatus.granted) {
         // If granted listen to the onLocationChanged stream and emit over our controller
         location.onLocationChanged.listen((locationData) {
-          _locationController.add(UserLocation(
-            latitude: locationData.latitude!,
-            longitude: locationData.longitude!,
-          ));
-          //notifyListeners();
-          
+          _currentLocation.latitude = locationData.latitude!;
+          _currentLocation.longitude = locationData.longitude!;
+
+          notifyListeners();
 
           //googleMapController = await _controller.future;
 
@@ -45,6 +46,33 @@ class LocationService with ChangeNotifier{
       }
     });
   }
+  // mapTrackingOn() {
+  //   // Request permission to use location
+  //   location.requestPermission().then((permissionStatus) {
+  //     if (permissionStatus == PermissionStatus.granted) {
+  //       // If granted listen to the onLocationChanged stream and emit over our controller
+  //       location.onLocationChanged.listen((locationData) async {
+  //         _currentLocation.latitude = locationData.latitude!;
+  //         _currentLocation.longitude = locationData.longitude!;
+
+  //         //notifyListeners();
+
+  //         googleMapController = await _controller.future;
+
+  //         googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+  //           CameraPosition(
+  //             zoom: 13.5,
+  //             target: LatLng(
+  //               locationData.latitude!,
+  //               locationData.longitude!,
+  //             ),
+  //           ),
+  //         ));
+
+  //       });
+  //     }
+  //   });
+  // }
 
   Future<UserLocation> getLocation() async {
     try {
@@ -62,8 +90,8 @@ class LocationService with ChangeNotifier{
 }
 
 class UserLocation with ChangeNotifier {
-  final double latitude;
-  final double longitude;
+  double latitude;
+  double longitude;
 
   UserLocation({required this.latitude, required this.longitude});
   LatLng latLng() {
@@ -79,8 +107,6 @@ class MapTrackingPage extends StatefulWidget {
 }
 
 class MapTrackingPageState extends State<MapTrackingPage> {
-  final Completer<GoogleMapController> _controller = Completer();
-
   static const LatLng sourceLocation = LatLng(35.118339, 32.850870);
   static const LatLng destination = LatLng(35.106985, 32.856650);
 
@@ -93,40 +119,27 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
   late Location location;
   void setController() async {
-    //location = Location();
     googleMapController = await _controller.future;
-    updateMap();
+
+    context.read<LocationService>().addListener(() {
+      updateMap();
+    });
+    //updateMap();
   }
 
   void updateMap() {
     //location = Location();
     // location.onLocationChanged.listen((locationData) {
+
     googleMapController.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(
         zoom: 13.5,
         target: LatLng(
-          Provider.of<UserLocation>(context, listen: true).latitude,
-          Provider.of<UserLocation>(context, listen: false).longitude,
+          context.read<LocationService>().currentlocation.latitude,
+          context.read<LocationService>().currentlocation.longitude,
         ),
       ),
     ));
-
-    //   location.onLocationChanged.listen((newloc) {
-    //     currentLocation = newloc;
-    //     googleMapController.animateCamera(
-    //       CameraUpdate.newCameraPosition(
-    //         CameraPosition(
-    //           zoom: 13.5,
-    //           target: LatLng(
-    //             newloc.latitude!,
-    //             newloc.longitude!,
-    //           ),
-    //         ),
-    //       ),
-    //     );
-    //     setState(() {});
-    //   });
-    //   setState(() {});
   }
 
   void getPolylinePoints() async {
@@ -165,6 +178,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   @override
   void initState() {
     setController();
+
     //updateMaps();
     //setCustomMarkerIcon();
     getPolylinePoints();
@@ -179,7 +193,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
   @override
   Widget build(BuildContext context) {
-    var userLocation = Provider.of<UserLocation>(context);
+    var userLocation = context.watch<LocationService>()._currentLocation;
     return Center(
       child: GoogleMap(
         initialCameraPosition: CameraPosition(
