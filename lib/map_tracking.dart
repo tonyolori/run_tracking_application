@@ -10,15 +10,11 @@ late GoogleMapController googleMapController;
 final Completer<GoogleMapController> _controller = Completer();
 
 class LocationService with ChangeNotifier {
-  UserLocation _currentLocation = UserLocation(latitude: 0, longitude: 0);
+  UserLocation? _currentLocation;
 
   var location = Location();
 
-  UserLocation get currentlocation => _currentLocation;
-
-  // Completer<GoogleMapController> getcontroller() {
-  //   return _controller;
-  // }
+  UserLocation? get currentlocation => _currentLocation;
 
   LocationService() {
     // Request permission to use location
@@ -26,55 +22,20 @@ class LocationService with ChangeNotifier {
       if (permissionStatus == PermissionStatus.granted) {
         // If granted listen to the onLocationChanged stream and emit over our controller
         location.onLocationChanged.listen((locationData) {
-          _currentLocation.latitude = locationData.latitude!;
-          _currentLocation.longitude = locationData.longitude!;
+          UserLocation newlocation = UserLocation(
+              latitude: locationData.latitude!,
+              longitude: locationData.longitude!);
 
+          _currentLocation = newlocation;
+          // _currentLocation.latitude =
+          // _currentLocation.longitude = !;
           notifyListeners();
-
-          //googleMapController = await _controller.future;
-
-          // googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-          //   CameraPosition(
-          //     zoom: 13.5,
-          //     target: LatLng(
-          //       locationData.latitude!,
-          //       locationData.longitude!,
-          //     ),
-          //   ),
-          // ));
         });
       }
     });
   }
-  // mapTrackingOn() {
-  //   // Request permission to use location
-  //   location.requestPermission().then((permissionStatus) {
-  //     if (permissionStatus == PermissionStatus.granted) {
-  //       // If granted listen to the onLocationChanged stream and emit over our controller
-  //       location.onLocationChanged.listen((locationData) async {
-  //         _currentLocation.latitude = locationData.latitude!;
-  //         _currentLocation.longitude = locationData.longitude!;
 
-  //         //notifyListeners();
-
-  //         googleMapController = await _controller.future;
-
-  //         googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-  //           CameraPosition(
-  //             zoom: 13.5,
-  //             target: LatLng(
-  //               locationData.latitude!,
-  //               locationData.longitude!,
-  //             ),
-  //           ),
-  //         ));
-
-  //       });
-  //     }
-  //   });
-  // }
-
-  Future<UserLocation> getLocation() async {
+  Future<UserLocation?> getLocation() async {
     try {
       var userLocation = await location.getLocation();
       _currentLocation = UserLocation(
@@ -89,7 +50,7 @@ class LocationService with ChangeNotifier {
   }
 }
 
-class UserLocation with ChangeNotifier {
+class UserLocation {
   double latitude;
   double longitude;
 
@@ -117,6 +78,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
 
+  UserLocation? userLocation;
   late Location location;
   void setController() async {
     googleMapController = await _controller.future;
@@ -124,22 +86,22 @@ class MapTrackingPageState extends State<MapTrackingPage> {
     context.read<LocationService>().addListener(() {
       updateMap();
     });
+
     //updateMap();
   }
 
   void updateMap() {
-    //location = Location();
-    // location.onLocationChanged.listen((locationData) {
-
+    userLocation = context.read<LocationService>()._currentLocation;
     googleMapController.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(
-        zoom: 13.5,
+        zoom: 14.5,
         target: LatLng(
-          context.read<LocationService>().currentlocation.latitude,
-          context.read<LocationService>().currentlocation.longitude,
+          context.read<LocationService>().currentlocation!.latitude,
+          context.read<LocationService>().currentlocation!.longitude,
         ),
       ),
     ));
+    setState(() {});
   }
 
   void getPolylinePoints() async {
@@ -178,8 +140,6 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   @override
   void initState() {
     setController();
-
-    //updateMaps();
     //setCustomMarkerIcon();
     getPolylinePoints();
     super.initState();
@@ -193,40 +153,42 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
   @override
   Widget build(BuildContext context) {
-    var userLocation = context.watch<LocationService>()._currentLocation;
+    userLocation = context.read<LocationService>()._currentLocation;
     return Center(
-      child: GoogleMap(
-        initialCameraPosition: CameraPosition(
-          target: userLocation.latLng(),
-          zoom: 13.5,
-        ),
-        polylines: {
-          Polyline(
-            polylineId: PolylineId("route"),
-            points: polylineCoordinates,
-            color: primaryColor,
-            width: 6,
-          )
-        },
-        markers: {
-          Marker(
-            markerId: MarkerId("currentlocation"),
-            icon: currentLocationIcon,
-            position: userLocation.latLng(),
-          ),
-          Marker(
-            markerId: MarkerId("source"),
-            position: sourceLocation,
-          ),
-          Marker(
-            markerId: MarkerId("destination"),
-            position: destination,
-          ),
-        },
-        onMapCreated: ((mapController) {
-          _controller.complete(mapController);
-        }),
-      ),
+      child: userLocation == null
+          ? const Center(child: Text("Loading"))
+          : GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: userLocation!.latLng(),
+                zoom: 14.5,
+              ),
+              polylines: {
+                Polyline(
+                  polylineId: PolylineId("route"),
+                  points: polylineCoordinates,
+                  color: primaryColor,
+                  width: 6,
+                )
+              },
+              markers: {
+                Marker(
+                  markerId: MarkerId("currentlocation"),
+                  icon: currentLocationIcon,
+                  position: userLocation!.latLng(),
+                ),
+                Marker(
+                  markerId: MarkerId("source"),
+                  position: sourceLocation,
+                ),
+                Marker(
+                  markerId: MarkerId("destination"),
+                  position: destination,
+                ),
+              },
+              onMapCreated: ((mapController) {
+                _controller.complete(mapController);
+              }),
+            ),
     );
   }
 }
