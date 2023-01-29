@@ -16,6 +16,8 @@ class LocationService with ChangeNotifier {
 
   UserLocation? get currentlocation => _currentLocation;
 
+  //void set _currentlocation => _currentLocation;
+
   LocationService() {
     // Request permission to use location
     location.requestPermission().then((permissionStatus) {
@@ -27,8 +29,6 @@ class LocationService with ChangeNotifier {
               longitude: locationData.longitude!);
 
           _currentLocation = newlocation;
-          // _currentLocation.latitude =
-          // _currentLocation.longitude = !;
           notifyListeners();
         });
       }
@@ -83,25 +83,32 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   void setController() async {
     googleMapController = await _controller.future;
 
+    addListener();
+  }
+
+  void addListener() {
     context.read<LocationService>().addListener(() {
       updateMap();
     });
-
-    //updateMap();
   }
 
+  // void removeListener() {
+  //   context.read<LocationService>().removeListener(() {});
+  // }
+
   void updateMap() {
-    userLocation = context.read<LocationService>()._currentLocation;
+    setState(() {
+      userLocation = context.read<LocationService>().currentlocation;
+    });
     googleMapController.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(
         zoom: 14.5,
         target: LatLng(
-          context.read<LocationService>().currentlocation!.latitude,
-          context.read<LocationService>().currentlocation!.longitude,
+          userLocation!.latitude,
+          userLocation!.longitude,
         ),
       ),
     ));
-    setState(() {});
   }
 
   void getPolylinePoints() async {
@@ -149,6 +156,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   void dispose() {
     super.dispose();
     googleMapController.dispose();
+    //removeListener();
   }
 
   @override
@@ -157,37 +165,44 @@ class MapTrackingPageState extends State<MapTrackingPage> {
     return Center(
       child: userLocation == null
           ? const Center(child: Text("Loading"))
-          : GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: userLocation!.latLng(),
-                zoom: 14.5,
-              ),
-              polylines: {
-                Polyline(
-                  polylineId: PolylineId("route"),
-                  points: polylineCoordinates,
-                  color: primaryColor,
-                  width: 6,
-                )
-              },
-              markers: {
-                Marker(
-                  markerId: MarkerId("currentlocation"),
-                  icon: currentLocationIcon,
-                  position: userLocation!.latLng(),
+          : Stack(
+              children: [
+                GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: userLocation!.latLng(),
+                    zoom: 14.5,
+                  ),
+                  polylines: {
+                    Polyline(
+                      polylineId: PolylineId("route"),
+                      points: polylineCoordinates,
+                      color: primaryColor,
+                      width: 6,
+                    )
+                  },
+                  markers: {
+                    Marker(
+                      markerId: MarkerId("currentlocation"),
+                      icon: currentLocationIcon,
+                      position: userLocation!.latLng(),
+                    ),
+                    Marker(
+                      markerId: MarkerId("source"),
+                      position: sourceLocation,
+                    ),
+                    Marker(
+                      markerId: MarkerId("destination"),
+                      position: destination,
+                    ),
+                  },
+                  onMapCreated: ((mapController) {
+                    //_controller.complete(mapController);
+                    googleMapController = mapController;
+                    addListener();
+                  }),
                 ),
-                Marker(
-                  markerId: MarkerId("source"),
-                  position: sourceLocation,
-                ),
-                Marker(
-                  markerId: MarkerId("destination"),
-                  position: destination,
-                ),
-              },
-              onMapCreated: ((mapController) {
-                _controller.complete(mapController);
-              }),
+                FloatingActionButton(onPressed: (() => Navigator.pop(context)))
+              ],
             ),
     );
   }
