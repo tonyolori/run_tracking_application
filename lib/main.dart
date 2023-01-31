@@ -1,6 +1,7 @@
 //import 'dart:html';
 // ignore_for_file: avoid_print
 
+import 'package:activity_recognition_flutter/activity_recognition_flutter.dart';
 import 'package:fit_work/activity_recognition.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -26,8 +27,7 @@ class _MyAppState extends State<MyApp> {
     //dynamic locator = LocationService();
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_)=> LocationService()),
-        
+        ChangeNotifierProvider(create: (_) => LocationService()),
       ],
       child: MaterialApp(
           theme: darkTheme,
@@ -52,28 +52,14 @@ class _HomepageState extends State<Homepage> {
   askPermission() async {
     // var status = await Permission.camera.status;
     var status = await Permission.activityRecognition.request();
-
-
+    //await Permission.activityRecognition.request().isGranted;
     if (status.isDenied) {
       // We didn't ask for permission yet or the permission has been denied before but not permanently.
     }
-
-// // You can can also directly ask the permission about its status.
-//     //   if (await Permission.location.isRestricted) {
-//     //     // The OS restricts access, for example because of parental controls.
-//     //   }
-//     //   // PermissionStatus status = await Permission.contacts.request();
-//     //   // if(status .isDenied == true)
-//     //   //   {
-//     //   //     askPermission();
-//     //   //   }
-//     //   // else
-//     //   //   {
-//     //   //     return true;
-//     //   //   }
-//     print('status =');
-//     print(status);
-//     return true;
+        
+      print('status =');
+      print(status);
+      return true;
   }
 
   @override

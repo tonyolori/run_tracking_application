@@ -61,45 +61,48 @@ class _runTrackingState extends State<runTracking> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Text(
-            'Steps taken:',
-            style: TextStyle(fontSize: 30),
-          ),
-          Text(
-            _steps,
-            style: const TextStyle(fontSize: 60),
-          ),
-          const Divider(
-            height: 100,
-            thickness: 0,
-            color: Colors.white,
-          ),
-          const Text(
-            'Pedestrian status:',
-            style: TextStyle(fontSize: 30),
-          ),
-          Icon(
-            _status == 'walking'
-                ? Icons.directions_walk
-                : _status == 'stopped'
-                    ? Icons.accessibility_new
-                    : Icons.error,
-            size: 100,
-          ),
-          Center(
-            child: Text(
-              _status,
-              style: _status == 'walking' || _status == 'stopped'
-                  ? const TextStyle(fontSize: 30)
-                  : const TextStyle(fontSize: 20, color: Colors.white),
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: () => Navigator.pop(context)),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              'Steps taken:',
+              style: TextStyle(fontSize: 30),
             ),
-          ),
-          //ElevatedButton(onPressed: onPressed, child: child)
-        ],
+            Text(
+              _steps,
+              style: const TextStyle(fontSize: 60),
+            ),
+            const Divider(
+              height: 100,
+              thickness: 0,
+              color: Colors.white,
+            ),
+            const Text(
+              'Pedestrian status:',
+              style: TextStyle(fontSize: 30),
+            ),
+            Icon(
+              _status == 'walking'
+                  ? Icons.directions_walk
+                  : _status == 'stopped'
+                      ? Icons.accessibility_new
+                      : Icons.error,
+              size: 100,
+            ),
+            Center(
+              child: Text(
+                _status,
+                style: _status == 'walking' || _status == 'stopped'
+                    ? const TextStyle(fontSize: 30)
+                    : const TextStyle(fontSize: 20, color: Colors.white),
+              ),
+            ),
+            //ElevatedButton(onPressed: onPressed, child: child)
+          ],
+        ),
       ),
     );
   }

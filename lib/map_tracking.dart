@@ -87,19 +87,16 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   }
 
   void addListener() {
-    context.read<LocationService>().addListener(() {
-      updateMap();
-    });
+    context.read<LocationService>().addListener(updateMap);
   }
 
-  // void removeListener() {
-  //   context.read<LocationService>().removeListener(() {});
-  // }
+  void removeListener() {
+    context.read<LocationService>().removeListener(updateMap);
+  }
 
   void updateMap() {
-    setState(() {
-      userLocation = context.read<LocationService>().currentlocation;
-    });
+    userLocation = context.read<LocationService>().currentlocation;
+    setState(() {});
     googleMapController.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(
         zoom: 14.5,
@@ -154,9 +151,9 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
   @override
   void dispose() {
-    super.dispose();
-    googleMapController.dispose();
     //removeListener();
+    googleMapController.dispose();
+    super.dispose();
   }
 
   @override
@@ -201,7 +198,10 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                     addListener();
                   }),
                 ),
-                FloatingActionButton(onPressed: (() => Navigator.pop(context)))
+                FloatingActionButton(onPressed: (() {
+                  removeListener();
+                  Navigator.pop(context);
+                }))
               ],
             ),
     );
