@@ -159,51 +159,54 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   @override
   Widget build(BuildContext context) {
     userLocation = context.read<LocationService>()._currentLocation;
-    return Center(
-      child: userLocation == null
-          ? const Center(child: Text("Loading"))
-          : Stack(
-              children: [
-                GoogleMap(
-                  initialCameraPosition: CameraPosition(
-                    target: userLocation!.latLng(),
-                    zoom: 14.5,
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: userLocation == null
+            ? const Center(child: Text("Loading"))
+            : Stack(
+                children: [
+                  GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: userLocation!.latLng(),
+                      zoom: 14.5,
+                    ),
+                    polylines: {
+                      Polyline(
+                        polylineId: PolylineId("route"),
+                        points: polylineCoordinates,
+                        color: primaryColor,
+                        width: 6,
+                      )
+                    },
+                    markers: {
+                      Marker(
+                        markerId: MarkerId("currentlocation"),
+                        icon: currentLocationIcon,
+                        position: userLocation!.latLng(),
+                      ),
+                      Marker(
+                        markerId: MarkerId("source"),
+                        position: sourceLocation,
+                      ),
+                      Marker(
+                        markerId: MarkerId("destination"),
+                        position: destination,
+                      ),
+                    },
+                    onMapCreated: ((mapController) {
+                      //_controller.complete(mapController);
+                      googleMapController = mapController;
+                      addListener();
+                    }),
                   ),
-                  polylines: {
-                    Polyline(
-                      polylineId: PolylineId("route"),
-                      points: polylineCoordinates,
-                      color: primaryColor,
-                      width: 6,
-                    )
-                  },
-                  markers: {
-                    Marker(
-                      markerId: MarkerId("currentlocation"),
-                      icon: currentLocationIcon,
-                      position: userLocation!.latLng(),
-                    ),
-                    Marker(
-                      markerId: MarkerId("source"),
-                      position: sourceLocation,
-                    ),
-                    Marker(
-                      markerId: MarkerId("destination"),
-                      position: destination,
-                    ),
-                  },
-                  onMapCreated: ((mapController) {
-                    //_controller.complete(mapController);
-                    googleMapController = mapController;
-                    addListener();
-                  }),
-                ),
-                FloatingActionButton(onPressed: (() {
-                  removeListener();
-                  Navigator.pop(context);
-                }))
-              ],
-            ),
+                  FloatingActionButton(onPressed: (() {
+                    removeListener();
+                    Navigator.pop(context);
+                  }))
+                ],
+              ),
+      ),
     );
   }
 }

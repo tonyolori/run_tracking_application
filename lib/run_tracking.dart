@@ -1,17 +1,18 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:pedometer/pedometer.dart';
+import 'package:provider/provider.dart';
 
-
-class runTracking extends StatefulWidget {
+class RunTracking extends StatefulWidget {
   @override
-  _runTrackingState createState() => _runTrackingState();
+  _RunTrackingState createState() => _RunTrackingState();
 }
 
-class _runTrackingState extends State<runTracking> {
+class _RunTrackingState extends State<RunTracking> {
   late Stream<StepCount> _stepCountStream;
-  late Stream<PedestrianStatus> _pedestrianStatusStream;
   String _status = '?', _steps = '?';
 
   @override
@@ -47,22 +48,19 @@ class _runTrackingState extends State<runTracking> {
   }
 
   void initPlatformState() {
-    _pedestrianStatusStream = Pedometer.pedestrianStatusStream;
-    _pedestrianStatusStream
-        .listen(onPedestrianStatusChanged)
-        .onError(onPedestrianStatusError);
-
     _stepCountStream = Pedometer.stepCountStream;
+    //Pedometer _pedometer = Provider.of<Pedometer>(context, listen: false);
+    //_stepCountStream = _pedometer.stepCountStream;
     _stepCountStream.listen(onStepCount).onError(onStepCountError);
 
     if (!mounted) return;
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: () => Navigator.pop(context)),
+      floatingActionButton:
+          FloatingActionButton(onPressed: () => Navigator.pop(context)),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -75,31 +73,17 @@ class _runTrackingState extends State<runTracking> {
               _steps,
               style: const TextStyle(fontSize: 60),
             ),
-            const Divider(
+            SizedBox(
               height: 100,
-              thickness: 0,
-              color: Colors.white,
-            ),
-            const Text(
-              'Pedestrian status:',
-              style: TextStyle(fontSize: 30),
-            ),
-            Icon(
-              _status == 'walking'
-                  ? Icons.directions_walk
-                  : _status == 'stopped'
-                      ? Icons.accessibility_new
-                      : Icons.error,
-              size: 100,
-            ),
-            Center(
-              child: Text(
-                _status,
-                style: _status == 'walking' || _status == 'stopped'
-                    ? const TextStyle(fontSize: 30)
-                    : const TextStyle(fontSize: 20, color: Colors.white),
+              width: 100,
+              child: Expanded(
+                child: CircularProgressIndicator(
+                  value: 20000 / double.tryParse(_steps)!,
+                  strokeWidth: 10,
+                ),
               ),
             ),
+
             //ElevatedButton(onPressed: onPressed, child: child)
           ],
         ),

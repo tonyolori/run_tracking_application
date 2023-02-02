@@ -9,6 +9,7 @@ import 'constants.dart';
 import 'run_tracking.dart';
 import 'package:flutter/material.dart';
 import 'map_tracking.dart';
+import 'package:pedometer/pedometer.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,6 +29,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => LocationService()),
+        Provider.value(value: Pedometer),
       ],
       child: MaterialApp(
           theme: darkTheme,
@@ -56,10 +58,10 @@ class _HomepageState extends State<Homepage> {
     if (status.isDenied) {
       // We didn't ask for permission yet or the permission has been denied before but not permanently.
     }
-        
-      print('status =');
-      print(status);
-      return true;
+
+    print('status =');
+    print(status);
+    return true;
   }
 
   @override
@@ -82,7 +84,7 @@ class _HomepageState extends State<Homepage> {
               await askPermission();
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => runTracking()),
+                MaterialPageRoute(builder: (context) => RunTracking()),
               );
             },
             child: const Text('Launch steps'),
