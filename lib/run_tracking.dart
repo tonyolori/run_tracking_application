@@ -60,74 +60,118 @@ class _RunTrackingState extends State<RunTracking> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton:
-          FloatingActionButton(onPressed: () => Navigator.pop(context)),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Steps taken:',
-              style: TextStyle(fontSize: 30),
-            ),
-            const Text(
-              "2000",
-              style: TextStyle(fontSize: 60),
-            ),
-            SizedBox(
-              height: kBoxSize,
-              width: kBoxSize,
-              child: Stack(
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Row(
                 children: [
-                  CircularStepProgressIndicator(
-                    totalSteps: 100,
-                    currentStep: 50,
-                    stepSize: 15,
-                    selectedColor: Colors.greenAccent,
-                    unselectedColor: Colors.grey[200],
-                    circularDirection: CircularDirection.clockwise,
-                    startingAngle: kPI - kPI / 4, //4.71239,
-                    arcSize: kPI * 1.5,
-                    padding: 0,
-                    width: kBoxSize,
-                    height: kBoxSize,
-                    selectedStepSize: 15,
-                    roundedCap: (_, __) => true,
-                  ),
-                  const Center(
-                    child: Text(
-                      "2000",
-                      style: TextStyle(
-                        height: null,
-                        fontSize: 70,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 20,
-                      left: 70,
-                      right: 70,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            association(),
-                            association(),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                  Text("Steps",
+                  style: TextStyle(
+                    fontSize: 48
+                  ),),
                 ],
               ),
-            ),
-            //ElevatedButton(onPressed: onPressed, child: child)
-          ],
+              Container(
+                decoration: BoxDecoration(color: Colors.red),
+                child: SizedBox(
+                  height: 100,
+                  width: 30,
+                ),
+              ),
+              SizedBox(
+                height: kBoxSize,
+                width: kBoxSize,
+                child: Stack(
+                  children: [
+                    CircularStepProgressIndicator(
+                      totalSteps: 100,
+                      currentStep: 50,
+                      stepSize: 15,
+                      selectedColor: Colors.greenAccent,
+                      unselectedColor: Colors.grey[200],
+                      circularDirection: CircularDirection.clockwise,
+                      startingAngle: kPI - kPI / 4, //4.71239,
+                      arcSize: kPI * 1.5,
+                      padding: 0,
+                      width: kBoxSize,
+                      height: kBoxSize,
+                      selectedStepSize: 15,
+                      roundedCap: (_, __) => true,
+                    ),
+                    const Center(
+                      child: Text(
+                        "2000",
+                        style: TextStyle(
+                          height: null,
+                          fontSize: 70,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 20,
+                        left: 70,
+                        right: 70,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              association(label: "Duration",value:"2000",),
+                              association(
+                                label: "Steps",
+                                value: "2000",
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  smallIcon(),
+                  smallIcon(),
+                ],
+              )
+              //ElevatedButton(onPressed: onPressed, child: child)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class smallIcon extends StatelessWidget {
+  const smallIcon({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        width: 100,
+        height: 70,
+        decoration: BoxDecoration(
+          color: Colors.greenAccent
+        ),
+        child: Center(
+          child: Row(children: [
+            Icon(Icons.local_fire_department),
+            Text("KM"),
+          ]),
         ),
       ),
     );
@@ -135,19 +179,23 @@ class _RunTrackingState extends State<RunTracking> {
 }
 
 class association extends StatelessWidget {
-  const association({
-    Key? key,
-  }) : super(key: key);
+  String label;
+  String value;
+  association({
+    super.key, 
+    required this.label,
+    required this.value
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Text(
-          "duration",
+          label,
         ),
         Text(
-          "2000",
+          value,
           style: TextStyle(
             height: null,
             fontSize: 24,
