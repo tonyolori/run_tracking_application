@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-const String google_api_key = "AIzaSyA_NkUVWZlypUI82bDtTouJD0GjTtNNCgQ";
+const String google_api_key = "AIzaS  yA_NkUVWZlypUI82bDtTouJD0GjTtNNCgQ";
 const Color primaryColor = Color(0xFF7B61FF);
 const double defaultPadding = 16.0;
+const double kPI = 3.1415926535897932;
+const double kBoxSize = 300;
 ThemeData darkTheme = ThemeData.dark().copyWith();

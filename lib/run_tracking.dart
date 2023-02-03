@@ -1,10 +1,12 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:fit_work/constants.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:pedometer/pedometer.dart';
 import 'package:provider/provider.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class RunTracking extends StatefulWidget {
   @override
@@ -69,25 +71,89 @@ class _RunTrackingState extends State<RunTracking> {
               'Steps taken:',
               style: TextStyle(fontSize: 30),
             ),
-            Text(
-              _steps,
-              style: const TextStyle(fontSize: 60),
+            const Text(
+              "2000",
+              style: TextStyle(fontSize: 60),
             ),
             SizedBox(
-              height: 100,
-              width: 100,
-              child: Expanded(
-                child: CircularProgressIndicator(
-                  value: 20000 / double.tryParse(_steps)!,
-                  strokeWidth: 10,
-                ),
+              height: kBoxSize,
+              width: kBoxSize,
+              child: Stack(
+                children: [
+                  CircularStepProgressIndicator(
+                    totalSteps: 100,
+                    currentStep: 50,
+                    stepSize: 15,
+                    selectedColor: Colors.greenAccent,
+                    unselectedColor: Colors.grey[200],
+                    circularDirection: CircularDirection.clockwise,
+                    startingAngle: kPI - kPI / 4, //4.71239,
+                    arcSize: kPI * 1.5,
+                    padding: 0,
+                    width: kBoxSize,
+                    height: kBoxSize,
+                    selectedStepSize: 15,
+                    roundedCap: (_, __) => true,
+                  ),
+                  const Center(
+                    child: Text(
+                      "2000",
+                      style: TextStyle(
+                        height: null,
+                        fontSize: 70,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 20,
+                      left: 70,
+                      right: 70,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            association(),
+                            association(),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-
             //ElevatedButton(onPressed: onPressed, child: child)
           ],
         ),
       ),
+    );
+  }
+}
+
+class association extends StatelessWidget {
+  const association({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          "duration",
+        ),
+        Text(
+          "2000",
+          style: TextStyle(
+            height: null,
+            fontSize: 24,
+          ),
+        ),
+      ],
     );
   }
 }
