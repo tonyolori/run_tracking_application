@@ -3,62 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'components/location_service.dart';
 import 'constants.dart';
 import 'package:provider/provider.dart';
 
 late GoogleMapController googleMapController;
 final Completer<GoogleMapController> _controller = Completer();
+//Timer.periodic(oneSec, (Timer t) => print('hi!'));
 
-class LocationService with ChangeNotifier {
-  UserLocation? _currentLocation;
 
-  var location = Location();
 
-  UserLocation? get currentlocation => _currentLocation;
-
-  //void set _currentlocation => _currentLocation;
-
-  LocationService() {
-    // Request permission to use location
-    location.requestPermission().then((permissionStatus) {
-      if (permissionStatus == PermissionStatus.granted) {
-        // If granted listen to the onLocationChanged stream and emit over our controller
-        location.onLocationChanged.listen((locationData) {
-          UserLocation newlocation = UserLocation(
-              latitude: locationData.latitude!,
-              longitude: locationData.longitude!);
-
-          _currentLocation = newlocation;
-          notifyListeners();
-        });
-      }
-    });
-  }
-
-  Future<UserLocation?> getLocation() async {
-    try {
-      var userLocation = await location.getLocation();
-      _currentLocation = UserLocation(
-        latitude: userLocation.latitude!,
-        longitude: userLocation.longitude!,
-      );
-    } on Exception catch (e) {
-      print('Could not get location: ${e.toString()}');
-    }
-
-    return _currentLocation;
-  }
-}
-
-class UserLocation {
-  double latitude;
-  double longitude;
-
-  UserLocation({required this.latitude, required this.longitude});
-  LatLng latLng() {
-    return LatLng(latitude, longitude);
-  }
-}
 
 class MapTrackingPage extends StatefulWidget {
   const MapTrackingPage({Key? key}) : super(key: key);
@@ -72,6 +26,8 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   static const LatLng destination = LatLng(35.106985, 32.856650);
 
   List<LatLng> polylineCoordinates = [];
+  List<LatLng> liveCoordinates = [];
+
   LocationData? currentLocation;
 
   BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
@@ -79,8 +35,10 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
 
   UserLocation? userLocation;
+  //Location? userLocation;
   late Location location;
   void setController() async {
+    userLocation = context.read<LocationService>().currentlocation;
     googleMapController = await _controller.future;
 
     addListener();
@@ -96,7 +54,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
   void updateMap() {
     userLocation = context.read<LocationService>().currentlocation;
-    setState(() {});
+    liveCoordinates.add(userLocation!.latLng());
     googleMapController.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(
         zoom: 14.5,
@@ -106,6 +64,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
         ),
       ),
     ));
+    setState(() {});
   }
 
   void getPolylinePoints() async {
@@ -117,8 +76,9 @@ class MapTrackingPageState extends State<MapTrackingPage> {
         PointLatLng(destination.latitude, destination.longitude));
 
     if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) =>
-          polylineCoordinates.add(LatLng(point.latitude, point.longitude)));
+      for (var point in result.points) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      }
     }
     setState(() {});
   }
@@ -158,13 +118,14 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
   @override
   Widget build(BuildContext context) {
-    userLocation = context.read<LocationService>()._currentLocation;
+    userLocation = context.read<LocationService>().currentlocation;
     return Scaffold(
       appBar: AppBar(),
       body: Center(
         child: userLocation == null
             ? const Center(child: Text("Loading"))
             : Stack(
+                alignment: Alignment.center,
                 children: [
                   GoogleMap(
                     initialCameraPosition: CameraPosition(
@@ -174,7 +135,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                     polylines: {
                       Polyline(
                         polylineId: PolylineId("route"),
-                        points: polylineCoordinates,
+                        points: liveCoordinates,
                         color: primaryColor,
                         width: 6,
                       )
@@ -200,10 +161,10 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                       addListener();
                     }),
                   ),
-                  FloatingActionButton(onPressed: (() {
-                    removeListener();
-                    Navigator.pop(context);
-                  }))
+                  // FloatingActionButton(onPressed: (() {
+                  //   removeListener();
+                  //   Navigator.pop(context);
+                  // }))
                 ],
               ),
       ),

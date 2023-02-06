@@ -5,6 +5,7 @@ import 'package:activity_recognition_flutter/activity_recognition_flutter.dart';
 import 'package:fit_work/activity_recognition.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'components/location_service.dart';
 import 'constants.dart';
 import 'run_tracking.dart';
 import 'package:flutter/material.dart';
