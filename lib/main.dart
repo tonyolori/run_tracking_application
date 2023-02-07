@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
         Provider.value(value: Pedometer),
       ],
       child: MaterialApp(
-          theme: darkTheme,
+          theme: lightTheme,
           home: Scaffold(
             appBar: AppBar(
               title: const Text('Pedometer example app'),
