@@ -11,6 +11,7 @@ class LocationService with ChangeNotifier {
   UserLocation? get currentlocation => _currentLocation;
 
   LocationService() {
+    print("locacalled");
     // Request permission to use location
     location.requestPermission().then((permissionStatus) {
       if (permissionStatus == PermissionStatus.granted) {
