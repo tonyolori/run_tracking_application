@@ -62,7 +62,8 @@ class _RunTrackingState extends State<RunTracking> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: Text("Steps"),),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

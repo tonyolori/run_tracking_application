@@ -14,3 +14,10 @@ TextStyle labelStyle = const TextStyle(
   fontFamily: 'General Sans',
   fontWeight: FontWeight.w400,
 );
+
+// TextStyle(
+//                                     color: Colors.grey,
+//                                     fontSize: 32,
+//                                     fontFamily: 'General Sans',
+//                                     fontWeight: FontWeight.w600,
+//                                   ),

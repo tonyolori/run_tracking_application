@@ -126,18 +126,19 @@ class MapTrackingPageState extends State<MapTrackingPage> {
     });
   }
 
+  var loc;
   @override
   void initState() {
     setController();
     //setCustomMarkerIcon();
     getPolylinePoints();
     super.initState();
-    //loc = context.read<LocationService>();
+    loc = context.read<LocationService>();
   }
 
   @override
   void dispose() {
-    context.read<LocationService>().removeListener(updateMapValues);
+    loc.removeListener(updateMapValues);
     googleMapController.dispose();
     super.dispose();
   }
@@ -146,14 +147,14 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   Widget build(BuildContext context) {
     userLocation = context.read<LocationService>().currentlocation;
     return Scaffold(
-      appBar: AppBar(),
       body: Center(
         child: userLocation == null
             ? const Center(child: Text("Loading"))
             : Stack(
-                alignment: Alignment.bottomCenter,
+                //alignment: Alignment.bottomCenter,
                 children: [
                   GoogleMap(
+                    zoomControlsEnabled: false,
                     initialCameraPosition: CameraPosition(
                       target: userLocation!.latLng(),
                       zoom: 15.5,
@@ -176,7 +177,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                         markerId: MarkerId("source"),
                         position: sourceLocation,
                       ),
-                      Marker(
+                      const Marker(
                         markerId: MarkerId("destination"),
                         position: destination,
                       ),
@@ -187,79 +188,106 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                       addListener();
                     }),
                   ),
-                  Card(
-                    clipBehavior: Clip.antiAlias,
-                    elevation: 0,
-                    margin: const EdgeInsets.symmetric(),
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(
-                      16, //getHorizontalSize(16),
-                    ))),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 15),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                "Map Data",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 32,
-                                  fontFamily: 'General Sans',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              //const Gap(8),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.max,
-                                children: const [],
-                              ),
-                              //const Gap(10),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text("10 ", style: labelStyle),
-                                  Text("KM", style: labelStyle),
-                                ],
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  print("object");
-                                  googleMapController.animateCamera(
-                                      CameraUpdate.newCameraPosition(
-                                    CameraPosition(
-                                      zoom: 15.5,
-                                      target: LatLng(
-                                        userLocation!.latitude,
-                                        userLocation!.longitude,
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      height: 200,
+                      width: double.infinity,
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          const Icon(Icons.map),
+                          const Text(
+                            "00:00:00",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 64,
+                            ),
+                          ),
+                          returnTextLabel("duration"),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                returnTextBody("0.00"),
+                                returnTextBody("0.00"),
+                                returnTextBody("00:00"),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                returnTextLabel("Distance(KM)"),
+                                returnTextLabel("Calories(cal)"),
+                                returnTextLabel("Avg. Pace(min/Km)"),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Card(
+                      clipBehavior: Clip.antiAlias,
+                      elevation: 0,
+                      margin: const EdgeInsets.symmetric(),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(
+                        16, //getHorizontalSize(16),
+                      ))),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 15),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                OutlinedButton(
+                                  onPressed: () {
+                                    print("object");
+                                    googleMapController.animateCamera(
+                                        CameraUpdate.newCameraPosition(
+                                      CameraPosition(
+                                        zoom: 15.5,
+                                        target: LatLng(
+                                          userLocation!.latitude,
+                                          userLocation!.longitude,
+                                        ),
                                       ),
-                                    ),
-                                  ));
-                                },
-                                child: Center(
-                                  child: const Text(
-                                    "Stop Run",
-                                    style: TextStyle(
-                                      fontSize: 32,
+                                    ));
+                                  },
+                                  child: const Center(
+                                    child: Text(
+                                      "Stop Run",
+                                      style: TextStyle(
+                                        fontSize: 32,
+                                        color: Colors.black,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                                OutlinedButton(
+                                  onPressed: () {},
+                                  child: Icon(Icons.my_location,
+                                  color: Colors.black,),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   // FloatingActionButton(onPressed: (() {
@@ -271,4 +299,24 @@ class MapTrackingPageState extends State<MapTrackingPage> {
       ),
     );
   }
+}
+
+Text returnTextBody(String data) {
+  return Text(
+    data,
+    style: const TextStyle(
+      color: Colors.black,
+      fontSize: 32,
+    ),
+  );
+}
+
+Text returnTextLabel(String data) {
+  return Text(
+    data,
+    style: const TextStyle(
+      color: Colors.grey,
+      fontSize: 16,
+    ),
+  );
 }
