@@ -8,7 +8,7 @@ import '../constants.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' show cos, sqrt, asin;
 
-late GoogleMapController googleMapController;
+GoogleMapController? googleMapController;
 final Completer<GoogleMapController> _controller = Completer();
 //Timer.periodic(oneSec, (Timer t) => print('hi!'));
 
@@ -38,7 +38,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   late Location location;
   void setController() async {
     userLocation = context.read<LocationService>().currentlocation;
-    googleMapController = await _controller.future;
+    //googleMapController = await _controller.future;
 
     addListener();
   }
@@ -61,7 +61,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
           liveCoordinates[liveCoordinates.length - 1].latitude,
           liveCoordinates[liveCoordinates.length - 1].longitude));
     }
-    googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+    googleMapController?.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(
         zoom: 15.5,
         target: LatLng(
@@ -105,8 +105,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       }
     }
-    if(mounted)
-      setState(() {});
+    if (mounted) setState(() {});
   }
 
   void setCustomMarkerIcon() {
@@ -130,9 +129,8 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   var loc;
   @override
   void initState() {
-    setController();
+    //setController();
     //setCustomMarkerIcon();
-    getPolylinePoints();
     super.initState();
     loc = context.read<LocationService>();
   }
@@ -140,7 +138,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   @override
   void dispose() {
     loc.removeListener(updateMapValues);
-    googleMapController.dispose();
+    googleMapController?.dispose();
     super.dispose();
   }
 
@@ -189,6 +187,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                       //_controller.complete(mapController);
                       googleMapController = mapController;
                       addListener();
+                      getPolylinePoints();
                     }),
                   ),
                   Align(
@@ -260,7 +259,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                                 OutlinedButton(
                                   onPressed: () {
                                     print("object");
-                                    googleMapController.animateCamera(
+                                    googleMapController?.animateCamera(
                                         CameraUpdate.newCameraPosition(
                                       CameraPosition(
                                         zoom: 15.5,
