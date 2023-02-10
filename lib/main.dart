@@ -6,7 +6,7 @@ import 'components/location_service.dart';
 import 'constants.dart';
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
-import 'home_page.dart';
+import 'pages/home_page.dart';
 void main() {
   runApp(const MyApp());
 }

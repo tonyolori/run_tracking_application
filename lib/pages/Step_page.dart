@@ -76,13 +76,7 @@ class _RunTrackingState extends State<RunTracking> {
                   ),),
                 ],
               ),
-              Container(
-                decoration: BoxDecoration(color: Colors.red),
-                child: SizedBox(
-                  height: 100,
-                  width: 30,
-                ),
-              ),
+             
               SizedBox(
                 height: kBoxSize,
                 width: kBoxSize,

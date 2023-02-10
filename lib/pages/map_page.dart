@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'components/location_service.dart';
-import 'constants.dart';
+import '../components/location_service.dart';
+import '../constants.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' show cos, sqrt, asin;
 
@@ -105,7 +105,8 @@ class MapTrackingPageState extends State<MapTrackingPage> {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       }
     }
-    setState(() {});
+    if(mounted)
+      setState(() {});
   }
 
   void setCustomMarkerIcon() {
@@ -143,6 +144,8 @@ class MapTrackingPageState extends State<MapTrackingPage> {
     super.dispose();
   }
 
+//final stopwatch = Stopwatch();
+//stopwatch.start();
   @override
   Widget build(BuildContext context) {
     userLocation = context.read<LocationService>().currentlocation;
@@ -280,8 +283,10 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                                 ),
                                 OutlinedButton(
                                   onPressed: () {},
-                                  child: Icon(Icons.my_location,
-                                  color: Colors.black,),
+                                  child: Icon(
+                                    Icons.my_location,
+                                    color: Colors.black,
+                                  ),
                                 )
                               ],
                             ),

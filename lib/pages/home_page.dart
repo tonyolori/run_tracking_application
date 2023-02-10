@@ -1,12 +1,13 @@
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'components/location_service.dart';
-import 'constants.dart';
+import '../components/location_service.dart';
+import '../constants.dart';
 import 'Step_page.dart';
 import 'package:flutter/material.dart';
 import 'map_page.dart';
 import 'package:pedometer/pedometer.dart';
 import 'settings_page.dart';
+import 'progress_page.dart';
 
 
 class Homepage extends StatefulWidget {
@@ -23,6 +24,7 @@ class _HomepageState extends State<Homepage> {
     MapTrackingPage(),
     RunTracking(),
     SettingsPage(),
+    ProgressPage(),
   ];
   askPermission() async {
     // var status = await Permission.camera.status;
@@ -61,6 +63,11 @@ class _HomepageState extends State<Homepage> {
                 selectedIcon: Icon(Icons.bookmark),
                 icon: Icon(Icons.bookmark_border),
                 label: 'Saved',
+              ),
+              NavigationDestination(
+                selectedIcon: Icon(Icons.legend_toggle),
+                icon: Icon(Icons.monitor),
+                label: 'Progress',
               ),
             ]),
         body: _screens[selectedIndex],

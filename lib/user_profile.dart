@@ -1,9 +1,12 @@
 import 'dart:math';
+
 class UserProfile {
   String name;
   int age;
   double height;
   double weight;
+  bool liveTrackingEnabled = true;
+  
 
   late double BMI;
 
@@ -12,8 +15,7 @@ class UserProfile {
     required this.age,
     required this.height,
     required this.weight,
-  }){
-   BMI = weight / pow(height / 100, 2); 
+  }) {
+    BMI = weight / pow(height / 100, 2);
   }
 }
-
