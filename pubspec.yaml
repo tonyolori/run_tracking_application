@@ -50,6 +50,7 @@ dependencies:
   step_progress_indicator: ^1.0.2
   settings_ui: ^2.0.2
   d_chart: ^2.0.2
+  shared_preferences: ^2.0.17
 
 dev_dependencies:
   flutter_test:

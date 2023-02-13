@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../components/location_service.dart';
 import '../constants.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,8 @@ class MapTrackingPage extends StatefulWidget {
   @override
   State<MapTrackingPage> createState() => MapTrackingPageState();
 }
+
+bool liveTrackingToggle = true;
 
 class MapTrackingPageState extends State<MapTrackingPage> {
   //late var loc;
@@ -54,22 +57,24 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   void updateMapValues() {
     userLocation = context.read<LocationService>().currentlocation;
     liveCoordinates.add(userLocation!.latLng());
-    if (liveCoordinates.length > 2) {
-      print(getDistance(
-          liveCoordinates[liveCoordinates.length - 2].latitude,
-          liveCoordinates[liveCoordinates.length - 2].longitude,
-          liveCoordinates[liveCoordinates.length - 1].latitude,
-          liveCoordinates[liveCoordinates.length - 1].longitude));
-    }
-    googleMapController?.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-        zoom: 15.5,
-        target: LatLng(
-          userLocation!.latitude,
-          userLocation!.longitude,
+    // if (liveCoordinates.length > 2) {
+    //   print(getDistance(
+    //       liveCoordinates[liveCoordinates.length - 2].latitude,
+    //       liveCoordinates[liveCoordinates.length - 2].longitude,
+    //       liveCoordinates[liveCoordinates.length - 1].latitude,
+    //       liveCoordinates[liveCoordinates.length - 1].longitude));
+    // }
+    if (liveTrackingToggle) {
+      googleMapController?.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+          zoom: 15.5,
+          target: LatLng(
+            userLocation!.latitude,
+            userLocation!.longitude,
+          ),
         ),
-      ),
-    ));
+      ));
+    }
     setState(() {});
   }
 
@@ -126,12 +131,22 @@ class MapTrackingPageState extends State<MapTrackingPage> {
     });
   }
 
+  getBoolValuesSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Return bool
+    liveTrackingToggle = prefs.getBool('liveTrackingToggle') ?? true;
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   var loc;
   @override
   void initState() {
     //setController();
     //setCustomMarkerIcon();
     super.initState();
+    getBoolValuesSF();
     loc = context.read<LocationService>();
   }
 

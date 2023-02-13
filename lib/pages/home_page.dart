@@ -1,14 +1,10 @@
 import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
-import '../components/location_service.dart';
 import '../constants.dart';
 import 'Step_page.dart';
 import 'package:flutter/material.dart';
 import 'map_page.dart';
-import 'package:pedometer/pedometer.dart';
 import 'settings_page.dart';
 import 'progress_page.dart';
-
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -21,10 +17,10 @@ class _HomepageState extends State<Homepage> {
   int selectedIndex = 0;
 
   final List<Widget> _screens = [
-    MapTrackingPage(),
+    const MapTrackingPage(),
     RunTracking(),
-    SettingsPage(),
-    ProgressPage(),
+    const ProgressPage(),
+    const SettingsPage(),
   ];
   askPermission() async {
     // var status = await Permission.camera.status;
@@ -53,21 +49,21 @@ class _HomepageState extends State<Homepage> {
             destinations: const <Widget>[
               NavigationDestination(
                 icon: Icon(Icons.explore),
-                label: 'Explore',
+                label: 'Maps',
               ),
               NavigationDestination(
-                icon: Icon(Icons.commute),
-                label: 'Commute',
-              ),
-              NavigationDestination(
-                selectedIcon: Icon(Icons.bookmark),
-                icon: Icon(Icons.bookmark_border),
-                label: 'Saved',
+                icon: Icon(Icons.commit),
+                label: 'Steps',
               ),
               NavigationDestination(
                 selectedIcon: Icon(Icons.legend_toggle),
                 icon: Icon(Icons.monitor),
                 label: 'Progress',
+              ),
+              NavigationDestination(
+                selectedIcon: Icon(Icons.bookmark),
+                icon: Icon(Icons.bookmark_border),
+                label: 'Settings',
               ),
             ]),
         body: _screens[selectedIndex],

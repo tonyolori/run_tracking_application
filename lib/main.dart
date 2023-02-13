@@ -18,7 +18,10 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
+  var liveTrackingToggle = true;
+
 class _MyAppState extends State<MyApp> {
+  
   @override
   Widget build(BuildContext context) {
     //dynamic locator = LocationService();
@@ -26,6 +29,7 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(create: (_) => LocationService()),
         Provider.value(value: Pedometer),
+        //Provider.value(value: liveTrackingToggle),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
