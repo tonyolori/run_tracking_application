@@ -1,14 +1,14 @@
 // ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:fit_work/constants.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:pedometer/pedometer.dart';
-import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class RunTracking extends StatefulWidget {
+  const RunTracking({super.key});
+
   @override
   _RunTrackingState createState() => _RunTrackingState();
 }
@@ -63,20 +63,21 @@ class _RunTrackingState extends State<RunTracking> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Steps"),),
+          title: Text("Steps"),
+        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Row(
                 children: [
-                  Text("Steps",
-                  style: TextStyle(
-                    fontSize: 48
-                  ),),
+                  Text(
+                    "Steps",
+                    style: TextStyle(fontSize: 48),
+                  ),
                 ],
               ),
-             
+
               SizedBox(
                 height: kBoxSize,
                 width: kBoxSize,
@@ -118,7 +119,10 @@ class _RunTrackingState extends State<RunTracking> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              association(label: "Duration",value:"2000",),
+                              association(
+                                label: "Duration",
+                                value: "2000",
+                              ),
                               association(
                                 label: "Steps",
                                 value: "2000",
@@ -159,9 +163,7 @@ class smallIcon extends StatelessWidget {
       child: Container(
         width: 100,
         height: 70,
-        decoration: BoxDecoration(
-          color: Colors.greenAccent
-        ),
+        decoration: BoxDecoration(color: Colors.greenAccent),
         child: Center(
           child: Row(children: [
             Icon(Icons.local_fire_department),
@@ -176,11 +178,7 @@ class smallIcon extends StatelessWidget {
 class association extends StatelessWidget {
   String label;
   String value;
-  association({
-    super.key, 
-    required this.label,
-    required this.value
-  });
+  association({super.key, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
