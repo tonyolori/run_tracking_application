@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
 
 import 'package:fit_work/constants.dart';
 import 'package:flutter/material.dart';
@@ -26,19 +26,6 @@ class _RunTrackingState extends State<RunTracking> {
   void onStepCount(StepCount event) {
     setState(() {
       _steps = event.steps.toString();
-    });
-  }
-
-  void onPedestrianStatusChanged(PedestrianStatus event) {
-    setState(() {
-      _status = event.status;
-    });
-  }
-
-  void onPedestrianStatusError(error) {
-    print('onPedestrianStatusError: $error');
-    setState(() {
-      _status = 'Pedestrian Status not available';
     });
   }
 

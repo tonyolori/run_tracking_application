@@ -5,15 +5,17 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 class StepService {
-  late var _pedometer;
+  late Stream<StepCount> _pedometer;
   late var _subscription;
   late int todaysteps;
+  late String _steps;
   //void function onstepcount;
 
   void startListening() {
-    _pedometer = Pedometer();
-    _subscription = _pedometer.pedometerStream.listen(
-      getTodaySteps,
+
+    _pedometer = Pedometer.stepCountStream;
+    _subscription = _pedometer.listen(
+      _onStepCount,
       onError: _onError,
       onDone: _onDone,
       cancelOnError: true,
@@ -27,9 +29,12 @@ class StepService {
   void _onDone() => print("Finished pedometer tracking");
   void _onError(error) => print("Flutter Pedometer Error: $error");
 
+  void _onStepCount(StepCount event) {
+      _steps = event.steps.toString();
+  }
+
   Future<int> getTodaySteps(int value) async {
     print(value);
-    int savedStepsCountKey = 999999;
     int savedStepsCount = 0; //TODO: get value from database
 
     int todayDayNo = 0; //=  get value from database
