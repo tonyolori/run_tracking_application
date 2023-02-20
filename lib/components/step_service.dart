@@ -14,7 +14,7 @@ class StepService {
   void startListening() {
 
     _pedometer = Pedometer.stepCountStream;
-    _subscription = _pedometer.listen(
+    _subscription = _pedometer.listen( 
       _onStepCount,
       onError: _onError,
       onDone: _onDone,

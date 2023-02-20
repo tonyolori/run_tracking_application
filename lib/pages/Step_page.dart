@@ -4,7 +4,11 @@ import 'package:fit_work/constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:pedometer/pedometer.dart';
+import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:fit_work/components/step_service.dart';
+import '../database/step_data.dart' as database;
 
 class RunTracking extends StatefulWidget {
   const RunTracking({super.key});
@@ -62,6 +66,18 @@ class _RunTrackingState extends State<RunTracking> {
                     "Steps",
                     style: TextStyle(fontSize: 48),
                   ),
+                  OutlinedButton(
+                    onPressed: () async {
+                      database.innit();
+                      var step = database.Step(
+                        id: 0,
+                        stepCount: "1273",
+                      );
+                      //database.insertStep(step);
+                      print(await database.Steps());
+                    },
+                    child: Text("press me"),
+                  )
                 ],
               ),
 
