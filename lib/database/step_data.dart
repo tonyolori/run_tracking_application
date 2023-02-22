@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+late Future<Database> database;
+
 void main() async {
   // Open the database and store the reference.
   innit();
@@ -10,7 +12,7 @@ void main() async {
   // Create a step and add it to the steps table
   var fido = Step(
     id: 0,
-    stepCount: "1273",
+    stepCount: 1273,
   );
 
   await insertStep(fido);
@@ -21,7 +23,7 @@ void main() async {
   // Update Fido's age and save it to the database.
   fido = Step(
     id: 0,
-    stepCount: "990",
+    stepCount: 990,
   );
   //await updateStep(fido);
 
@@ -50,19 +52,14 @@ Future<void> deleteStep(int id) async {
   );
 }
 
-void innit() async {
-  final database = openDatabase(
+Future<void> innit() async {
+  database = openDatabase(
     // Set the path to the database. Note: Using the `join` function from the
     // `path` package is best practice to ensure the path is correctly
     // constructed for each platform.
     join(await getDatabasesPath(), 'fitwork_database.db'),
     // When the database is first created, create a table to store dogs.
-    onCreate: (db, version) {
-      // Run the CREATE TABLE statement on the database.
-      return db.execute(
-        'CREATE TABLE stepTable(id INT AUTO_INCREMENT PRIMARY KEY, steps INT, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP);',
-      );
-    },
+    onCreate: _oncreate,
     // Set the version. This executes the onCreate function and provides a
     // path to perform database upgrades and downgrades.
     version: 1,
@@ -70,48 +67,49 @@ void innit() async {
   print("innited");
 }
 
+_oncreate(db, version) {
+  // Run the CREATE TABLE statement on the database.
+  return db.execute(
+    'CREATE TABLE stepTable(id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, steps INT, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP);',
+  );
+}
+
+void dropTable() async {
+  var db = await database;
+  db.execute('drop table stepTable');
+  print("table dropped");
+}
+
+Future<bool> createTable() async {
+  var db = await database;
+  if (await db.query('sqlite_master',
+          where: 'name = ?', whereArgs: ['stepTable']) ==
+      []) {
+    _oncreate(db, 1);
+  }
+  return true;
+}
+
 // Define a function that inserts dogs into the database
 Future<void> insertStep(Step stepdata) async {
   // Get a reference to the database.
-  final db = await openDatabase(
-      // Set the path to the database. Note: Using the `join` function from the
-      // `path` package is best practice to ensure the path is correctly
-      // constructed for each platform.
-      join(await getDatabasesPath(), 'fitwork_database.db'),
-
-      version: 1, onOpen: (db) {
-    print("database opened");
-  }, onCreate: (db, version) {
-    // Run the CREATE TABLE statement on the database.
-    print("asdfhalskfhlashhfjas");
-  }, onConfigure: (db) {
-    print("yellowstone");
-  });
+  final db = await database;
 
   // Insert the Dog into the correct table. You might also specify the
   // `conflictAlgorithm` to use in case the same dog is inserted twice.
   //
   // In this case, replace any previous data.
-  await db.insert(
-    'stepTable',
-    //stepdata.toMap(),
-    {'id': 0, 'steps': 123213, 'timestamp': "'2008-01-01 00:00:01'"},
-    conflictAlgorithm: ConflictAlgorithm.replace,
-  );
+  await createTable();
+  // await db.insert(
+  //   'stepTable',
+  //   stepdata.toMap(),
+  //   conflictAlgorithm: ConflictAlgorithm.replace,
+  // );
 }
 
 Future<List<Step>> Steps() async {
   // Get a reference to the database.
-  final db = await openDatabase(
-    join(await getDatabasesPath(), 'fitwork_database.db'),
-    onOpen: (db) {
-      print("database opened");
-    },
-    onCreate: (db, version) {
-      print("new created");
-    },
-    version: 1,
-  );
+  final db = await database;
 
   // Query the table for all The Dogs.
   final List<Map<String, dynamic>> maps = await db.query('stepTable');
@@ -127,16 +125,14 @@ Future<List<Step>> Steps() async {
 
 class Step {
   int id;
-  final String stepCount;
-  late DateTime? timeStamp;
+  final int stepCount;
+  String? timeStamp;
 
   Step({
     required this.id,
     required this.stepCount,
     this.timeStamp,
-  }) {
-    timeStamp ??= DateTime.now();
-  }
+  });
 
   //DateTime get timeStamp => _timeStamp;
 
@@ -154,7 +150,7 @@ class Step {
   // each dog when using the print statement.
   @override
   String toString() {
-    return 'Step{name: $stepCount, time: $timeStamp}';
+    return 'Step{id:$id name: $stepCount, time: $timeStamp}';
   }
 }
 

@@ -68,13 +68,20 @@ class _RunTrackingState extends State<RunTracking> {
                   ),
                   OutlinedButton(
                     onPressed: () async {
-                      database.innit();
+                      await database.innit();
                       var step = database.Step(
                         id: 0,
-                        stepCount: "1273",
+                        stepCount: 1273,
                       );
-                      //database.insertStep(step);
+                      var step2 = database.Step(
+                        id: 1,
+                        stepCount: 12723,
+                      );
+                      database.insertStep(step);
+                      await database.insertStep(step2);
+
                       print(await database.Steps());
+                      //database.dropTable();
                     },
                     child: Text("press me"),
                   )
