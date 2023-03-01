@@ -56,6 +56,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
   void updateMapValues() {
     userLocation = context.read<LocationService>().currentlocation;
+    
     liveCoordinates.add(userLocation!.latLng());
     // if (liveCoordinates.length > 2) {
     //   print(getDistance(
@@ -131,9 +132,10 @@ class MapTrackingPageState extends State<MapTrackingPage> {
     });
   }
 
+  //shared preferences
   getBoolValuesSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    //Return bool
+
     liveTrackingToggle = prefs.getBool('liveTrackingToggle') ?? true;
     if (mounted) {
       setState(() {});

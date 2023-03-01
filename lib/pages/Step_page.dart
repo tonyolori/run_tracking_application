@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:fit_work/components/step_service.dart';
+import '../database/step.dart' as stepClass;
 import '../database/step_data.dart' as database;
 
 class RunTracking extends StatefulWidget {
@@ -69,19 +70,19 @@ class _RunTrackingState extends State<RunTracking> {
                   OutlinedButton(
                     onPressed: () async {
                       await database.innit();
-                      var step = database.Step(
-                        id: 0,
+                      var step = stepClass.Step(
                         stepCount: 1273,
                       );
-                      var step2 = database.Step(
-                        id: 1,
+                      var step2 = stepClass.Step(
                         stepCount: 12723,
+                        time: DateTime.now(),
                       );
-                      database.insertStep(step);
+                      await database.insertStep(step);
+                      await database.insertStep(step);
                       await database.insertStep(step2);
-
-                      print(await database.Steps());
-                      //database.dropTable();
+                      database.getStep(2023, 3, 1);
+                      //database.getStepsInMonth(2);
+                      //print( await database.getAllSteps());
                     },
                     child: Text("press me"),
                   )
