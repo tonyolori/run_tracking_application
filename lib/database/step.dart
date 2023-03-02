@@ -1,4 +1,5 @@
 const String tableName = 'stepTable';
+const String fakeTableName = "ahsdfh";
 const String columnStepCount = 'steps';
 const String columnTime = 'time';
 const String columnYear = 'year';
@@ -7,24 +8,19 @@ const String columnDay = 'day';
 
 class Step {
   final int stepCount;
-  DateTime? time;
-  int? year;
-  int? month;
-  int? day;
+  DateTime time;
+  late int year;
+  late int month;
+  late int day;
 
   Step({
     required this.stepCount,
-    this.time,
-    this.year,
-    this.month,
-    this.day,
+    required this.time,
   }) {
-    if (time == null) {
-      time = DateTime.now();
-      year = time?.year;
-      month = time?.month;
-      day = time?.day;
-    }
+    time = DateTime.now();
+    year = time.year;
+    month = time.month;
+    day = time.day;
   }
 
   //DateTime get timeStamp => _timeStamp;
@@ -37,9 +33,9 @@ class Step {
         columnStepCount: stepCount,
       };
     }
-    year = time?.year;
-    month = time?.month;
-    day = time?.day;
+    year = time.year;
+    month = time.month;
+    day = time.day;
     return {
       columnStepCount: stepCount,
       columnTime: time.toString(),

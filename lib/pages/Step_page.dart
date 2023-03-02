@@ -71,16 +71,19 @@ class _RunTrackingState extends State<RunTracking> {
                     onPressed: () async {
                       await database.innit();
                       var step = stepClass.Step(
-                        stepCount: 1273,
+                        stepCount: 1273222,
+                        time: DateTime.now(),
                       );
                       var step2 = stepClass.Step(
                         stepCount: 12723,
                         time: DateTime.now(),
                       );
-                      await database.insertStep(step);
-                      await database.insertStep(step);
-                      await database.insertStep(step2);
-                      database.getStep(2023, 3, 1);
+                      database.createTable();
+                      print("object");
+                      // await database.insertStep(step);
+                      // await database.insertStep(step);
+                      // await database.insertStep(step2);
+                      // print(database.getStep(2023, 3, 1));
                       //database.getStepsInMonth(2);
                       //print( await database.getAllSteps());
                     },

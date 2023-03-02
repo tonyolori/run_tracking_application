@@ -80,9 +80,15 @@ void dropTable() async {
 
 Future<bool> createTable() async {
   var db = await database;
+  // await db.query('sqlite_master', where: 'name = ?', whereArgs: [tableName]) ==
+  //     [];
+  //!hack, rough work also untested
   if (await db
           .query('sqlite_master', where: 'name = ?', whereArgs: [tableName]) ==
-      []) {
+      await db
+          .query('sqlite_master', where: 'name = ?', whereArgs: [fakeTableName])) {
+    print("oncreated");
+
     _oncreate(db, 1);
   }
   return true;
@@ -95,6 +101,16 @@ Future<void> insertStep(Step stepdata) async {
 
   await createTable();
 
+  List<Step> duplicateStep =
+      await getStep(stepdata.year, stepdata.month, stepdata.day);
+  print(duplicateStep);
+
+  if (duplicateStep.isNotEmpty &  
+  (duplicateStep[0].stepCount > stepdata.stepCount)) {
+    //!this dosenet work yet
+    print("checked, better");
+    return;
+  }
   await db.insert(
     tableName,
     stepdata.toMap(),
@@ -113,7 +129,7 @@ Future<List<Step>> getAllSteps() async {
   return _convertToStepList(maps);
 }
 
-getStep(int year, int month, int day) async {
+Future<List<Step>> getStep(int year, int month, int day) async {
   final db = await database;
 
   final List<Map<String, dynamic>> maps = await db.rawQuery(
@@ -138,15 +154,12 @@ Future<List<Step>> getStepsInMonth(int month) async {
 }
 
 // Convert the Liste<Map<String, dynamic> into a List<step>.
-_convertToStepList(List<Map<String, dynamic>> maps) {
+List<Step> _convertToStepList(List<Map<String, dynamic>> maps) {
   return List.generate(maps.length, (i) {
-    DateTime? time = DateTime.tryParse(maps[i][columnTime]);
+    DateTime time = DateTime.parse(maps[i][columnTime]);
     return Step(
       stepCount: maps[i][columnStepCount] ?? -1,
       time: time,
-      year: time?.year,
-      month: time?.month,
-      day: time?.day,
     );
   });
 }
