@@ -82,15 +82,9 @@ Future<bool> createTable() async {
   var db = await database;
   // await db.query('sqlite_master', where: 'name = ?', whereArgs: [tableName]) ==
   //     [];
-  //!hack, rough work also untested
-  if (await db
-          .query('sqlite_master', where: 'name = ?', whereArgs: [tableName]) ==
-      await db
-          .query('sqlite_master', where: 'name = ?', whereArgs: [fakeTableName])) {
-    print("oncreated");
 
-    _oncreate(db, 1);
-  }
+  _oncreate(db, 1);
+
   return true;
 }
 
@@ -99,18 +93,15 @@ Future<void> insertStep(Step stepdata) async {
   // Get a reference to the database.
   final db = await database;
 
-  await createTable();
-
   List<Step> duplicateStep =
       await getStep(stepdata.year, stepdata.month, stepdata.day);
-  print(duplicateStep);
 
-  if (duplicateStep.isNotEmpty &  
-  (duplicateStep[0].stepCount > stepdata.stepCount)) {
-    //!this dosenet work yet
-    print("checked, better");
+  if ((duplicateStep.isNotEmpty) &&
+      (duplicateStep[0].stepCount > stepdata.stepCount)) {
+    print("stepdata: checked, stored count is better");
     return;
   }
+
   await db.insert(
     tableName,
     stepdata.toMap(),
@@ -131,9 +122,15 @@ Future<List<Step>> getAllSteps() async {
 
 Future<List<Step>> getStep(int year, int month, int day) async {
   final db = await database;
-
-  final List<Map<String, dynamic>> maps = await db.rawQuery(
-      'SELECT * FROM $tableName WHERE $columnYear = $year and $columnMonth = $month and  $columnDay = $day');
+  List<Map<String, dynamic>> maps = [];
+  try {
+    maps = await db.rawQuery(
+        'SELECT * FROM $tableName WHERE $columnYear = $year and $columnMonth = $month and  $columnDay = $day');
+  }catch (e) {
+    await createTable();
+    maps = await db.rawQuery(
+        'SELECT * FROM $tableName WHERE $columnYear = $year and $columnMonth = $month and  $columnDay = $day');
+  }
 
   return _convertToStepList(maps);
 }
