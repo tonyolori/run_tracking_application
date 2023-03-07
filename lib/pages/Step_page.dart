@@ -10,6 +10,7 @@ import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:fit_work/components/step_service.dart';
 import '../database/step.dart' as stepClass;
 import '../database/step_data.dart' as database;
+import '../components/step_helper.dart' as helper;
 
 class RunTracking extends StatefulWidget {
   const RunTracking({super.key});
@@ -69,6 +70,9 @@ class _RunTrackingState extends State<RunTracking> {
                   ),
                   OutlinedButton(
                     onPressed: () async {
+                      print(DateTime.now());
+                      helper.fillDatabase();
+
                     },
                     child: Text("press me"),
                   )

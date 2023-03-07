@@ -89,7 +89,7 @@ Future<bool> createTable() async {
 }
 
 // Define a function that inserts dogs into the database
-Future<void> insertStep(Step stepdata) async {
+Future<bool> insertStep(Step stepdata) async {
   // Get a reference to the database.
   final db = await database;
 
@@ -98,8 +98,8 @@ Future<void> insertStep(Step stepdata) async {
 
   if ((duplicateStep.isNotEmpty) &&
       (duplicateStep[0].stepCount > stepdata.stepCount)) {
-    print("stepdata: checked, stored count is better");
-    return;
+    print("stepdata: checked, stored count is better, value discardeded");
+    return false;
   }
 
   await db.insert(
@@ -107,6 +107,7 @@ Future<void> insertStep(Step stepdata) async {
     stepdata.toMap(),
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
+  return true;
 }
 
 Future<List<Step>> getAllSteps() async {
@@ -117,7 +118,7 @@ Future<List<Step>> getAllSteps() async {
   final List<Map<String, dynamic>> maps = await db.query(tableName);
 
   // Convert the List<Map<String, dynamic> into a List<step>.
-  return _convertToStepList(maps);
+  return convertToStepList(maps);
 }
 
 Future<List<Step>> getStep(int year, int month, int day) async {
@@ -126,13 +127,15 @@ Future<List<Step>> getStep(int year, int month, int day) async {
   try {
     maps = await db.rawQuery(
         'SELECT * FROM $tableName WHERE $columnYear = $year and $columnMonth = $month and  $columnDay = $day');
-  }catch (e) {
+  } on Exception catch (e) {
+    print(e);
+  } catch (e) {
     await createTable();
     maps = await db.rawQuery(
         'SELECT * FROM $tableName WHERE $columnYear = $year and $columnMonth = $month and  $columnDay = $day');
   }
 
-  return _convertToStepList(maps);
+  return convertToStepList(maps);
 }
 
 Future<List<Step>> getStepsInMonth(int month) async {
@@ -147,11 +150,11 @@ Future<List<Step>> getStepsInMonth(int month) async {
   }).toList();
 
   // Convert the List<Map<String, dynamic> into a List<step>.
-  return _convertToStepList(filteredMaps);
+  return convertToStepList(filteredMaps);
 }
 
 // Convert the Liste<Map<String, dynamic> into a List<step>.
-List<Step> _convertToStepList(List<Map<String, dynamic>> maps) {
+List<Step> convertToStepList(List<Map<String, dynamic>> maps) {
   return List.generate(maps.length, (i) {
     DateTime time = DateTime.parse(maps[i][columnTime]);
     return Step(
