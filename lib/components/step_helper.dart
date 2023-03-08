@@ -1,26 +1,24 @@
+
 import 'package:flutter/material.dart';
 
-import '../database/step_data.dart' as database;
+import '../database/step_data.dart';
 import '../database/step.dart' as step;
 
 class StepHelper with ChangeNotifier {
-  bool databasefilled = false;
+  bool databasefilled = true;
   List<Map<String, dynamic>> constructedbar = _dummyBarData;
   List<Map<String, Object>> barData = _dummyBarData[0]['data'];
   List<step.Step> availableSteps = [];
+  late DatabaseCrud database;
 
   //get barData ->
 
   StepHelper() {
-    database.innit();
+    database = DatabaseCrud();
 
     if (!databasefilled) {
       fillDatabase();
     }
-
-    print(availableSteps.isEmpty);
-
-    print(barData);
   }
 
   //this gets the values from db so it can be displayed in progress page
@@ -41,6 +39,7 @@ class StepHelper with ChangeNotifier {
     for (int i = 0; i < steps.length; i++) {
       database.insertStep(steps[i]);
     }
+
     return;
   }
 

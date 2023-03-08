@@ -1,7 +1,9 @@
+import 'package:fit_work/components/step_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:d_chart/d_chart.dart';
+import 'package:provider/provider.dart';
 import '../components/step_helper.dart';
 
 class ProgressPage extends StatefulWidget {
@@ -22,7 +24,7 @@ class _ProgressPageState extends State<ProgressPage> {
         child: AspectRatio(
           aspectRatio: 4/3,
           child: DChartBar(
-          data: ,
+          data: context.read<StepHelper>().constructedbar,
           domainLabelPaddingToAxisLine: 16,
           axisLineTick: 2,
           axisLinePointTick: 2,

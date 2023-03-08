@@ -8,9 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:fit_work/components/step_service.dart';
-import '../database/step.dart' as stepClass;
-import '../database/step_data.dart' as database;
+import '../database/step_data.dart';
 import '../components/step_helper.dart' as helper;
+import '../database/step.dart' as step;
 
 class RunTracking extends StatefulWidget {
   const RunTracking({super.key});
@@ -22,6 +22,7 @@ class RunTracking extends StatefulWidget {
 class _RunTrackingState extends State<RunTracking> {
   late Stream<StepCount> _stepCountStream;
   String _status = '?', _steps = '?';
+  late DatabaseCrud database;
 
   @override
   void initState() {
@@ -70,8 +71,19 @@ class _RunTrackingState extends State<RunTracking> {
                   ),
                   OutlinedButton(
                     onPressed: () async {
-                  
-
+                      database = DatabaseCrud();
+                      database.insertStep(
+                        step.Step(
+                          stepCount: 3330,
+                          time: DateTime.now(),
+                        ),
+                      );
+                      database.insertStep(
+                        step.Step(
+                          stepCount: 3330,
+                          time: DateTime.now(),
+                        ),
+                      );
                     },
                     child: Text("press me"),
                   )
