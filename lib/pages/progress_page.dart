@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:d_chart/d_chart.dart';
+import '../components/step_helper.dart';
 
 class ProgressPage extends StatefulWidget {
   const ProgressPage({super.key});
@@ -21,25 +22,7 @@ class _ProgressPageState extends State<ProgressPage> {
         child: AspectRatio(
           aspectRatio: 4/3,
           child: DChartBar(
-          data: const [
-              {
-                  'id': 'Bar',
-                  'data': [
-                      {'domain': 'jan', 'measure': 3},
-                      {'domain': 'feb', 'measure': 4},
-                      {'domain': 'march', 'measure': 6},
-                      {'domain': 'april', 'measure': 0.3},
-                      {'domain': 'may', 'measure': 3},
-                      {'domain': 'june', 'measure': 4},
-                      {'domain': 'july', 'measure': 6},
-                      {'domain': 'Aug', 'measure': 0.3},
-                      {'domain': 'Sept', 'measure': 3},
-                      {'domain': 'Oct', 'measure': 4},
-                      {'domain': 'Nov', 'measure': 6},
-                      {'domain': 'Dec', 'measure': 0.3},
-                  ],
-              },
-          ],
+          data: ,
           domainLabelPaddingToAxisLine: 16,
           axisLineTick: 2,
           axisLinePointTick: 2,

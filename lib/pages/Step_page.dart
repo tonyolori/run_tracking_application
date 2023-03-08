@@ -70,8 +70,7 @@ class _RunTrackingState extends State<RunTracking> {
                   ),
                   OutlinedButton(
                     onPressed: () async {
-                      print(DateTime.now());
-                      helper.fillDatabase();
+                  
 
                     },
                     child: Text("press me"),

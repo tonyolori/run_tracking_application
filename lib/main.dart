@@ -1,6 +1,7 @@
 //import 'dart:html';
 // ignore_for_file: avoid_print
 
+import 'package:fit_work/components/step_helper.dart';
 import 'package:provider/provider.dart';
 import 'components/location_service.dart';
 import 'constants.dart';
@@ -32,6 +33,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => LocationService()),
         Provider.value(value: Pedometer),
         Provider.value(value: StepService()),
+        ChangeNotifierProvider(create: (_) => StepHelper()),
         //Provider.value(value: liveTrackingToggle),
       ],
       child: MaterialApp(
