@@ -32,6 +32,7 @@ class DatabaseCrud {
       // path to perform database upgrades and downgrades.
       version: 1,
     );
+    readyState = true;
     print("innited");
   }
 
@@ -96,9 +97,9 @@ class DatabaseCrud {
 
   // Define a function that inserts dogs into the database
   Future<bool> insertStep(Step stepdata) async {
-    if(!readyState){
-    await _innit();
-  }
+    if (!readyState) {
+      await _innit();
+    }
     // Get a reference to the database.
     final db = await database;
 
@@ -107,7 +108,7 @@ class DatabaseCrud {
 
     if ((duplicateStep.isNotEmpty) &&
         (duplicateStep[0].stepCount >= stepdata.stepCount)) {
-      print("stepdata: checked, stored count is better, value discardeded");
+      print("stepdata: checked, stored count is better, value discarded");
       return false;
     }
 
@@ -120,9 +121,9 @@ class DatabaseCrud {
   }
 
   Future<List<Step>> getAllSteps() async {
-    if(!readyState){
-    await _innit();
-  }
+    if (!readyState) {
+      await _innit();
+    }
     // Get a reference to the database.
     final db = await database;
 

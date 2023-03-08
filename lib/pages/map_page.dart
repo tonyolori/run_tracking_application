@@ -100,7 +100,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
   void getPolylinePoints() async {
     PolylinePoints polylinePoints = PolylinePoints();
-
+    // add try catch
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         google_api_key,
         PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
