@@ -17,11 +17,10 @@ class ProgressPage extends StatefulWidget {
 
 class _ProgressPageState extends State<ProgressPage> {
   late DatabaseCrud database;
-  List<Map<String, dynamic>> constructedBar =[];
+  List<Map<String, dynamic>> constructedBar = [];
 
   void addListener() {
     context.read<StepHelper>().addListener(updateBarValues);
-    
   }
 
   void removeListener() {
@@ -32,6 +31,12 @@ class _ProgressPageState extends State<ProgressPage> {
     constructedBar = context.read<StepHelper>().constructedbar;
 
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    addListener();
   }
 
   @override
@@ -46,8 +51,9 @@ class _ProgressPageState extends State<ProgressPage> {
         children: [
           OutlinedButton(
             onPressed: () async {
+              context.read<StepHelper>().fillStepData();
               constructedBar = context.read<StepHelper>().constructedbar;
-              
+              print(constructedBar);
             },
             child: Text("press me"),
           ),
