@@ -3,7 +3,7 @@ import '../database/step_data.dart';
 import '../database/step.dart' as step;
 
 class StepHelper with ChangeNotifier {
-  bool databasefilled = true;
+  bool databasefilled = false;
   List<Map<String, dynamic>> constructedbar = _dummyBarData;
   List<Map<String, Object>> barData = _dummyBarData[0]['data'];
   List<step.Step> availableSteps = [];
@@ -22,10 +22,11 @@ class StepHelper with ChangeNotifier {
 
   //this gets the values from db so it can be displayed in progress page
   fillStepData() async {
+    await fillDatabase();
     availableSteps = await database.getAllSteps();
 
-    for (int i = 0; i < 11; i++) { 
-      barData[i]['domain'] = _toMonthSt(i+1);
+    for (int i = 0; i < 11; i++) {
+      barData[i]['domain'] = _toMonthSt(i + 1);
       barData[i]['measure'] = await _GetStepCountInMonth(i + 1);
     }
     constructedbar[0]['data'] = barData;
@@ -35,7 +36,7 @@ class StepHelper with ChangeNotifier {
   _GetStepCountInMonth(int month) async {
     int stepcount = 0;
 
-    if (month < 0 || month > 12) return 0;
+    if (month < 1 || month > 12) return 0;
 
     var stepsInMonth = await database.getStepsInMonth(month);
     for (int i = 0; i < stepsInMonth.length; i++) {
@@ -47,10 +48,15 @@ class StepHelper with ChangeNotifier {
   Future<void> fillDatabase() async {
     var steps = database.convertToStepList(maps);
 
+     if (!database.readyState) {
+      await database.innit();
+    }
     for (int i = 0; i < steps.length; i++) {
       database.insertStep(steps[i]);
     }
 
+    databasefilled = true;
+    print("db filled");
     return;
   }
 
@@ -145,7 +151,7 @@ List<Map<String, dynamic>> _dummyBarData = [
 
 List<Map<String, dynamic>> maps = [
   {
-    step.columnStepCount: 1300,
+    step.columnStepCount: 1900,
     step.columnTime: "2023-01-01 18:08:46.385056",
   },
   {

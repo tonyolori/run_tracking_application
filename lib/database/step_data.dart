@@ -17,10 +17,10 @@ class DatabaseCrud {
   late Future<Database> database;
 
   DatabaseCrud() {
-    _innit();
+    innit();
   }
 
-  Future<void> _innit() async {
+  Future<void> innit() async {
     database = openDatabase(
       // Set the path to the database. Note: Using the `join` function from the
       // `path` package is best practice to ensure the path is correctly
@@ -97,9 +97,9 @@ class DatabaseCrud {
 
   // Define a function that inserts dogs into the database
   Future<bool> insertStep(Step stepdata) async {
-    if (!readyState) {
-      await _innit();
-    }
+    // if (!readyState) {
+    //   await innit();
+    // }
     // Get a reference to the database.
     final db = await database;
 
@@ -122,7 +122,7 @@ class DatabaseCrud {
 
   Future<List<Step>> getAllSteps() async {
     if (!readyState) {
-      await _innit();
+      await innit();
     }
     // Get a reference to the database.
     final db = await database;

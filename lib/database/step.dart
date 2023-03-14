@@ -17,7 +17,7 @@ class Step {
     required this.stepCount,
     required this.time,
   }) {
-    time = DateTime.now();
+    //time = DateTime.now();
     year = time.year;
     month = time.month;
     day = time.day;
@@ -28,11 +28,11 @@ class Step {
   // Convert a Dog into a Map. The keys must correspond to the names of the
   // columns in the database.
   Map<String, dynamic> toMap() {
-    if (time == null) {
-      return {
-        columnStepCount: stepCount,
-      };
-    }
+    // if (time == null) {
+    //   return {
+    //     columnStepCount: stepCount,
+    //   };
+    // }
     year = time.year;
     month = time.month;
     day = time.day;

@@ -31,12 +31,19 @@ class _ProgressPageState extends State<ProgressPage> {
     constructedBar = context.read<StepHelper>().constructedbar;
 
     setState(() {});
+    print("ProgressPage:notified");
   }
 
   @override
   void initState() {
     super.initState();
     addListener();
+  }
+
+  @override
+  void dispose() {
+    removeListener();
+    super.dispose();
   }
 
   @override
