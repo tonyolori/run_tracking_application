@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../database/step_data.dart';
 import '../database/step.dart' as step;
+import 'package:pedometer/pedometer.dart';
 
 class StepHelper with ChangeNotifier {
   bool databasefilled = false;
@@ -8,6 +10,11 @@ class StepHelper with ChangeNotifier {
   List<Map<String, Object>> barData = _dummyBarData[0]['data'];
   List<step.Step> availableSteps = [];
   late DatabaseCrud database;
+  //db
+  late Stream<StepCount> _pedometer;
+  late var _subscription;
+  late int todaysteps;
+  late String _steps;
 
   //get barData ->
 
@@ -18,7 +25,31 @@ class StepHelper with ChangeNotifier {
       fillDatabase();
     }
     fillStepData();
+    startListening();
   }
+  void startListening() async {
+    await Permission.activityRecognition.request().isGranted;
+    _pedometer = Pedometer.stepCountStream;
+    _subscription = _pedometer.listen(
+      _onStepCount,
+      onError: _onError,
+      onDone: _onDone,
+      cancelOnError: true,
+    );
+  }
+
+  void stopListening() {
+    _subscription.cancel();
+  }
+
+  void _onDone() => print("Finished pedometer tracking");
+  void _onError(error) => print("Flutter Pedometer Error: $error");
+
+  void _onStepCount(StepCount event) {
+    _steps = event.steps.toString();
+    print(_steps);
+  }
+  //****************** db functions */
 
   //this gets the values from db so it can be displayed in progress page
   fillStepData() async {

@@ -27,7 +27,7 @@ class _statisticsPageState extends State<statisticsPage> {
                 iconlabel: Icons.bolt_outlined,
                 mainString: "0",
                 labelString: "Activities",
-                iconlabel2: Icons.bolt_outlined,
+                iconlabel2: Icons.local_fire_department,
                 mainString2: "0",
                 labelString2: "Calories",
               ),

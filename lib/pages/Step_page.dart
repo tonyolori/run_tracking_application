@@ -33,7 +33,6 @@ class _RunTrackingState extends State<RunTracking> {
   void onStepCount(StepCount event) {
     setState(() {
       _steps = event.steps.toString();
-      
     });
   }
 
@@ -45,10 +44,10 @@ class _RunTrackingState extends State<RunTracking> {
   }
 
   void initPlatformState() {
-    _stepCountStream = Pedometer.stepCountStream;
-    //Pedometer _pedometer = Provider.of<Pedometer>(context, listen: false);
-    //_stepCountStream = _pedometer.stepCountStream;
-    _stepCountStream.listen(onStepCount).onError(onStepCountError);
+    // _stepCountStream = Pedometer.stepCountStream;
+    ////Pedometer _pedometer = Provider.of<Pedometer>(context, listen: false);
+    ////_stepCountStream = _pedometer.stepCountStream;
+    //_stepCountStream.listen(onStepCount).onError(onStepCountError);
 
     if (!mounted) return;
   }
@@ -68,8 +67,7 @@ class _RunTrackingState extends State<RunTracking> {
                     style: TextStyle(fontSize: 48),
                   ),
                   OutlinedButton(
-                    onPressed: () async {
-                    },
+                    onPressed: () async {},
                     child: Text("press me"),
                   )
                 ],

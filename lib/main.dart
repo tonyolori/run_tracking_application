@@ -34,13 +34,14 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => LocationService()),
         Provider.value(value: Pedometer),
         Provider.value(value: StepService()),
-        ChangeNotifierProvider(create: (_) => StepHelper()),
+        ChangeNotifierProvider(create: (_) => StepHelper(),
+        lazy: false,),
         //Provider.value(value: liveTrackingToggle),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
           theme: lightTheme,
-          home:  const statisticsPage(),
+          home:  const Homepage(),
     ));
   }
 }
