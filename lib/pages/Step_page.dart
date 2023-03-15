@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:fit_work/components/step_service.dart';
+import '../components/step_helper.dart';
 import '../database/step_data.dart';
 import '../components/step_helper.dart' as helper;
 import '../database/step.dart' as step;
@@ -49,11 +50,13 @@ class _RunTrackingState extends State<RunTracking> {
     ////_stepCountStream = _pedometer.stepCountStream;
     //_stepCountStream.listen(onStepCount).onError(onStepCountError);
 
+    _steps = context.read<StepHelper>().steps;
     if (!mounted) return;
   }
 
   @override
   Widget build(BuildContext context) {
+    print(((int.parse(_steps)* 100) ~/ 8000 ));
     return SafeArea(
       child: Scaffold(
         body: Center(
@@ -79,7 +82,7 @@ class _RunTrackingState extends State<RunTracking> {
                   children: [
                     CircularStepProgressIndicator(
                       totalSteps: 100,
-                      currentStep: 50,
+                      currentStep: ((int.parse(_steps)* 100) ~/ 8000 ),
                       stepSize: 15,
                       selectedColor: Colors.greenAccent,
                       unselectedColor: Colors.grey[200],
@@ -92,9 +95,9 @@ class _RunTrackingState extends State<RunTracking> {
                       selectedStepSize: 15,
                       roundedCap: (_, __) => true,
                     ),
-                    const Center(
+                    Center(
                       child: Text(
-                        "2000",
+                        _steps,
                         style: TextStyle(
                           height: null,
                           fontSize: 70,
@@ -115,11 +118,11 @@ class _RunTrackingState extends State<RunTracking> {
                             children: [
                               association(
                                 label: "Duration",
-                                value: "2000",
+                                value: "5H",
                               ),
                               association(
                                 label: "Steps",
-                                value: "2000",
+                                value: _steps,
                               ),
                             ],
                           ),

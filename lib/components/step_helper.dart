@@ -13,8 +13,8 @@ class StepHelper with ChangeNotifier {
   //db
   late Stream<StepCount> _pedometer;
   late var _subscription;
-  late int todaysteps;
-  late String _steps;
+  int todaysteps = 0;
+  String steps ="0";
 
   //get barData ->
 
@@ -46,8 +46,8 @@ class StepHelper with ChangeNotifier {
   void _onError(error) => print("Flutter Pedometer Error: $error");
 
   void _onStepCount(StepCount event) {
-    _steps = event.steps.toString();
-    print(_steps);
+    steps = event.steps.toString();
+    print(steps);
   }
   //****************** db functions */
 
