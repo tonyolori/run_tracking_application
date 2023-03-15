@@ -23,6 +23,7 @@ class StepHelper with ChangeNotifier {
   //this gets the values from db so it can be displayed in progress page
   fillStepData() async {
     await fillDatabase();
+
     availableSteps = await database.getAllSteps();
 
     for (int i = 0; i < 11; i++) {
@@ -48,7 +49,7 @@ class StepHelper with ChangeNotifier {
   Future<void> fillDatabase() async {
     var steps = database.convertToStepList(maps);
 
-     if (!database.readyState) {
+    if (!database.readyState) {
       await database.innit();
     }
     for (int i = 0; i < steps.length; i++) {
@@ -173,5 +174,17 @@ List<Map<String, dynamic>> maps = [
   {
     step.columnStepCount: 1300,
     step.columnTime: "2023-03-04 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 1200,
+    step.columnTime: "2023-04-01 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 1900,
+    step.columnTime: "2023-05-01 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 2100,
+    step.columnTime: "2023-06-01 18:08:46.385056",
   },
 ];

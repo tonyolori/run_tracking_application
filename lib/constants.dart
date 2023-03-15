@@ -14,6 +14,12 @@ TextStyle labelStyle = const TextStyle(
   fontFamily: 'General Sans',
   fontWeight: FontWeight.w400,
 );
+TextStyle labelBold = const TextStyle(
+  color: Colors.black, //ColorConstant.gray900,
+  fontSize: 16,
+  fontFamily: 'General Sans',
+  fontWeight: FontWeight.bold,
+);
 
 // TextStyle(
 //                                     color: Colors.grey,

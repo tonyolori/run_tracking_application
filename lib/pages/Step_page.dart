@@ -33,6 +33,7 @@ class _RunTrackingState extends State<RunTracking> {
   void onStepCount(StepCount event) {
     setState(() {
       _steps = event.steps.toString();
+      
     });
   }
 
@@ -56,9 +57,6 @@ class _RunTrackingState extends State<RunTracking> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text("Steps"),
-        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -71,25 +69,11 @@ class _RunTrackingState extends State<RunTracking> {
                   ),
                   OutlinedButton(
                     onPressed: () async {
-                      database = DatabaseCrud();
-                      database.insertStep(
-                        step.Step(
-                          stepCount: 3330,
-                          time: DateTime.now(),
-                        ),
-                      );
-                      database.insertStep(
-                        step.Step(
-                          stepCount: 3330,
-                          time: DateTime.now(),
-                        ),
-                      );
                     },
                     child: Text("press me"),
                   )
                 ],
               ),
-
               SizedBox(
                 height: kBoxSize,
                 width: kBoxSize,
@@ -150,8 +134,8 @@ class _RunTrackingState extends State<RunTracking> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  smallIcon(),
-                  smallIcon(),
+                  SmallIcon(),
+                  SmallIcon(),
                 ],
               )
               //ElevatedButton(onPressed: onPressed, child: child)
@@ -163,8 +147,8 @@ class _RunTrackingState extends State<RunTracking> {
   }
 }
 
-class smallIcon extends StatelessWidget {
-  const smallIcon({
+class SmallIcon extends StatelessWidget {
+  const SmallIcon({
     Key? key,
   }) : super(key: key);
 

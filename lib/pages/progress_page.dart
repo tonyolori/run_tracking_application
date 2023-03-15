@@ -31,7 +31,6 @@ class _ProgressPageState extends State<ProgressPage> {
     constructedBar = context.read<StepHelper>().constructedbar;
 
     setState(() {});
-    print("ProgressPage:notified");
   }
 
   @override
@@ -42,7 +41,7 @@ class _ProgressPageState extends State<ProgressPage> {
 
   @override
   void dispose() {
-    removeListener();
+    //removeListener();
     super.dispose();
   }
 
