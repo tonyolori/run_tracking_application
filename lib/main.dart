@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
 import 'pages/home_page.dart';
 import 'package:fit_work/components/step_service.dart';
+import 'pages/statistics_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,7 +40,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
           theme: lightTheme,
-          home:  const Homepage(),
+          home:  const statisticsPage(),
     ));
   }
 }

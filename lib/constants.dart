@@ -10,13 +10,13 @@ ThemeData lightTheme = ThemeData.light().copyWith();
 
 TextStyle labelStyle = const TextStyle(
   color: Colors.grey, //ColorConstant.gray900,
-  fontSize: 16,
+  fontSize: 22,
   fontFamily: 'General Sans',
   fontWeight: FontWeight.w400,
 );
 TextStyle labelBold = const TextStyle(
   color: Colors.black, //ColorConstant.gray900,
-  fontSize: 16,
+  fontSize: 24,
   fontFamily: 'General Sans',
   fontWeight: FontWeight.bold,
 );
