@@ -14,7 +14,7 @@ class StepHelper with ChangeNotifier {
   late Stream<StepCount> _pedometer;
   late var _subscription;
   int todaysteps = 0;
-  String steps ="0";
+  String steps = "0";
 
   //get barData ->
 
@@ -47,7 +47,8 @@ class StepHelper with ChangeNotifier {
 
   void _onStepCount(StepCount event) {
     steps = event.steps.toString();
-    print(steps);
+    print("Stephelper:$steps");
+    notifyListeners();
   }
   //****************** db functions */
 

@@ -1,7 +1,5 @@
-import 'package:fit_work/components/step_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:d_chart/d_chart.dart';
 import 'package:provider/provider.dart';
 import '../components/step_helper.dart';
@@ -59,7 +57,6 @@ class _ProgressPageState extends State<ProgressPage> {
             onPressed: () async {
               context.read<StepHelper>().fillStepData();
               constructedBar = context.read<StepHelper>().constructedbar;
-              print(constructedBar);
             },
             child: Text("press me"),
           ),

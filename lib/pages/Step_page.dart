@@ -32,7 +32,7 @@ class _RunTrackingState extends State<RunTracking> {
 
   @override
   Widget build(BuildContext context) {
-    print(((int.parse(_steps)* 100) ~/ 8000 ));
+    //print(((int.parse(_steps)) ~/ 80 ));
     return SafeArea(
       child: Scaffold(
         body: Center(
@@ -73,7 +73,7 @@ class _RunTrackingState extends State<RunTracking> {
                     ),
                     Center(
                       child: Text(
-                        _steps,
+                        context.watch<StepHelper>().steps,
                         style: TextStyle(
                           height: null,
                           fontSize: 70,
