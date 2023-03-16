@@ -3,15 +3,10 @@
 import 'package:fit_work/constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:pedometer/pedometer.dart';
 import 'package:provider/provider.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
-import 'package:fit_work/components/step_service.dart';
 import '../components/step_helper.dart';
 import '../database/step_data.dart';
-import '../components/step_helper.dart' as helper;
-import '../database/step.dart' as step;
 
 class RunTracking extends StatefulWidget {
   const RunTracking({super.key});
@@ -21,7 +16,6 @@ class RunTracking extends StatefulWidget {
 }
 
 class _RunTrackingState extends State<RunTracking> {
-  late Stream<StepCount> _stepCountStream;
   String _status = '?', _steps = '?';
   late DatabaseCrud database;
 
@@ -31,25 +25,7 @@ class _RunTrackingState extends State<RunTracking> {
     initPlatformState();
   }
 
-  void onStepCount(StepCount event) {
-    setState(() {
-      _steps = event.steps.toString();
-    });
-  }
-
-  void onStepCountError(error) {
-    print('onStepCountError: $error');
-    setState(() {
-      _steps = 'Step Count not available';
-    });
-  }
-
   void initPlatformState() {
-    // _stepCountStream = Pedometer.stepCountStream;
-    ////Pedometer _pedometer = Provider.of<Pedometer>(context, listen: false);
-    ////_stepCountStream = _pedometer.stepCountStream;
-    //_stepCountStream.listen(onStepCount).onError(onStepCountError);
-
     _steps = context.read<StepHelper>().steps;
     if (!mounted) return;
   }
