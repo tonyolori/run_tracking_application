@@ -240,10 +240,6 @@ List<Map<String, dynamic>> maps = [
     step.columnTime: "2023-03-12 18:08:46.385056",
   },
   {
-    step.columnStepCount: 2000,
-    step.columnTime: "2023-03-013 18:08:46.385056",
-  },
-  {
     step.columnStepCount: 2300,
     step.columnTime: "2023-03-13 18:08:46.385056",
   },
