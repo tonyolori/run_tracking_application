@@ -204,8 +204,64 @@ List<Map<String, dynamic>> maps = [
     step.columnTime: "2023-03-03 18:08:46.385056",
   },
   {
-    step.columnStepCount: 1300,
+    step.columnStepCount: 1400,
     step.columnTime: "2023-03-04 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 2500,
+    step.columnTime: "2023-03-05 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 1900,
+    step.columnTime: "2023-03-06 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 2000,
+    step.columnTime: "2023-03-07 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 2500,
+    step.columnTime: "2023-03-08 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 3000,
+    step.columnTime: "2023-03-09 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 2000,
+    step.columnTime: "2023-03-10 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 1500,
+    step.columnTime: "2023-03-11 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 1100,
+    step.columnTime: "2023-03-12 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 2000,
+    step.columnTime: "2023-03-013 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 2300,
+    step.columnTime: "2023-03-13 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 1400,
+    step.columnTime: "2023-03-14 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 1900,
+    step.columnTime: "2023-03-15 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 1000,
+    step.columnTime: "2023-03-16 18:08:46.385056",
+  },
+  {
+    step.columnStepCount: 3000,
+    step.columnTime: "2023-03-17 18:08:46.385056",
   },
   {
     step.columnStepCount: 1200,
