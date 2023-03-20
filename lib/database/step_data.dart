@@ -33,7 +33,6 @@ class DatabaseCrud {
       version: 1,
     );
     readyState = true;
-    print("innited");
   }
 
   Future<void> deleteStep(int id) async {
@@ -52,19 +51,7 @@ class DatabaseCrud {
   }
 
   _oncreate(db, version) {
-    //   return db.execute(
-    //     '''
-    //     CREATE TABLE $tableName(
-    //       $columnStepCount INT,
-    //       $columnYear INT,
-    //       $columnMonth INT,
-    //       $columnDay INT,
-    //       $columnTime DATETIME default CURRENT_TIMESTAMP);
-    //       primary key ($columnYear,$columnMonth,$columnDay)
-    // ''',
-    //   );
     // Run the CREATE TABLE statement on the database.
-    print("created");
     return db.execute(
       '''
       CREATE TABLE $tableName(
@@ -82,13 +69,10 @@ class DatabaseCrud {
   void dropTable() async {
     var db = await database;
     db.execute('drop table $tableName');
-    print("table dropped");
   }
 
   Future<bool> createTable() async {
     var db = await database;
-    // await db.query('sqlite_master', where: 'name = ?', whereArgs: [tableName]) ==
-    //     [];
 
     _oncreate(db, 1);
 
@@ -97,9 +81,10 @@ class DatabaseCrud {
 
   // Define a function that inserts dogs into the database
   Future<bool> insertStep(Step stepdata) async {
-    // if (!readyState) {
-    //   await innit();
-    // }
+    if (!readyState) {
+      await innit();
+    }
+    
     // Get a reference to the database.
     final db = await database;
 
@@ -108,7 +93,6 @@ class DatabaseCrud {
 
     if ((duplicateStep.isNotEmpty) &&
         (duplicateStep[0].stepCount >= stepdata.stepCount)) {
-      print("stepdata: checked, stored count is better, value discarded");
       return false;
     }
 

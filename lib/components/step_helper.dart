@@ -5,7 +5,7 @@ import '../database/step.dart' as step;
 import 'package:pedometer/pedometer.dart';
 
 class StepHelper with ChangeNotifier {
-  bool databasefilled = false;
+  bool databasefilled = true;//change this to be gotten from shared preferences
   List<Map<String, dynamic>> constructedbar = _dummyBarData;
   List<Map<String, Object>> barData = _dummyBarData[0]['data'];
   List<step.Step> availableSteps = [];
