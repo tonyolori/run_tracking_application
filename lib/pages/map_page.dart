@@ -9,7 +9,7 @@ import '../constants.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'dart:math' show cos, sqrt, asin;
+import '../components/map_helper.dart';
 
 GoogleMapController? googleMapController;
 final Completer<GoogleMapController> _controller = Completer();
@@ -29,10 +29,9 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   static const LatLng sourceLocation = LatLng(35.118339, 32.850870);
   static const LatLng destination = LatLng(35.106985, 32.856650);
 
-  List<LatLng> polylineCoordinates = [];
-  List<LatLng> liveCoordinates = [];
-
   LocationData? currentLocation;
+
+  RunHelper runHelper = RunHelper();
 
   BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
@@ -59,14 +58,8 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   void updateMapValues() {
     userLocation = context.read<LocationService>().currentlocation;
 
-    liveCoordinates.add(userLocation!.latLng());
-    // if (liveCoordinates.length > 2) {
-    //   print(getDistance(
-    //       liveCoordinates[liveCoordinates.length - 2].latitude,
-    //       liveCoordinates[liveCoordinates.length - 2].longitude,
-    //       liveCoordinates[liveCoordinates.length - 1].latitude,
-    //       liveCoordinates[liveCoordinates.length - 1].longitude));
-    // }
+    runHelper.addLiveCoordinates(userLocation);
+
     if (liveTrackingToggle) {
       googleMapController?.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -81,25 +74,6 @@ class MapTrackingPageState extends State<MapTrackingPage> {
     setState(() {});
   }
 
-  //KM
-  double getDistance(lat1, lon1, lat2, lon2) {
-    var p = 0.017453292519943295;
-    var c = cos;
-    var a = 0.5 -
-        c((lat2 - lat1) * p) / 2 +
-        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
-    return 12742 * asin(sqrt(a));
-  }
-
-  //ex distance variation 0.00011963740546565533
-  double getTotalDistance(List<UserLocation> data) {
-    double totalDistance = 0;
-    for (var i = 0; i < data.length - 1; i++) {
-      totalDistance += getDistance(data[i], data[i], data[i + 1], data[i + 1]);
-    }
-    return totalDistance;
-  }
-
   void getPolylinePoints() async {
     PolylinePoints polylinePoints = PolylinePoints();
     // add try catch
@@ -110,7 +84,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
     if (result.points.isNotEmpty) {
       for (var point in result.points) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+        runHelper.polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       }
     }
     if (mounted) setState(() {});
@@ -173,9 +147,9 @@ class MapTrackingPageState extends State<MapTrackingPage> {
         child: userLocation == null
             ? const Center(child: Text("Loading"))
             : Stack(
-              //alignment: Alignment.bottomCenter,
-              children: [
-                GoogleMap(
+                //alignment: Alignment.bottomCenter,
+                children: [
+                  GoogleMap(
                     zoomControlsEnabled: false,
                     initialCameraPosition: CameraPosition(
                       target: userLocation!.latLng(),
@@ -184,7 +158,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                     polylines: {
                       Polyline(
                         polylineId: PolylineId("route"),
-                        points: liveCoordinates,
+                        points: runHelper.liveCoordinates,
                         color: primaryColor,
                         width: 6,
                       )
@@ -210,76 +184,76 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                       addListener();
                       getPolylinePoints();
                     }),
-                    ),
-                detailWidgets
-                    ? Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Card(
-                          clipBehavior: Clip.antiAlias,
-                          elevation: 0,
-                          margin: const EdgeInsets.symmetric(),
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(
-                            16, //getHorizontalSize(16),
-                          ))),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 15),
-                                child: Row(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    OutlinedButton(
-                                      onPressed: () {
-                                        print("object");
-                                        googleMapController?.animateCamera(
-                                            CameraUpdate.newCameraPosition(
-                                          CameraPosition(
-                                            zoom: 15.5,
-                                            target: LatLng(
-                                              userLocation!.latitude,
-                                              userLocation!.longitude,
+                  ),
+                  detailWidgets
+                      ? Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Card(
+                            clipBehavior: Clip.antiAlias,
+                            elevation: 0,
+                            margin: const EdgeInsets.symmetric(),
+                            shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(
+                              16, //getHorizontalSize(16),
+                            ))),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 15),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      OutlinedButton(
+                                        onPressed: () {
+                                          print("object");
+                                          googleMapController?.animateCamera(
+                                              CameraUpdate.newCameraPosition(
+                                            CameraPosition(
+                                              zoom: 15.5,
+                                              target: LatLng(
+                                                userLocation!.latitude,
+                                                userLocation!.longitude,
+                                              ),
                                             ),
-                                          ),
-                                        ));
-                                      },
-                                      child: const Center(
-                                        child: Text(
-                                          "Stop Run",
-                                          style: TextStyle(
-                                            fontSize: 32,
-                                            color: Colors.black,
+                                          ));
+                                        },
+                                        child: const Center(
+                                          child: Text(
+                                            "Stop Run",
+                                            style: TextStyle(
+                                              fontSize: 32,
+                                              color: Colors.black,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    OutlinedButton(
-                                      onPressed: () {},
-                                      child: Icon(
-                                        Icons.my_location,
-                                        color: Colors.black,
-                                      ),
-                                    )
-                                  ],
+                                      OutlinedButton(
+                                        onPressed: () {},
+                                        child: Icon(
+                                          Icons.my_location,
+                                          color: Colors.black,
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      )
-                    : Container(),
-                // FloatingActionButton(onPressed: (() {
-                //   removeListener();
-                //   Navigator.pop(context);
-                // }))
-              ],
-            ),
+                        )
+                      : Container(),
+                  // FloatingActionButton(onPressed: (() {
+                  //   removeListener();
+                  //   Navigator.pop(context);
+                  // }))
+                ],
+              ),
       ),
     );
   }
