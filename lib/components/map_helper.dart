@@ -11,6 +11,16 @@ class RunHelper with ChangeNotifier {
   //route coordinates
   List<LatLng> routePolylineCoordinates = [];
 
+  startRun() {
+    stopwatch.start();
+  }
+
+  stopRun() {
+    stopwatch.stop();
+  }
+
+  
+
   addLiveCoordinates(UserLocation? userLocation) {
     liveCoordinates.add(userLocation!.latLng());
     if (liveCoordinates.length > 2) {

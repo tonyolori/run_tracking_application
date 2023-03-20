@@ -25,6 +25,7 @@ class MapTrackingPage extends StatefulWidget {
 bool liveTrackingToggle = true;
 
 class MapTrackingPageState extends State<MapTrackingPage> {
+  bool ongoingRun = false;
   //late var loc;
   static const LatLng sourceLocation = LatLng(35.118339, 32.850870);
   static const LatLng destination = LatLng(35.106985, 32.856650);
@@ -205,17 +206,34 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 OutlinedButton(
-                                  onPressed: () {},
-                                  child: const Center(
+                                  onPressed: () {
+                                    if (ongoingRun) {
+                                      runHelper.stopRun();
+                                    } else {
+                                      runHelper.startRun();
+                                    }
+                                    ongoingRun = !ongoingRun;
+                                  },
+                                  child: Center(
                                     child: Text(
-                                      "Stop Run",
-                                      style: TextStyle(
+                                      ongoingRun ? "Stop Run" : "Start Run",
+                                      style: const TextStyle(
                                         fontSize: 32,
                                         color: Colors.black,
                                       ),
                                     ),
                                   ),
                                 ),
+                                OutlinedButton(
+                                    onPressed: () {},
+                                    child: Text(
+                                      runHelper.stopwatch.elapsed.inSeconds
+                                          .toString(),
+                                      style: const TextStyle(
+                                        fontSize: 32,
+                                        color: Colors.black,
+                                      ),
+                                    )),
                                 OutlinedButton(
                                   onPressed: () {
                                     googleMapController?.animateCamera(
