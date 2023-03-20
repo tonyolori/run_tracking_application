@@ -84,7 +84,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
         ),
       ));
     }
-    //setState(() {});
+    setState(() {});
   }
 
   void getPolylinePoints() async {
@@ -101,7 +101,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
             .add(LatLng(point.latitude, point.longitude));
       }
     }
-    //if (mounted) setState(() {});
+    if (mounted) setState(() {});
   }
 
   void setCustomMarkerIcon() {
@@ -128,7 +128,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
     liveTrackingToggle = prefs.getBool('liveTrackingToggle') ?? true;
     if (mounted) {
-      //setState(() {});
+      setState(() {});
     }
   }
 
