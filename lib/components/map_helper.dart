@@ -5,17 +5,20 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../components/location_service.dart';
 
 class RunHelper with ChangeNotifier {
+  double totalDistance = 0;
+  final stopwatch = Stopwatch();
   List<LatLng> liveCoordinates = [];
-  List<LatLng> polylineCoordinates = [];
+  //route coordinates
+  List<LatLng> routePolylineCoordinates = [];
 
   addLiveCoordinates(UserLocation? userLocation) {
     liveCoordinates.add(userLocation!.latLng());
     if (liveCoordinates.length > 2) {
-      print(getDistance(
+      totalDistance += getDistance(
           liveCoordinates[liveCoordinates.length - 2].latitude,
           liveCoordinates[liveCoordinates.length - 2].longitude,
           liveCoordinates[liveCoordinates.length - 1].latitude,
-          liveCoordinates[liveCoordinates.length - 1].longitude));
+          liveCoordinates[liveCoordinates.length - 1].longitude);
     }
     notifyListeners();
   }

@@ -84,7 +84,8 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
     if (result.points.isNotEmpty) {
       for (var point in result.points) {
-        runHelper.polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+        runHelper.routePolylineCoordinates
+            .add(LatLng(point.latitude, point.longitude));
       }
     }
     if (mounted) setState(() {});
@@ -118,6 +119,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
     }
   }
 
+  // ignore: prefer_typing_uninitialized_variables
   var loc;
   @override
   void initState() {
@@ -135,10 +137,6 @@ class MapTrackingPageState extends State<MapTrackingPage> {
     super.dispose();
   }
 
-  var detailWidgets = true;
-
-//final stopwatch = Stopwatch();
-//stopwatch.start();
   @override
   Widget build(BuildContext context) {
     userLocation = context.read<LocationService>().currentlocation;
@@ -185,69 +183,64 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                       getPolylinePoints();
                     }),
                   ),
-                  detailWidgets
-                      ? Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Card(
-                            clipBehavior: Clip.antiAlias,
-                            elevation: 0,
-                            margin: const EdgeInsets.symmetric(),
-                            shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(
-                              16, //getHorizontalSize(16),
-                            ))),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Card(
+                      clipBehavior: Clip.antiAlias,
+                      elevation: 0,
+                      margin: const EdgeInsets.symmetric(),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(
+                        16, //getHorizontalSize(16),
+                      ))),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 15),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 15),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      OutlinedButton(
-                                        onPressed: () {
-                                          print("object");
-                                          googleMapController?.animateCamera(
-                                              CameraUpdate.newCameraPosition(
-                                            CameraPosition(
-                                              zoom: 15.5,
-                                              target: LatLng(
-                                                userLocation!.latitude,
-                                                userLocation!.longitude,
-                                              ),
-                                            ),
-                                          ));
-                                        },
-                                        child: const Center(
-                                          child: Text(
-                                            "Stop Run",
-                                            style: TextStyle(
-                                              fontSize: 32,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ),
+                                OutlinedButton(
+                                  onPressed: () {},
+                                  child: const Center(
+                                    child: Text(
+                                      "Stop Run",
+                                      style: TextStyle(
+                                        fontSize: 32,
+                                        color: Colors.black,
                                       ),
-                                      OutlinedButton(
-                                        onPressed: () {},
-                                        child: Icon(
-                                          Icons.my_location,
-                                          color: Colors.black,
-                                        ),
-                                      )
-                                    ],
+                                    ),
                                   ),
                                 ),
+                                OutlinedButton(
+                                  onPressed: () {
+                                    googleMapController?.animateCamera(
+                                        CameraUpdate.newCameraPosition(
+                                      CameraPosition(
+                                        zoom: 15.5,
+                                        target: LatLng(
+                                          userLocation!.latitude,
+                                          userLocation!.longitude,
+                                        ),
+                                      ),
+                                    ));
+                                  },
+                                  child: Icon(
+                                    Icons.my_location,
+                                    color: Colors.black,
+                                  ),
+                                )
                               ],
                             ),
                           ),
-                        )
-                      : Container(),
+                        ],
+                      ),
+                    ),
+                  )
                   // FloatingActionButton(onPressed: (() {
                   //   removeListener();
                   //   Navigator.pop(context);
