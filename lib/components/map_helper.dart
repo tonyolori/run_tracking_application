@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' show cos, sqrt, asin;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -6,20 +7,26 @@ import '../components/location_service.dart';
 
 class RunHelper with ChangeNotifier {
   double totalDistance = 0;
+  int elapsedTime = 0;
+  Timer? timer;
   final stopwatch = Stopwatch();
-  List<LatLng> liveCoordinates = [];
-  //route coordinates
-  List<LatLng> routePolylineCoordinates = [];
+
+  List<LatLng> liveCoordinates = []; //live distance calcs and polyline tracking
+
+  List<LatLng> routePolylineCoordinates = []; //Start/end route coordinates
 
   startRun() {
     stopwatch.start();
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      elapsedTime += 1;
+      notifyListeners();
+    });
   }
 
   stopRun() {
     stopwatch.stop();
+    timer?.cancel();
   }
-
-  
 
   addLiveCoordinates(UserLocation? userLocation) {
     liveCoordinates.add(userLocation!.latLng());
@@ -30,7 +37,7 @@ class RunHelper with ChangeNotifier {
           liveCoordinates[liveCoordinates.length - 1].latitude,
           liveCoordinates[liveCoordinates.length - 1].longitude);
     }
-    notifyListeners();
+    //notifyListeners();
   }
 
   //KM

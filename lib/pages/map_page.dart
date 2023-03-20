@@ -45,15 +45,27 @@ class MapTrackingPageState extends State<MapTrackingPage> {
     userLocation = context.read<LocationService>().currentlocation;
     //googleMapController = await _controller.future;
 
-    addListener();
+    addMapListener();
   }
 
-  void addListener() {
+  void addMapListener() {
     context.read<LocationService>().addListener(updateMapValues);
   }
 
-  void removeListener() {
+  void removeMapListener() {
     context.read<LocationService>().removeListener(updateMapValues);
+  }
+
+  void addStepListener() {
+    runHelper.addListener(setStateRun);
+  }
+
+  void removeStepListener() {
+    runHelper.removeListener(setStateRun);
+  }
+
+  setStateRun() {
+    if (mounted) setState(() {});
   }
 
   void updateMapValues() {
@@ -72,7 +84,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
         ),
       ));
     }
-    setState(() {});
+    //setState(() {});
   }
 
   void getPolylinePoints() async {
@@ -89,7 +101,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
             .add(LatLng(point.latitude, point.longitude));
       }
     }
-    if (mounted) setState(() {});
+    //if (mounted) setState(() {});
   }
 
   void setCustomMarkerIcon() {
@@ -116,7 +128,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
     liveTrackingToggle = prefs.getBool('liveTrackingToggle') ?? true;
     if (mounted) {
-      setState(() {});
+      //setState(() {});
     }
   }
 
@@ -180,7 +192,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                     onMapCreated: ((mapController) {
                       //_controller.complete(mapController);
                       googleMapController = mapController;
-                      addListener();
+                      addMapListener();
                       getPolylinePoints();
                     }),
                   ),
@@ -211,8 +223,10 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                                       runHelper.stopRun();
                                     } else {
                                       runHelper.startRun();
+                                      addStepListener();
                                     }
                                     ongoingRun = !ongoingRun;
+                                    if (mounted) setState(() {});
                                   },
                                   child: Center(
                                     child: Text(
@@ -224,16 +238,15 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                                     ),
                                   ),
                                 ),
-                                OutlinedButton(
-                                    onPressed: () {},
-                                    child: Text(
-                                      runHelper.stopwatch.elapsed.inSeconds
-                                          .toString(),
-                                      style: const TextStyle(
-                                        fontSize: 32,
-                                        color: Colors.black,
-                                      ),
-                                    )),
+                                Text(
+                                  runHelper.elapsedTime.toString(),
+                                  // runHelper.stopwatch.elapsed.inSeconds
+                                  //     .toString(),
+                                  style: const TextStyle(
+                                    fontSize: 32,
+                                    color: Colors.black,
+                                  ),
+                                ),
                                 OutlinedButton(
                                   onPressed: () {
                                     googleMapController?.animateCamera(
