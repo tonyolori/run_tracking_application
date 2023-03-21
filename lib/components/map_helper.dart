@@ -6,8 +6,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../components/location_service.dart';
 
 class RunHelper with ChangeNotifier {
+  bool isRunning = false;
   double totalDistance = 0;
-  int elapsedTime = 0;
+  int elapsedSeconds = 0;
   Timer? timer;
   final stopwatch = Stopwatch();
 
@@ -16,16 +17,19 @@ class RunHelper with ChangeNotifier {
   List<LatLng> routePolylineCoordinates = []; //Start/end route coordinates
 
   startRun() {
+    isRunning = true;
     stopwatch.start();
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      elapsedTime += 1;
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      elapsedSeconds += 1;
       notifyListeners();
     });
   }
 
   stopRun() {
+    isRunning = false;
     stopwatch.stop();
     timer?.cancel();
+    liveCoordinates.clear();
   }
 
   addLiveCoordinates(UserLocation? userLocation) {
