@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'map_page.dart';
 import 'settings_page.dart';
 import 'progress_page.dart';
+import 'gpt_page.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});

@@ -198,81 +198,165 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                       getPolylinePoints();
                     }),
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Card(
-                      //clipBehavior: Clip.antiAlias,
-                      elevation: 0,
-                      margin: const EdgeInsets.symmetric(),
-                      shape: const RoundedRectangleBorder(
+                  DraggableScrollableSheet(
+                    initialChildSize: 0.5,
+                    minChildSize: 0.20,
+                    maxChildSize: 0.50,
+                    builder: (BuildContext context,
+                        ScrollController scrollController) {
+                      return Card(
+                        elevation: 0,
+                        margin: const EdgeInsets.symmetric(),
+                        shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(
-                        16, //getHorizontalSize(16),
-                      ))),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 100,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 15),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              OutlinedButton(
-                                onPressed: () {
-                                  if (ongoingRun) {
-                                    runHelper.stopRun();
-                                  } else {
-                                    runHelper.startRun();
-                                    addStepListener();
-                                  }
-                                  ongoingRun = !ongoingRun;
-                                  if (mounted) setState(() {});
-                                },
-                                child: Center(
-                                  child: Text(
-                                    ongoingRun ? "Stop Run" : "Start Run",
-                                    style: const TextStyle(
-                                      fontSize: 32,
-                                      color: Colors.black,
+                            top: Radius.circular(16),
+                          ),
+                        ),
+                        child: SingleChildScrollView(
+                          controller: scrollController,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 15,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Elapsed Time',
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  '${runHelper.elapsedSeconds} seconds',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Distance',
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  '${runHelper.totalDistance.toStringAsFixed(2)} km',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                OutlinedButton(
+                                  onPressed: () {
+                                    if (ongoingRun) {
+                                      runHelper.stopRun();
+                                    } else {
+                                      runHelper.startRun();
+                                      addStepListener();
+                                    }
+                                    ongoingRun = !ongoingRun;
+                                    if (mounted) setState(() {});
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      ongoingRun ? "Stop Run" : "Start Run",
+                                      style: const TextStyle(
+                                        fontSize: 32,
+                                        color: Colors.black,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Text(
-                                runHelper.elapsedSeconds.toString(),
-                                // runHelper.stopwatch.elapsed.inSeconds
-                                //     .toString(),
-                                style: const TextStyle(
-                                  fontSize: 32,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              OutlinedButton(
-                                onPressed: () {
-                                  googleMapController?.animateCamera(
-                                      CameraUpdate.newCameraPosition(
-                                    CameraPosition(
-                                      zoom: 15.5,
-                                      target: LatLng(
-                                        userLocation!.latitude,
-                                        userLocation!.longitude,
-                                      ),
-                                    ),
-                                  ));
-                                },
-                                child: Icon(
-                                  Icons.my_location,
-                                  color: Colors.black,
-                                ),
-                              )
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  )
+                      );
+                    },
+                  ),
+                  // Align(
+                  //   alignment: Alignment.bottomCenter,
+                  //   child: Card(
+                  //     //clipBehavior: Clip.antiAlias,
+                  //     elevation: 0,
+                  //     margin: const EdgeInsets.symmetric(),
+                  //     shape: const RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.vertical(
+                  //             top: Radius.circular(
+                  //       16, //getHorizontalSize(16),
+                  //     ))),
+                  //     child: SizedBox(
+                  //       width: double.infinity,
+                  //       height: 100,
+                  //       child: Padding(
+                  //         padding: const EdgeInsets.symmetric(
+                  //             horizontal: 15, vertical: 15),
+                  //         child: Row(
+                  //           crossAxisAlignment: CrossAxisAlignment.center,
+                  //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //           children: [
+                  //             OutlinedButton(
+                  //               onPressed: () {
+                  //                 if (ongoingRun) {
+                  //                   runHelper.stopRun();
+                  //                 } else {
+                  //                   runHelper.startRun();
+                  //                   addStepListener();
+                  //                 }
+                  //                 ongoingRun = !ongoingRun;
+                  //                 if (mounted) setState(() {});
+                  //               },
+                  //               child: Center(
+                  //                 child: Text(
+                  //                   ongoingRun ? "Stop Run" : "Start Run",
+                  //                   style: const TextStyle(
+                  //                     fontSize: 32,
+                  //                     color: Colors.black,
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //             Text(
+                  //               runHelper.elapsedSeconds.toString(),
+                  //               // runHelper.stopwatch.elapsed.inSeconds
+                  //               //     .toString(),
+                  //               style: const TextStyle(
+                  //                 fontSize: 32,
+                  //                 color: Colors.black,
+                  //               ),
+                  //             ),
+                  //             OutlinedButton(
+                  //               onPressed: () {
+                  //                 googleMapController?.animateCamera(
+                  //                     CameraUpdate.newCameraPosition(
+                  //                   CameraPosition(
+                  //                     zoom: 15.5,
+                  //                     target: LatLng(
+                  //                       userLocation!.latitude,
+                  //                       userLocation!.longitude,
+                  //                     ),
+                  //                   ),
+                  //                 ));
+                  //               },
+                  //               child: Icon(
+                  //                 Icons.my_location,
+                  //                 color: Colors.black,
+                  //               ),
+                  //             )
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // )
                   // FloatingActionButton(onPressed: (() {
                   //   removeListener();
                   //   Navigator.pop(context);

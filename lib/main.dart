@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
 import 'pages/home_page.dart';
 import 'pages/statistics_page.dart';
+import 'pages/gpt_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,25 +22,26 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-  var liveTrackingToggle = true;
+var liveTrackingToggle = true;
 
 class _MyAppState extends State<MyApp> {
-  
   @override
   Widget build(BuildContext context) {
     //dynamic locator = LocationService();
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => LocationService()),
-        Provider.value(value: Pedometer),
-        ChangeNotifierProvider(create: (_) => StepHelper(),
-        lazy: false,),
-        //Provider.value(value: liveTrackingToggle),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
+        providers: [
+          ChangeNotifierProvider(create: (_) => LocationService()),
+          Provider.value(value: Pedometer),
+          ChangeNotifierProvider(
+            create: (_) => StepHelper(),
+            lazy: false,
+          ),
+          //Provider.value(value: liveTrackingToggle),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           theme: lightTheme,
-          home:  const Homepage(),
-    ));
+          home: const Homepage(),
+        ));
   }
 }
