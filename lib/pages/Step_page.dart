@@ -35,6 +35,9 @@ class _RunTrackingState extends State<RunTracking> {
     //print(((int.parse(_steps)) ~/ 80 ));
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Text("Step Page"),
+        ),
         body: Column(
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[

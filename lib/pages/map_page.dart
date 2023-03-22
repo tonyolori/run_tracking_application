@@ -155,6 +155,11 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   Widget build(BuildContext context) {
     userLocation = context.read<LocationService>().currentlocation;
     return Scaffold(
+      appBar: AppBar(
+          title: const Text("Map Page"),
+          foregroundColor: Colors.black,
+          backgroundColor: Colors.white,
+        ),
       body: Center(
         child: userLocation == null
             ? const Center(child: Text("Loading"))
