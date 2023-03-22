@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
           Provider.value(value: Pedometer),
           ChangeNotifierProvider(
             create: (_) => StepHelper(),
-            lazy: false,
+            lazy: true,
           ),
           //Provider.value(value: liveTrackingToggle),
         ],

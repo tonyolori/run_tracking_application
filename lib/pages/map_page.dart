@@ -86,6 +86,8 @@ class MapTrackingPageState extends State<MapTrackingPage> {
         ),
       ));
     }
+
+    if (mounted) setState(() {});
     setState(() {});
   }
 
@@ -170,7 +172,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                     ),
                     polylines: {
                       Polyline(
-                        polylineId: PolylineId("route"),
+                        polylineId: const PolylineId("route"),
                         points: runHelper.liveCoordinates,
                         color: primaryColor,
                         width: 6,
@@ -178,17 +180,9 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                     },
                     markers: {
                       Marker(
-                        markerId: MarkerId("currentlocation"),
+                        markerId: const MarkerId("currentlocation"),
                         icon: currentLocationIcon,
                         position: userLocation!.latLng(),
-                      ),
-                      Marker(
-                        markerId: MarkerId("source"),
-                        position: sourceLocation,
-                      ),
-                      const Marker(
-                        markerId: MarkerId("destination"),
-                        position: destination,
                       ),
                     },
                     onMapCreated: ((mapController) {
@@ -222,9 +216,9 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'Elapsed Time',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -238,9 +232,9 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                                   ),
                                 ),
                                 const SizedBox(height: 16),
-                                Text(
+                                const Text(
                                   'Distance',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -267,7 +261,9 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                                   },
                                   child: Center(
                                     child: Text(
-                                      ongoingRun ? "Stop Run" : "Start Run",
+                                      ongoingRun
+                                          ? "Stop Run"
+                                          : "Start Run",
                                       style: const TextStyle(
                                         fontSize: 32,
                                         color: Colors.black,
@@ -357,10 +353,6 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                   //     ),
                   //   ),
                   // )
-                  // FloatingActionButton(onPressed: (() {
-                  //   removeListener();
-                  //   Navigator.pop(context);
-                  // }))
                 ],
               ),
       ),
