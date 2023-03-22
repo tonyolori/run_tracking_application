@@ -8,8 +8,6 @@ import 'constants.dart';
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
 import 'pages/home_page.dart';
-import 'pages/statistics_page.dart';
-import 'pages/gpt_page.dart';
 
 void main() {
   runApp(const MyApp());

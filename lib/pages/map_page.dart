@@ -7,8 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../components/location_service.dart';
 import '../constants.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import '../components/map_helper.dart';
 
 GoogleMapController? googleMapController;
@@ -49,11 +47,11 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   }
 
   void addMapListener() {
-    context.read<LocationService>().addListener(updateMapValues);
+    context.read<LocationService>().addListener(setStateMapValues);
   }
 
   void removeMapListener() {
-    context.read<LocationService>().removeListener(updateMapValues);
+    context.read<LocationService>().removeListener(setStateMapValues);
   }
 
   void addStepListener() {
@@ -68,7 +66,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
     if (mounted) setState(() {});
   }
 
-  void updateMapValues() {
+  void setStateMapValues() {
     userLocation = context.read<LocationService>().currentlocation;
 
     if (runHelper.isRunning) {
@@ -88,7 +86,6 @@ class MapTrackingPageState extends State<MapTrackingPage> {
     }
 
     if (mounted) setState(() {});
-    setState(() {});
   }
 
   void getPolylinePoints() async {
@@ -149,7 +146,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
   @override
   void dispose() {
-    loc.removeListener(updateMapValues);
+    loc.removeListener(setStateMapValues);
     googleMapController?.dispose();
     super.dispose();
   }
@@ -261,9 +258,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                                   },
                                   child: Center(
                                     child: Text(
-                                      ongoingRun
-                                          ? "Stop Run"
-                                          : "Start Run",
+                                      ongoingRun ? "Stop Run" : "Start Run",
                                       style: const TextStyle(
                                         fontSize: 32,
                                         color: Colors.black,
@@ -278,81 +273,6 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                       );
                     },
                   ),
-                  // Align(
-                  //   alignment: Alignment.bottomCenter,
-                  //   child: Card(
-                  //     //clipBehavior: Clip.antiAlias,
-                  //     elevation: 0,
-                  //     margin: const EdgeInsets.symmetric(),
-                  //     shape: const RoundedRectangleBorder(
-                  //         borderRadius: BorderRadius.vertical(
-                  //             top: Radius.circular(
-                  //       16, //getHorizontalSize(16),
-                  //     ))),
-                  //     child: SizedBox(
-                  //       width: double.infinity,
-                  //       height: 100,
-                  //       child: Padding(
-                  //         padding: const EdgeInsets.symmetric(
-                  //             horizontal: 15, vertical: 15),
-                  //         child: Row(
-                  //           crossAxisAlignment: CrossAxisAlignment.center,
-                  //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //           children: [
-                  //             OutlinedButton(
-                  //               onPressed: () {
-                  //                 if (ongoingRun) {
-                  //                   runHelper.stopRun();
-                  //                 } else {
-                  //                   runHelper.startRun();
-                  //                   addStepListener();
-                  //                 }
-                  //                 ongoingRun = !ongoingRun;
-                  //                 if (mounted) setState(() {});
-                  //               },
-                  //               child: Center(
-                  //                 child: Text(
-                  //                   ongoingRun ? "Stop Run" : "Start Run",
-                  //                   style: const TextStyle(
-                  //                     fontSize: 32,
-                  //                     color: Colors.black,
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //             Text(
-                  //               runHelper.elapsedSeconds.toString(),
-                  //               // runHelper.stopwatch.elapsed.inSeconds
-                  //               //     .toString(),
-                  //               style: const TextStyle(
-                  //                 fontSize: 32,
-                  //                 color: Colors.black,
-                  //               ),
-                  //             ),
-                  //             OutlinedButton(
-                  //               onPressed: () {
-                  //                 googleMapController?.animateCamera(
-                  //                     CameraUpdate.newCameraPosition(
-                  //                   CameraPosition(
-                  //                     zoom: 15.5,
-                  //                     target: LatLng(
-                  //                       userLocation!.latitude,
-                  //                       userLocation!.longitude,
-                  //                     ),
-                  //                   ),
-                  //                 ));
-                  //               },
-                  //               child: Icon(
-                  //                 Icons.my_location,
-                  //                 color: Colors.black,
-                  //               ),
-                  //             )
-                  //           ],
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // )
                 ],
               ),
       ),
