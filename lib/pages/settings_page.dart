@@ -65,12 +65,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 value: Text('English'),
               ),
               SettingsTile.switchTile(
-                onToggle: (value) {},
-                initialValue: true,
-                leading: Icon(Icons.format_paint),
-                title: Text('Enable custom theme'),
-              ),
-              SettingsTile.switchTile(
                 onToggle: (value) async {
                   liveTrackingToggle = value;
                   SharedPreferences prefs =

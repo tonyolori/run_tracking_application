@@ -8,6 +8,7 @@ import '../components/location_service.dart';
 import '../constants.dart';
 import 'package:provider/provider.dart';
 import '../components/map_helper.dart';
+import '../api_key.dart';
 
 GoogleMapController? googleMapController;
 final Completer<GoogleMapController> _controller = Completer();

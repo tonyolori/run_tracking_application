@@ -53,6 +53,9 @@ class _ProgressPageState extends State<ProgressPage> {
       ),
       body: Column(
         children: [
+          SizedBox(
+            height: 100,
+          ),
           Center(
             child: AspectRatio(
               aspectRatio: 4 / 3,
