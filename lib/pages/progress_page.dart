@@ -53,13 +53,6 @@ class _ProgressPageState extends State<ProgressPage> {
       ),
       body: Column(
         children: [
-          OutlinedButton(
-            onPressed: () async {
-              context.read<StepHelper>().fillStepData();
-              constructedBar = context.read<StepHelper>().constructedbar;
-            },
-            child: Text("press me"),
-          ),
           Center(
             child: AspectRatio(
               aspectRatio: 4 / 3,
