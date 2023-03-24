@@ -30,49 +30,120 @@ class _RunTrackingState extends State<RunTracking> {
     if (!mounted) return;
   }
 
-  @override
   Widget build(BuildContext context) {
-    //print(((int.parse(_steps)) ~/ 80 ));
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("Step Page"),
+  return Scaffold(
+    appBar: AppBar(
+      title: Text("Step Page"),
+    ),
+    body: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "Steps",
+          style: TextStyle(fontSize: 48),
         ),
-        body: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Row(
+        SizedBox(
+          height: 40,
+        ),
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            CircularStepProgressIndicator(
+              totalSteps: 100,
+              currentStep: 33,//((int.parse(_steps) * 100) ~/ 8000),
+              stepSize: 15,
+              selectedColor: Colors.greenAccent,
+              unselectedColor: Colors.grey[200],
+              circularDirection: CircularDirection.clockwise,
+              startingAngle: kPI - kPI / 4,
+              arcSize: kPI * 1.5,
+              padding: 0,
+              width: kBoxSize,
+              height: kBoxSize,
+              selectedStepSize: 15,
+              roundedCap: (_, __) => true,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Steps",
-                  style: TextStyle(fontSize: 48),
+                  context.watch<StepHelper>().steps,
+                  style: TextStyle(
+                    height: null,
+                    fontSize: 70,
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Association(
+                      label: "Duration",
+                      value: "5H",
+                    ),
+                    Association(
+                      label: "Steps",
+                      value: "999"//_steps,
+                    ),
+                  ],
                 ),
               ],
             ),
-            SizedBox(
-              height: 120,
-            ),
-            Align(
-              alignment: FractionalOffset.bottomCenter,
-              child: SizedBox(
-                height: kBoxSize,
-                width: kBoxSize,
-                child: StepWidget(steps: _steps),
-              ),
-            ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //   children: [
-            //     SmallIcon(),
-            //     SmallIcon(),
-            //   ],
-            // )
           ],
         ),
-      ),
-    );
-  }
+      ],
+    ),
+  );
 }
+}
+
+//? my former build
+  // @override
+  // Widget build(BuildContext context) {
+  //   //print(((int.parse(_steps)) ~/ 80 ));
+  //   return SafeArea(
+  //     child: Scaffold(
+  //       appBar: AppBar(
+  //         title: Text("Step Page"),
+  //       ),
+  //       body: Column(
+  //         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: <Widget>[
+  //           Row(
+  //             children: [
+  //               Text(
+  //                 "Steps",
+  //                 style: TextStyle(fontSize: 48),
+  //               ),
+  //             ],
+  //           ),
+  //           SizedBox(
+  //             height: 120,
+  //           ),
+  //           Align(
+  //             alignment: FractionalOffset.bottomCenter,
+  //             child: SizedBox(
+  //               height: kBoxSize,
+  //               width: kBoxSize,
+  //               child: StepWidget(steps: _steps),
+  //             ),
+  //           ),
+  //           // Row(
+  //           //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //           //   children: [
+  //           //     SmallIcon(),
+  //           //     SmallIcon(),
+  //           //   ],
+  //           // )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+//}
 
 class StepWidget extends StatelessWidget {
   const StepWidget({
@@ -122,11 +193,11 @@ class StepWidget extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  association(
+                  Association(
                     label: "Duration",
                     value: "5H",
                   ),
-                  association(
+                  Association(
                     label: "Steps",
                     value: _steps,
                   ),
@@ -143,41 +214,65 @@ class StepWidget extends StatelessWidget {
 class SmallIcon extends StatelessWidget {
   const SmallIcon({
     Key? key,
+    required this.icon,
+    required this.label,
   }) : super(key: key);
+
+  final IconData icon;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        width: 100,
-        height: 70,
-        decoration: BoxDecoration(color: Colors.greenAccent),
-        child: Center(
-          child: Row(children: [
-            Icon(Icons.local_fire_department),
-            Text("KM"),
-          ]),
+    return Container(
+      width: 120,
+      height: 100,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.secondary,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Icon(
+              icon,
+              color: Theme.of(context).colorScheme.onSecondary,
+            ),
+            Text(
+              label,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSecondary,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class association extends StatelessWidget {
+
+class Association extends StatefulWidget {
   String label;
   String value;
-  association({super.key, required this.label, required this.value});
+  Association({super.key, required this.label, required this.value});
 
+  @override
+  State<Association> createState() => _AssociationState();
+}
+
+class _AssociationState extends State<Association> {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Text(
-          label,
+          widget.label,
         ),
         Text(
-          value,
+          widget.value,
           style: TextStyle(
             height: null,
             fontSize: 24,
