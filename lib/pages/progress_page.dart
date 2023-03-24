@@ -4,8 +4,6 @@ import 'package:provider/provider.dart';
 import '../components/step_helper.dart';
 import '../database/step_data.dart';
 
-
-
 class ProgressPage extends StatefulWidget {
   const ProgressPage({super.key});
 
@@ -43,11 +41,9 @@ class _ProgressPageState extends State<ProgressPage> {
     super.dispose();
   }
 
-
-
-@override
-Widget build(BuildContext context) {
-    String dropdownValue = 'Option 1';
+  @override
+  Widget build(BuildContext context) {
+    String dropdownValue = 'yearly';
 
     return Scaffold(
       appBar: AppBar(
@@ -58,7 +54,7 @@ Widget build(BuildContext context) {
           Align(
             alignment: Alignment.topRight,
             child: Padding(
-              padding: const EdgeInsets.only(top:30.0,right: 20.0),
+              padding: const EdgeInsets.only(top: 30.0, right: 20.0),
               child: SizedBox(
                 height: 50,
                 child: DropdownButton<String>(
