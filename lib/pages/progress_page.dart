@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:d_chart/d_chart.dart';
 import 'package:provider/provider.dart';
 import '../components/step_helper.dart';
 import '../database/step_data.dart';
-import '../database/step.dart' as step;
+
+
 
 class ProgressPage extends StatefulWidget {
   const ProgressPage({super.key});
@@ -43,9 +43,11 @@ class _ProgressPageState extends State<ProgressPage> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    constructedBar = context.read<StepHelper>().constructedbar;
+
+
+@override
+Widget build(BuildContext context) {
+    String dropdownValue = 'Option 1';
 
     return Scaffold(
       appBar: AppBar(
@@ -53,8 +55,31 @@ class _ProgressPageState extends State<ProgressPage> {
       ),
       body: Column(
         children: [
-          SizedBox(
-            height: 100,
+          Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+              padding: const EdgeInsets.only(top:30.0,right: 20.0),
+              child: SizedBox(
+                height: 50,
+                child: DropdownButton<String>(
+                  value: dropdownValue,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      dropdownValue = newValue!;
+                    });
+                  },
+                  items: <String>[
+                    'yearly',
+                    'monthly',
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
           ),
           Center(
             child: AspectRatio(
@@ -77,3 +102,55 @@ class _ProgressPageState extends State<ProgressPage> {
     );
   }
 }
+
+
+
+
+
+
+
+
+//   @override
+//   Widget build(BuildContext context) {
+//     constructedBar = context.read<StepHelper>().constructedbar;
+
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("Progress"),
+//       ),
+//       body: Column(
+//         children: [
+//           SizedBox(
+//             height: 100,
+//           ),
+//           Expanded(
+//             child: Center(
+//               child:  AspectRatio(
+//                       aspectRatio: 4 / 3,
+//                       child: DChartBar(
+//                         data: constructedBar,
+//                         domainLabelPaddingToAxisLine: 16,
+//                         axisLineTick: 2,
+//                         axisLinePointTick: 2,
+//                         axisLinePointWidth: 10,
+//                         axisLineColor: Colors.black,
+//                         measureLabelPaddingToAxisLine: 16,
+//                         barColor: (barData, index, id) => Colors.black,
+//                         showBarValue: true,
+//                       ),
+//                     )
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+// }
+
+
+
+
+
+
+

@@ -22,7 +22,7 @@ class _HomepageState extends State<Homepage> {
     RunTracking(),
     const ProgressPage(),
     const SettingsPage(),
-    const StepPage(),
+    //const StepPage(),
   ];
   askPermission() async {
     // var status = await Permission.camera.status;
@@ -32,8 +32,6 @@ class _HomepageState extends State<Homepage> {
       // We didn't ask for permission yet or the permission has been denied before but not permanently.
     }
 
-    print('status =');
-    print(status);
     return true;
   }
 
