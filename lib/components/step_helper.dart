@@ -7,6 +7,7 @@ import 'package:pedometer/pedometer.dart';
 class StepHelper with ChangeNotifier {
   bool databasefilled = false;//change this to be gotten from shared preferences
   List<Map<String, dynamic>> constructedbar = _dummyBarData;
+  List<Map<String, dynamic>> constructedbarweekly = _dummyBarDataWeekly;
   List<Map<String, Object>> barData = _dummyBarData[0]['data'];
   List<step.Step> availableSteps = [];
   late DatabaseCrud database;
@@ -67,6 +68,17 @@ class StepHelper with ChangeNotifier {
   }
 
   _GetStepCountInMonth(int month) async {
+    int stepcount = 0;
+
+    if (month < 1 || month > 12) return 0;
+
+    var stepsInMonth = await database.getStepsInMonth(month);
+    for (int i = 0; i < stepsInMonth.length; i++) {
+      stepcount = stepcount + stepsInMonth[i].stepCount;
+    }
+    return stepcount;
+  }
+  _GetStepCountInWeek(int month,int week) async {
     int stepcount = 0;
 
     if (month < 1 || month > 12) return 0;
@@ -270,5 +282,21 @@ List<Map<String, dynamic>> maps = [
   {
     step.columnStepCount: 2100,
     step.columnTime: "2023-06-01 18:08:46.385056",
+  },
+];
+
+
+List<Map<String, dynamic>> _dummyBarDataWeekly = [
+  {
+    'id': 'Bar',
+    'data': [
+      {'domain': 'Sun', 'measure': 6},
+      {'domain': 'Mon', 'measure': 3},
+      {'domain': 'Tues', 'measure': 4},
+      {'domain': 'Wed', 'measure': 6},
+      {'domain': 'Thur', 'measure': 0.3},
+      {'domain': 'Fri', 'measure': 3},
+      {'domain': 'Sat', 'measure': 4},
+    ],
   },
 ];

@@ -14,6 +14,8 @@ class ProgressPage extends StatefulWidget {
 class _ProgressPageState extends State<ProgressPage> {
   late DatabaseCrud database;
   List<Map<String, dynamic>> constructedBar = [];
+  List<Map<String, dynamic>> constructedBarWeekly = [];
+
 
   void addListener() {
     context.read<StepHelper>().addListener(updateBarValues);
@@ -25,7 +27,7 @@ class _ProgressPageState extends State<ProgressPage> {
 
   void updateBarValues() {
     constructedBar = context.read<StepHelper>().constructedbar;
-
+    constructedBarWeekly = context.read<StepHelper>().constructedbarweekly;
     setState(() {});
   }
 
@@ -43,7 +45,7 @@ class _ProgressPageState extends State<ProgressPage> {
 
   @override
   Widget build(BuildContext context) {
-    String dropdownValue = 'yearly';
+    String dropdownValue = 'Yearly';
 
     return Scaffold(
       appBar: AppBar(
@@ -63,10 +65,11 @@ class _ProgressPageState extends State<ProgressPage> {
                     setState(() {
                       dropdownValue = newValue!;
                     });
-                  },
+                  },//stop at trying to create weekly graph
                   items: <String>[
-                    'yearly',
-                    'monthly',
+                    'Yearly',
+                    'Monthly',
+                    'Daily',
                   ].map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -98,10 +101,6 @@ class _ProgressPageState extends State<ProgressPage> {
     );
   }
 }
-
-
-
-
 
 
 

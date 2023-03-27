@@ -84,7 +84,7 @@ class DatabaseCrud {
     if (!readyState) {
       await innit();
     }
-    
+
     // Get a reference to the database.
     final db = await database;
 
@@ -150,6 +150,42 @@ class DatabaseCrud {
     return convertToStepList(filteredMaps);
   }
 
+  /// you write quotes like this `yup yup`
+  Future<List<Step>> getStepsInWeek(int month, int day) async {
+    // Get a reference to the database.
+    final db = await database;
+
+    // Query the table for all The Dogs.
+    final List<Map<String, dynamic>> unFilteredMaps = await db.query(tableName);
+    final List<Map<String, dynamic>> filteredMaps = unFilteredMaps.where((map) {
+      DateTime stepTime = DateTime.parse(map[columnTime]);
+
+      if (stepTime.month == month) {
+        //greater than 7 then we can safely minus 7
+        // return true for the days within that
+        if (day > 6) {
+          //the difference between the day we are comparing with and the given day is less than 7
+          int difference = stepTime.day - day;
+
+          if (difference.abs() < 7) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+        //minusing 7 will leader to the former month for now we return true
+        else {
+          return true;
+        }
+      } else {
+        return false;
+      }
+    }).toList();
+
+    // Convert the List<Map<String, dynamic> into a List<step>.
+    return convertToStepList(filteredMaps);
+  }
+
   // Convert the Liste<Map<String, dynamic> into a List<step>.
   List<Step> convertToStepList(List<Map<String, dynamic>> maps) {
     return List.generate(maps.length, (i) {
@@ -161,7 +197,6 @@ class DatabaseCrud {
     });
   }
 }
-
 
 // Future<void> updateStep(Step step) async {
 //   // Get a reference to the database.
