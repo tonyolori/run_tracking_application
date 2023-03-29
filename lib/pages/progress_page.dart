@@ -16,14 +16,13 @@ class _ProgressPageState extends State<ProgressPage> {
   List<Map<String, dynamic>> constructedBar = [];
   List<Map<String, dynamic>> constructedBarWeekly = [];
 
+  // void addListener() {
+  //   context.read<StepHelper>().addListener(updateBarValues);
+  // }
 
-  void addListener() {
-    context.read<StepHelper>().addListener(updateBarValues);
-  }
-
-  void removeListener() {
-    context.read<StepHelper>().removeListener(updateBarValues);
-  }
+  // void removeListener() {
+  //   context.read<StepHelper>().removeListener(updateBarValues);
+  // }
 
   void updateBarValues() {
     constructedBar = context.read<StepHelper>().constructedbar;
@@ -34,7 +33,8 @@ class _ProgressPageState extends State<ProgressPage> {
   @override
   void initState() {
     super.initState();
-    addListener();
+    //addListener();
+    updateBarValues();
   }
 
   @override
@@ -65,7 +65,7 @@ class _ProgressPageState extends State<ProgressPage> {
                     setState(() {
                       dropdownValue = newValue!;
                     });
-                  },//stop at trying to create weekly graph
+                  }, //stop at trying to create weekly graph
                   items: <String>[
                     'Yearly',
                     'Monthly',
