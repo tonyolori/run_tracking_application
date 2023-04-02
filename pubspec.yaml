@@ -52,6 +52,7 @@ dependencies:
   d_chart: ^2.0.2
   shared_preferences: ^2.0.17
   sqflite: ^2.2.4+1
+  google_fonts: ^4.0.3
 
 dev_dependencies:
   flutter_test:

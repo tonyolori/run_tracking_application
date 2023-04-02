@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +10,9 @@ import '../constants.dart';
 import 'package:provider/provider.dart';
 import '../components/map_helper.dart';
 import '../api_key.dart';
+import '../model/entry.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart'; // for date format
 
 GoogleMapController? googleMapController;
 final Completer<GoogleMapController> _controller = Completer();
@@ -37,7 +41,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
 
-  UserLocation? userLocation;
+  UserLocation? userLocation = UserLocation(longitude: 34.3, latitude: 34.5);
   //Location? userLocation;
   late Location location;
   void setController() async {
@@ -157,10 +161,10 @@ class MapTrackingPageState extends State<MapTrackingPage> {
     userLocation = context.read<LocationService>().currentlocation;
     return Scaffold(
       appBar: AppBar(
-          title: const Text("Map Page"),
-          foregroundColor: Colors.black,
-          backgroundColor: Colors.white,
-        ),
+        title: const Text("Map Page"),
+        foregroundColor: Colors.black,
+        backgroundColor: Colors.white,
+      ),
       body: Center(
         child: userLocation == null
             ? const Center(child: Text("Loading"))
@@ -219,42 +223,62 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Elapsed Time',
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  '${runHelper.elapsedSeconds} seconds',
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                const Text(
-                                  'Distance',
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  '${runHelper.totalDistance.toStringAsFixed(2)} km',
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.black,
-                                  ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Text("SPEED (KM/H)",
+                                            style: GoogleFonts.montserrat(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w300)),
+                                        Text(runHelper.speed.toStringAsFixed(2),
+                                            style: GoogleFonts.montserrat(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.w300))
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text("TIME",
+                                            style: GoogleFonts.montserrat(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w300)),
+                                        Text(runHelper.displayTime,
+                                            style: GoogleFonts.montserrat(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.w300))
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text("DISTANCE (KM)",
+                                            style: GoogleFonts.montserrat(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w300)),
+                                        Text(
+                                            (runHelper.dist).toStringAsFixed(2),
+                                            style: GoogleFonts.montserrat(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.w300))
+                                      ],
+                                    )
+                                  ],
                                 ),
                                 const SizedBox(height: 16),
                                 OutlinedButton(
                                   onPressed: () {
                                     if (ongoingRun) {
                                       runHelper.stopRun();
+
+                                      Entry en = Entry(
+                                          date: (DateFormat().format(DateTime
+                                              .now())), //DateFormat.yMMMMd('en_US').format(DateTime.now()),
+                                          duration: runHelper.displayTime,
+                                          speed: runHelper.speed,
+                                          distance: runHelper.dist);
+                                      Navigator.pop(context, en);
                                     } else {
                                       runHelper.startRun();
                                       addStepListener();

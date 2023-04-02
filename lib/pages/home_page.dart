@@ -3,6 +3,7 @@ import '../constants.dart';
 import 'Step_page.dart';
 import 'package:flutter/material.dart';
 import 'map_page.dart';
+import 'maps_home.dart';
 import 'settings_page.dart';
 import 'progress_page.dart';
 import 'gpt_page.dart';
@@ -18,7 +19,7 @@ class _HomepageState extends State<Homepage> {
   int selectedIndex = 0;
 
   final List<Widget> _screens = [
-    const MapTrackingPage(),
+    MapHomePage(),
     RunTracking(),
     const ProgressPage(),
     const SettingsPage(),
