@@ -40,7 +40,7 @@ class _MapHomePageState extends State<MapHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Strava"),
+        title: Text("Runs"),
       ),
       body: ListView(
         children: _cards,

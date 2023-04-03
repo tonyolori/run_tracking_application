@@ -41,7 +41,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
 
-  UserLocation? userLocation = UserLocation(longitude: 34.3, latitude: 34.5);
+  UserLocation? userLocation = UserLocation(longitude: 35.118339, latitude: 32.850870);
   //Location? userLocation;
   late Location location;
   void setController() async {
@@ -158,7 +158,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
   @override
   Widget build(BuildContext context) {
-    userLocation = context.read<LocationService>().currentlocation;
+    userLocation = context.watch<LocationService>().currentlocation;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Map Page"),

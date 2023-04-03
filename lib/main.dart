@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
     //dynamic locator = LocationService();
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => LocationService()),
+          ChangeNotifierProvider(create: (_) => LocationService(), lazy: false,),
           Provider.value(value: Pedometer),
           ChangeNotifierProvider(
             create: (_) => StepHelper(),

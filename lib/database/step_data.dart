@@ -25,7 +25,7 @@ class DatabaseCrud {
       // Set the path to the database. Note: Using the `join` function from the
       // `path` package is best practice to ensure the path is correctly
       // constructed for each platform.
-      join(await getDatabasesPath(), 'fitwork_database.db'),
+      join(await getDatabasesPath(), 'step_database.db'),
       // When the database is first created, create a table to store dogs.
       onCreate: _oncreate,
       // Set the version. This executes the onCreate function and provides a

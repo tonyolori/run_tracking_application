@@ -66,11 +66,6 @@ class _HomepageState extends State<Homepage> {
                 icon: Icon(Icons.bookmark_border),
                 label: 'Settings',
               ),
-              NavigationDestination(
-                selectedIcon: Icon(Icons.bookmark),
-                icon: Icon(Icons.bookmark_border),
-                label: 'Settings',
-              ),
             ]),
         body: _screens[selectedIndex],
       ),

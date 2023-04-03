@@ -11,7 +11,7 @@ abstract class DB {
   static Future<void> init() async {
     try {
       String _path = await getDatabasesPath();
-      String _dbpath = p.join(_path, 'database.db');
+      String _dbpath = p.join(_path, 'run_database.db');
       _db = await openDatabase(_dbpath, version: _version, onCreate: onCreate);
     } catch (ex) {
       print(ex);
