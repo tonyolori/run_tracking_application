@@ -39,6 +39,15 @@ class _RunTrackingState extends State<RunTracking> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            OutlinedButton(onPressed: (){}, child: Text("Add steps")),
+            OutlinedButton(onPressed: (){}, child: Text("Remove steps")),
+            OutlinedButton(onPressed: (){}, child: Text("Reset")),
+
+          ],
+        ),
         Text(
           "Steps",
           style: TextStyle(fontSize: 48),
@@ -51,7 +60,7 @@ class _RunTrackingState extends State<RunTracking> {
           children: [
             CircularStepProgressIndicator(
               totalSteps: 100,
-              currentStep: 33,//((int.parse(_steps) * 100) ~/ 8000),
+              currentStep: ((int.parse(context.watch<StepHelper>().steps) * 100) ~/ 8000),//33,
               stepSize: 15,
               selectedColor: Colors.greenAccent,
               unselectedColor: Colors.grey[200],
@@ -86,7 +95,7 @@ class _RunTrackingState extends State<RunTracking> {
                     ),
                     Association(
                       label: "Steps",
-                      value: "999"//_steps,
+                      value: "8000"//_steps,
                     ),
                   ],
                 ),
