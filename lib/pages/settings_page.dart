@@ -1,3 +1,4 @@
+import 'package:fit_work/pages/user_page.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 //         prefs.getString("app-name");
 //     } catch (err) {
 //         /// setMockInitialValues initiates shared preference
-//         /// Adds app-name 
+//         /// Adds app-name
 //         SharedPreferences.setMockInitialValues({});
 //         Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 //         final SharedPreferences prefs = await _prefs;
@@ -37,10 +38,8 @@ class _SettingsPageState extends State<SettingsPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Return bool
     liveTrackingToggle = prefs.getBool('liveTrackingToggle') ?? true;
-    if(mounted){
-      setState(() {
-        
-      });
+    if (mounted) {
+      setState(() {});
     }
   }
 
@@ -57,12 +56,18 @@ class _SettingsPageState extends State<SettingsPage> {
       body: SettingsList(
         sections: [
           SettingsSection(
-            title: Text('Common'),
+            title: const Text('Common'),
             tiles: <SettingsTile>[
+              SettingsTile(
+                title: const Text('Profile'),
+                onPressed: (context) {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const UserPage()));
+                },
+              ),
               SettingsTile.navigation(
-                leading: Icon(Icons.language),
-                title: Text('Language'),
-                value: Text('English'),
+                leading: const Icon(Icons.language),
+                title: const Text('Language'),
+                value: const Text('English'),
               ),
               SettingsTile.switchTile(
                 onToggle: (value) async {
@@ -73,8 +78,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   setState(() {});
                 },
                 initialValue: liveTrackingToggle,
-                leading: Icon(Icons.location_city),
-                title: Text('Maps live tracking'),
+                leading: const Icon(Icons.location_city),
+                title: const Text('Maps live tracking'),
               ),
             ],
           ),

@@ -6,7 +6,7 @@ import 'map_page.dart';
 import 'maps_home.dart';
 import 'settings_page.dart';
 import 'progress_page.dart';
-import 'gpt_page.dart';
+import 'user_page.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -20,10 +20,10 @@ class _HomepageState extends State<Homepage> {
 
   final List<Widget> _screens = [
     MapHomePage(),
-    RunTracking(),
+    const RunTracking(),
     const ProgressPage(),
     const SettingsPage(),
-    //const StepPage(),
+    const UserPage(),
   ];
   askPermission() async {
     // var status = await Permission.camera.status;
@@ -60,6 +60,11 @@ class _HomepageState extends State<Homepage> {
                 selectedIcon: Icon(Icons.legend_toggle),
                 icon: Icon(Icons.monitor),
                 label: 'Progress',
+              ),
+              NavigationDestination(
+                selectedIcon: Icon(Icons.bookmark),
+                icon: Icon(Icons.bookmark_border),
+                label: 'Settings',
               ),
               NavigationDestination(
                 selectedIcon: Icon(Icons.bookmark),
