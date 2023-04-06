@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../database/step_data.dart';
-import '../database/step.dart' as step;
+import '../model/step_model.dart' as step;
 import 'package:pedometer/pedometer.dart';
 
 class StepHelper with ChangeNotifier {

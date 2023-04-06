@@ -1,5 +1,4 @@
 const String tableName = 'stepTable';
-const String fakeTableName = "ahsdfh";
 const String columnStepCount = 'steps';
 const String columnTime = 'time';
 const String columnYear = 'year';
@@ -36,7 +35,7 @@ class Step {
     year = time.year;
     month = time.month;
     day = time.day;
-    return {
+    return { 
       columnStepCount: stepCount,
       columnTime: time.toString(),
       columnYear: year,

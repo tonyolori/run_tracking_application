@@ -1,16 +1,14 @@
 import 'dart:math';
 
-class UserProfile {
+class UserModel {
   String name;
   int age;
   double height;
   double weight;
-  bool liveTrackingEnabled = true;
-  
 
   late double BMI;
 
-  UserProfile({
+  UserModel({
     required this.name,
     required this.age,
     required this.height,
