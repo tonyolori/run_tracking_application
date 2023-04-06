@@ -1,5 +1,7 @@
+import 'package:fit_work/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../database/user_data.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({Key? key}) : super(key: key);
@@ -16,6 +18,8 @@ class _UserPageState extends State<UserPage> {
   String? gender;
   double? weight;
 
+  //user details
+  UserModel? userModel;
   // Declare a global key for the form
   final _formKey = GlobalKey<FormState>();
 
@@ -24,6 +28,22 @@ class _UserPageState extends State<UserPage> {
   final _birthdayController = TextEditingController();
   final _heightController = TextEditingController();
   final _weightController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    setModel();
+  }
+
+  setModel() async {
+    userModel = await getUserValuesSF();
+    _nameController.text = userModel!.name;
+    _birthdayController.text = userModel!.birthday.toString();
+    _heightController.text = userModel!.height.toString();
+    _weightController.text = userModel!.weight.toString();
+    gender = userModel!.gender;
+    if (mounted) setState(() {});
+  }
 
   @override
   void dispose() {
@@ -207,6 +227,13 @@ class _UserPageState extends State<UserPage> {
                     // Validate and save the form fields
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
+
+                      setUserValuesSF(UserModel(
+                          name: name ?? '',
+                          gender: gender ?? 'male',
+                          birthday: birthday ?? DateTime.now(),
+                          height: height ?? 0,
+                          weight: weight ?? 0));
                       // Show a snackbar with the user input
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(

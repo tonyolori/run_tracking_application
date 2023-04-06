@@ -1,20 +1,29 @@
 import '../model/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<UserModel> getBoolValuesSF() async {
+Future<UserModel> getUserValuesSF() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   String name = prefs.getString('name') ?? '';
-  int age = prefs.getInt('age') ?? 0;
+  String gender = prefs.getString("gender")?? "male";
+  // int age = prefs.getInt('age') ?? 0;
+  String birthday = prefs.getString("birthday") ?? DateTime.now().toString();
   double height = prefs.getDouble("height") ?? 0;
   double weight = prefs.getDouble("weight") ?? 0;
-  return UserModel(name: name, age: age, height: height, weight: weight);
+  return UserModel(
+      name: name,
+      gender: gender,
+      birthday: DateTime.parse(birthday),
+      height: height,
+      weight: weight);
 }
 
-Future<void> setValuesSF(UserModel user) async {
+Future<void> setUserValuesSF(UserModel user) async {
   SharedPreferences prefs = await SharedPreferences.getInstance()
-  ..setString('name', user.name)
-  ..setInt('age', user.age)
-  ..setDouble("height", user.height)
-  ..setDouble("weight", user.weight);
+    ..setString('name', user.name)
+    ..setInt('age', user.age)
+    ..setDouble("height", user.height)
+    ..setDouble("weight", user.weight)
+    ..setString("gender", user.gender)
+    ..setString("birthday", user.birthday.toString());
 }

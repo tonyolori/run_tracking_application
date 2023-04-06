@@ -25,7 +25,7 @@ class _MapHomePageState extends State<MapHomePage> {
     List<Map<String, dynamic>> _results = await DB.query(Entry.table);
     _data = _results.map((item) => Entry.fromMap(item)).toList();
     _data.forEach((element) => _cards.add(EntryCard(entry: element)));
-    setState(() {});
+    if(mounted)setState(() {});
   }
 
   void _addEntries(Entry? en) async {
