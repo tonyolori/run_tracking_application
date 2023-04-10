@@ -1,6 +1,7 @@
 import 'package:fit_work/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../database/user_data.dart';
 
 class UserPage extends StatefulWidget {
@@ -36,7 +37,7 @@ class _UserPageState extends State<UserPage> {
   }
 
   setModel() async {
-    userModel = await getUserValuesSF();
+    userModel = await User.getUserValuesSF();
     _nameController.text = userModel!.name;
     _birthdayController.text = userModel!.birthday.toString();
     _heightController.text = userModel!.height.toString();
@@ -57,6 +58,7 @@ class _UserPageState extends State<UserPage> {
 
   @override
   Widget build(BuildContext context) {
+    //! String formattedDate = DateFormat('kk:mm:ss \n EEE d MMM').format(now);
     return Scaffold(
       appBar: AppBar(
         title: const Text('User Form'),
@@ -228,7 +230,7 @@ class _UserPageState extends State<UserPage> {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
 
-                      setUserValuesSF(UserModel(
+                      context.read<User>().setUserValuesSF(UserModel(
                           name: name ?? '',
                           gender: gender ?? 'male',
                           birthday: birthday ?? DateTime.now(),

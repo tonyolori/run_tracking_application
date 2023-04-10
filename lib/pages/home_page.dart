@@ -1,12 +1,13 @@
+import 'package:fit_work/database/user_data.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../constants.dart';
 import 'Step_page.dart';
 import 'package:flutter/material.dart';
-import 'map_page.dart';
 import 'maps_home.dart';
 import 'settings_page.dart';
 import 'progress_page.dart';
 import 'user_page.dart';
+import '../model/user_model.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -23,7 +24,7 @@ class _HomepageState extends State<Homepage> {
     const RunTracking(),
     const ProgressPage(),
     const SettingsPage(),
-    const UserPage(),
+    const SettingsPage(),
   ];
   askPermission() async {
     // var status = await Permission.camera.status;
@@ -35,6 +36,60 @@ class _HomepageState extends State<Homepage> {
 
     return true;
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     body: Row(
+  //       children: <Widget>[
+  //         // create a navigation rail
+  //         NavigationRail(
+  //           selectedIndex: selectedIndex,
+  //           onDestinationSelected: (int index) {
+  //             setState(() {
+  //               selectedIndex = index;
+  //             });
+  //           },
+  //           labelType: NavigationRailLabelType.selected,
+  //           backgroundColor: Colors.green,
+  //           destinations: const <NavigationRailDestination>[
+  //             // navigation destinations
+  //             NavigationRailDestination(
+  //               icon: Icon(Icons.favorite_border),
+  //               selectedIcon: Icon(Icons.favorite),
+  //               label: Text('Wishlist'),
+  //             ),
+  //             NavigationRailDestination(
+  //               icon: Icon(Icons.person_outline_rounded),
+  //               selectedIcon: Icon(Icons.person),
+  //               label: Text('Account'),
+  //             ),
+  //             NavigationRailDestination(
+  //               icon: Icon(Icons.shopping_cart_outlined),
+  //               selectedIcon: Icon(Icons.shopping_cart),
+  //               label: Text('Cart'),
+  //             ),
+  //             NavigationRailDestination(
+  //               icon: Icon(Icons.shopping_cart_outlined),
+  //               selectedIcon: Icon(Icons.shopping_cart),
+  //               label: Text('smart'),
+  //             ),
+  //             NavigationRailDestination(
+  //               icon: Icon(Icons.shopping_cart_outlined),
+  //               selectedIcon: Icon(Icons.shopping_cart),
+  //               label: Text('dart'),
+  //             ),
+  //           ],
+  //           selectedIconTheme: IconThemeData(color: Colors.white),
+  //           unselectedIconTheme: IconThemeData(color: Colors.black),
+  //           selectedLabelTextStyle: TextStyle(color: Colors.white),
+  //         ),
+  //         const VerticalDivider(thickness: 1, width: 2),
+  //         Expanded(child: _screens[selectedIndex])
+  //       ],
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -77,16 +132,3 @@ class _HomepageState extends State<Homepage> {
     );
   }
 }
-
-
-
-// ElevatedButton(
-//                 onPressed: () async {
-//                   await askPermission();
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(builder: (context) => RunTracking()),
-//                   );
-//                 },
-//                 child: const Text('Launch steps'),
-//               ),

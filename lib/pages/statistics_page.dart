@@ -3,14 +3,14 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import '../constants.dart';
 
-class statisticsPage extends StatefulWidget {
-  const statisticsPage({super.key});
+class StatisticsPage extends StatefulWidget {
+  const StatisticsPage({super.key});
 
   @override
-  State<statisticsPage> createState() => _statisticsPageState();
+  State<StatisticsPage> createState() => _StatisticsPageState();
 }
 
-class _statisticsPageState extends State<statisticsPage> {
+class _StatisticsPageState extends State<StatisticsPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
