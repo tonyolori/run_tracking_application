@@ -22,8 +22,8 @@ class StepHelper with ChangeNotifier {
   StepHelper() {
     _innit();
   }
-  _innit() {
-    StepDatabase.innit();
+  _innit() async{
+    await StepDatabase.innit();
     if (!databasefilled) {
       fillDatabase();
     }

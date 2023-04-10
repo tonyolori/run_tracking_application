@@ -17,7 +17,6 @@ class RunTracking extends StatefulWidget {
 
 class _RunTrackingState extends State<RunTracking> {
   String _status = '?', _steps = '?';
-  late DatabaseCrud database;
 
   @override
   void initState() {

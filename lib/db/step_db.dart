@@ -103,9 +103,9 @@ abstract class StepDatabase {
     } on Exception catch (e) {
       print(e);
     } catch (e) {
-      await createTable();
-      maps = await _db!.rawQuery(
-          'SELECT * FROM $tableName WHERE $columnYear = $year and $columnMonth = $month and  $columnDay = $day');
+      // await createTable();
+      // maps = await _db!.rawQuery(
+      //     'SELECT * FROM $tableName WHERE $columnYear = $year and $columnMonth = $month and  $columnDay = $day');
     }
 
     return convertToStepList(maps);

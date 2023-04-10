@@ -12,7 +12,6 @@ class ProgressPage extends StatefulWidget {
 }
 
 class _ProgressPageState extends State<ProgressPage> {
-  late DatabaseCrud database;
   List<Map<String, dynamic>> constructedBar = [];
   List<Map<String, dynamic>> constructedBarWeekly = [];
 

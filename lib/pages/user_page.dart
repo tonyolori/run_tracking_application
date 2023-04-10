@@ -16,7 +16,7 @@ class _UserPageState extends State<UserPage> {
   String? name;
   DateTime? birthday;
   double? height;
-  String? gender;
+  String? gender = 'Male';
   double? weight;
 
   //user details
@@ -59,6 +59,9 @@ class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
     //! String formattedDate = DateFormat('kk:mm:ss \n EEE d MMM').format(now);
+    //! Format the date as a string
+    //! final formatter = DateFormat('yyyy-MM-dd');
+    //! final dateString = formatter.format(date);
     return Scaffold(
       appBar: AppBar(
         title: const Text('User Form'),
@@ -167,7 +170,7 @@ class _UserPageState extends State<UserPage> {
                   },
                 ),
                 const SizedBox(height: 16.0),
-                // Gender field
+                //Gender field
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
                     labelText: 'Gender',
@@ -229,13 +232,25 @@ class _UserPageState extends State<UserPage> {
                     // Validate and save the form fields
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-
+                      if (gender == null ||
+                          name == null ||
+                          birthday == null ||
+                          height == null ||
+                          weight == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                'Null value for  $birthday, your height is $height cm, your gender is $gender and your weight is $weight kg.'),
+                          ),
+                        );
+                        return;
+                      }
                       context.read<User>().setUserValuesSF(UserModel(
-                          name: name ?? '',
-                          gender: gender ?? 'male',
+                          name: name!,
+                          gender: gender!,
                           birthday: birthday ?? DateTime.now(),
-                          height: height ?? 0,
-                          weight: weight ?? 0));
+                          height: height!,
+                          weight: weight!));
                       // Show a snackbar with the user input
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
