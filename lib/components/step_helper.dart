@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../database/step_data.dart';
+import '../db/step_db.dart';
 import '../model/step_model.dart' as step;
 import 'package:pedometer/pedometer.dart';
 
 class StepHelper with ChangeNotifier {
-  bool databasefilled = false;//change this to be gotten from shared preferences
+  bool databasefilled =
+      false; //change this to be gotten from shared preferences
   List<Map<String, dynamic>> constructedbar = _dummyBarData;
   List<Map<String, dynamic>> constructedbarweekly = _dummyBarDataWeekly;
   List<Map<String, Object>> barData = _dummyBarData[0]['data'];
   List<step.Step> availableSteps = [];
-  late DatabaseCrud database;
   //db
   late Stream<StepCount> _pedometer;
   late var _subscription;
@@ -20,8 +20,10 @@ class StepHelper with ChangeNotifier {
   //get barData ->
 
   StepHelper() {
-    database = DatabaseCrud();
-
+    _innit();
+  }
+  _innit() {
+    StepDatabase.innit();
     if (!databasefilled) {
       fillDatabase();
     }
@@ -57,7 +59,7 @@ class StepHelper with ChangeNotifier {
   fillStepData() async {
     await fillDatabase();
 
-    availableSteps = await database.getAllSteps();
+    availableSteps = await StepDatabase.getAllSteps();
 
     for (int i = 0; i < 11; i++) {
       barData[i]['domain'] = _toMonthSt(i + 1);
@@ -72,18 +74,19 @@ class StepHelper with ChangeNotifier {
 
     if (month < 1 || month > 12) return 0;
 
-    var stepsInMonth = await database.getStepsInMonth(month);
+    var stepsInMonth = await StepDatabase.getStepsInMonth(month);
     for (int i = 0; i < stepsInMonth.length; i++) {
       stepcount = stepcount + stepsInMonth[i].stepCount;
     }
     return stepcount;
   }
-  _GetStepCountInWeek(int month,int week) async {
+
+  _GetStepCountInWeek(int month, int week) async {
     int stepcount = 0;
 
     if (month < 1 || month > 12) return 0;
 
-    var stepsInMonth = await database.getStepsInMonth(month);
+    var stepsInMonth = await StepDatabase.getStepsInMonth(month);
     for (int i = 0; i < stepsInMonth.length; i++) {
       stepcount = stepcount + stepsInMonth[i].stepCount;
     }
@@ -91,13 +94,10 @@ class StepHelper with ChangeNotifier {
   }
 
   Future<void> fillDatabase() async {
-    var steps = database.convertToStepList(maps);
+    var steps = StepDatabase.convertToStepList(maps);
 
-    if (!database.readyState) {
-      await database.innit();
-    }
     for (int i = 0; i < steps.length; i++) {
-      database.insertStep(steps[i]);
+      StepDatabase.insertStep(steps[i]);
     }
 
     databasefilled = true;
@@ -284,7 +284,6 @@ List<Map<String, dynamic>> maps = [
     step.columnTime: "2023-06-01 18:08:46.385056",
   },
 ];
-
 
 List<Map<String, dynamic>> _dummyBarDataWeekly = [
   {

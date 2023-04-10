@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:d_chart/d_chart.dart';
 import 'package:provider/provider.dart';
 import '../components/step_helper.dart';
-import '../database/step_data.dart';
+import '../db/step_db.dart';
 
 class ProgressPage extends StatefulWidget {
   const ProgressPage({super.key});
@@ -35,6 +35,9 @@ class _ProgressPageState extends State<ProgressPage> {
     super.initState();
     //addListener();
     updateBarValues();
+    //? example 
+    //DB.init().then((value) => _fetchEntries());
+
   }
 
   @override

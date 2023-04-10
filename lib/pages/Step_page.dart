@@ -6,7 +6,7 @@ import 'dart:async';
 import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import '../components/step_helper.dart';
-import '../database/step_data.dart';
+import '../db/step_db.dart';
 
 class RunTracking extends StatefulWidget {
   const RunTracking({super.key});

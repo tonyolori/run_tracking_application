@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../db/db.dart';
+import '../db/run_db.dart';
 import '../model/entry.dart';
 import 'map_page.dart';
 import '../widgets/entry_card.dart';
