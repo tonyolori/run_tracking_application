@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import '../model/step_model.dart';
+import '../model/calorie_model.dart';
 
 abstract class CalorieDatabase {
   static Database? _db;
@@ -26,7 +26,7 @@ abstract class CalorieDatabase {
     return db.execute(
       '''
       CREATE TABLE $tableName(
-        $columnStepCount INT,
+        $columnCalorieCount INT,
         $columnYear INT,
         $columnMonth INT,
         $columnDay INT,
@@ -38,24 +38,24 @@ abstract class CalorieDatabase {
   }
 
   // Define a function that inserts dogs into the database
-  static Future<bool> insertCalorie(Step stepdata) async {
-    List<Step> duplicateStep =
-        await getCalorie(stepdata.year, stepdata.month, stepdata.day);
+  static Future<bool> insertCalorie(Calorie calorieData) async {
+    List<Calorie> duplicateCalorie =
+        await getCalorie(calorieData.year, calorieData.month, calorieData.day);
 
-    if ((duplicateStep.isNotEmpty) &&
-        (duplicateStep[0].stepCount >= stepdata.stepCount)) {
+    if ((duplicateCalorie.isNotEmpty) &&
+        (duplicateCalorie[0].calorieCount >= calorieData.calorieCount)) {
       return false;
     }
 
     await _db!.insert(
       tableName,
-      stepdata.toMap(),
+      calorieData.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     return true;
   }
 
-  static Future<List<Step>> getAllCalories() async {
+  static Future<List<Calorie>> getAllCalories() async {
     // Get a reference to the database.
     //final db = await database;
 
@@ -63,10 +63,10 @@ abstract class CalorieDatabase {
     final List<Map<String, dynamic>> maps = await _db!.query(tableName);
 
     // Convert the List<Map<String, dynamic> into a List<step>.
-    return convertToStepList(maps);
+    return convertToCalorieList(maps);
   }
 
-  static Future<List<Step>> getCalorie(int year, int month, int day) async {
+  static Future<List<Calorie>> getCalorie(int year, int month, int day) async {
     List<Map<String, dynamic>> maps = [];
     try {
       maps = await _db!.rawQuery(
@@ -79,15 +79,15 @@ abstract class CalorieDatabase {
       //     'SELECT * FROM $tableName WHERE $columnYear = $year and $columnMonth = $month and  $columnDay = $day');
     }
 
-    return convertToStepList(maps);
+    return convertToCalorieList(maps);
   }
 
   // Convert the List <Map<String, dynamic> into a List<step>.
-  static List<Step> convertToStepList(List<Map<String, dynamic>> maps) {
+  static List<Calorie> convertToCalorieList(List<Map<String, dynamic>> maps) {
     return List.generate(maps.length, (i) {
       DateTime time = DateTime.parse(maps[i][columnTime]);
-      return Step(
-        stepCount: maps[i][columnStepCount] ?? -1,
+      return Calorie(
+        calorieCount: maps[i][columnCalorieCount] ?? -1,
         time: time,
       );
     });
