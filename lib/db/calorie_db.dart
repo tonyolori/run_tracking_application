@@ -1,40 +1,23 @@
 import 'dart:async';
-import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../model/step_model.dart';
 
-abstract class StepDatabase {
+abstract class CalorieDatabase {
   static Database? _db;
   static int get _version => 1;
-
 
   static Future<void> innit() async {
     _db = await openDatabase(
       // Set the path to the database. Note: Using the `join` function from the
       // `path` package is best practice to ensure the path is correctly
       // constructed for each platform.
-      join(await getDatabasesPath(), 'step_database.db'),
+      join(await getDatabasesPath(), 'calorie_database.db'),
       // When the database is first created, create a table to store dogs.
       onCreate: onCreate,
       // Set the version. This executes the onCreate function and provides a
       // path to perform database upgrades and downgrades.
       version: _version,
-    );
-  }
-
-  static Future<void> deleteStep(int id) async {
-    // Get a reference to the database.
-    final db = await openDatabase(
-      join(await getDatabasesPath(), 'fitwork_database.db'),
-      version: 1,
-    );
-
-    // Remove a step entry from the database.
-    await db.delete(
-      tableName,
-      where: 'id = ?',
-      whereArgs: [id],
     );
   }
 
@@ -54,21 +37,10 @@ abstract class StepDatabase {
     );
   }
 
-  static void dropTable() async {
-    _db!.execute('drop table $tableName');
-  }
-
-  static Future<bool> createTable() async {
-    onCreate(_db, 1);
-
-    return true;
-  }
-
   // Define a function that inserts dogs into the database
-  static Future<bool> insertStep(Step stepdata) async {
-
+  static Future<bool> insertCalorie(Step stepdata) async {
     List<Step> duplicateStep =
-        await getStep(stepdata.year, stepdata.month, stepdata.day);
+        await getCalorie(stepdata.year, stepdata.month, stepdata.day);
 
     if ((duplicateStep.isNotEmpty) &&
         (duplicateStep[0].stepCount >= stepdata.stepCount)) {
@@ -83,8 +55,7 @@ abstract class StepDatabase {
     return true;
   }
 
-  static Future<List<Step>> getAllSteps() async {
-    
+  static Future<List<Step>> getAllCalories() async {
     // Get a reference to the database.
     //final db = await database;
 
@@ -95,7 +66,7 @@ abstract class StepDatabase {
     return convertToStepList(maps);
   }
 
-  static Future<List<Step>> getStep(int year, int month, int day) async {
+  static Future<List<Step>> getCalorie(int year, int month, int day) async {
     List<Map<String, dynamic>> maps = [];
     try {
       maps = await _db!.rawQuery(
@@ -109,53 +80,6 @@ abstract class StepDatabase {
     }
 
     return convertToStepList(maps);
-  }
-
-  static Future<List<Step>> getStepsInMonth(int month) async {
-
-    // Query the table for all The Dogs.
-    final List<Map<String, dynamic>> unFilteredMaps = await _db!.query(tableName);
-    final List<Map<String, dynamic>> filteredMaps = unFilteredMaps.where((map) {
-      DateTime stepTime = DateTime.parse(map[columnTime]);
-      return stepTime.month == month;
-    }).toList();
-
-    // Convert the List<Map<String, dynamic> into a List<step>.
-    return convertToStepList(filteredMaps);
-  }
-
-  /// you write quotes like this `yup yup`
-  static Future<List<Step>> getStepsInWeek(int month, int day) async {
-
-    // Query the table for all The Dogs.
-    final List<Map<String, dynamic>> unFilteredMaps = await _db!.query(tableName);
-    final List<Map<String, dynamic>> filteredMaps = unFilteredMaps.where((map) {
-      DateTime stepTime = DateTime.parse(map[columnTime]);
-
-      if (stepTime.month == month) {
-        //greater than 7 then we can safely minus 7
-        // return true for the days within that
-        if (day > 6) {
-          //the difference between the day we are comparing with and the given day is less than 7
-          int difference = stepTime.day - day;
-
-          if (difference.abs() < 7) {
-            return true;
-          } else {
-            return false;
-          }
-        }
-        //minusing 7 will leader to the former month for now we return true
-        else {
-          return true;
-        }
-      } else {
-        return false;
-      }
-    }).toList();
-
-    // Convert the List<Map<String, dynamic> into a List<step>.
-    return convertToStepList(filteredMaps);
   }
 
   // Convert the List <Map<String, dynamic> into a List<step>.
