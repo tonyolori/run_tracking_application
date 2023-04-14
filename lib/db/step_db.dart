@@ -108,14 +108,13 @@ abstract class StepDatabase {
     return convertToStepList(maps);
   }
 
-  static Future<List<Step>> getStepsInMonth(int month) async {
+  static Future<List<Step>> getStepsInMonth(DateTime date,int month) async {
     // Query the table for all The Dogs.
     final List<Map<String, dynamic>> unFilteredMaps =
         await _db!.query(tableName);
     final List<Map<String, dynamic>> filteredMaps = unFilteredMaps.where((map) {
       DateTime stepTime = DateTime.parse(map[columnTime]);
-      final year = DateTime.now().year;
-      return stepTime.month == month && stepTime.year == year;
+      return stepTime.year == date.year && stepTime.month == month;
     }).toList();
 
     // Convert the List<Map<String, dynamic> into a List<step>.
@@ -123,7 +122,8 @@ abstract class StepDatabase {
   }
 
   /// you write quotes like this `yup yup`
-  static Future<List<Step>> getStepsInWeek(int month, int day) async {
+  /// Return a list of steps that match, down to the month
+  static Future<List<Step>> getStepsInWeek(DateTime date) async {
     final List<Map<String, dynamic>> unFilteredMaps =
         await _db!.query(tableName);
     final List<Map<String, dynamic>> filteredMaps = unFilteredMaps.where((map) {
@@ -132,6 +132,22 @@ abstract class StepDatabase {
       //i want to display, starting from this monday to next monday, all steps
 
       return true;
+    }).toList();
+
+    // Convert the List<Map<String, dynamic> into a List<step>.
+    return convertToStepList(filteredMaps);
+  }
+
+  /// Return a list of steps that match, down to the day
+  static Future<List<Step>> getStepsInDay(DateTime date) async {
+    final List<Map<String, dynamic>> unFilteredMaps =
+        await _db!.query(tableName);
+    final List<Map<String, dynamic>> filteredMaps = unFilteredMaps.where((map) {
+      DateTime stepTime = DateTime.parse(map[columnTime]);
+
+      return date.year == stepTime.year &&
+          date.month == stepTime.month &&
+          date.day == stepTime.day;
     }).toList();
 
     // Convert the List<Map<String, dynamic> into a List<step>.
@@ -185,7 +201,8 @@ List<DateTime> getDaysInWeek({
   // Defaults to now
   final date = from ?? DateTime.now();
 
-  return _daySincePreviousMonday(from: date) + _daysTillNextMonday(from: date);
+  return _daySincePreviousMonday(from: date) +
+      _daysTillNextMonday(from: date.add(const Duration(days: 1)));
 }
 
 List<DateTime> _daySincePreviousMonday({required DateTime from}) {
@@ -207,9 +224,4 @@ List<DateTime> _daysTillNextMonday({required DateTime from, int? count}) {
 
   return [from] +
       _daysTillNextMonday(from: from.add(const Duration(days: 1)), count: 1);
-}
-
-int main() {
-  print(getDaysInWeek());
-  return 0;
 }

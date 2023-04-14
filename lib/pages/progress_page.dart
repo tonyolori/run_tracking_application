@@ -34,9 +34,8 @@ class _ProgressPageState extends State<ProgressPage> {
     super.initState();
     //addListener();
     updateBarValues();
-    //? example 
+    //? example
     //DB.init().then((value) => _fetchEntries());
-
   }
 
   @override
@@ -45,13 +44,12 @@ class _ProgressPageState extends State<ProgressPage> {
     super.dispose();
   }
 
+  String dropdownValue = 'Monthly';
   @override
   Widget build(BuildContext context) {
-    String dropdownValue = 'Yearly';
-
     return Scaffold(
       appBar: AppBar(
-        title: Text("Progress"),
+        title: const Text("Progress"),
       ),
       body: Column(
         children: [
@@ -63,9 +61,13 @@ class _ProgressPageState extends State<ProgressPage> {
                 height: 50,
                 child: DropdownButton<String>(
                   value: dropdownValue,
-                  onChanged: (String? newValue) {
+                  onChanged: (String? newValue) async {
+                    
+                    context.read<StepHelper>().choice = newValue!;
+                    await context.read<StepHelper>().constructBarData(newValue);
                     setState(() {
-                      dropdownValue = newValue!;
+                      dropdownValue = newValue;
+
                     });
                   }, //stop at trying to create weekly graph
                   items: <String>[
@@ -104,9 +106,6 @@ class _ProgressPageState extends State<ProgressPage> {
   }
 }
 
-
-
-
 //   @override
 //   Widget build(BuildContext context) {
 //     constructedBar = context.read<StepHelper>().constructedbar;
@@ -144,10 +143,3 @@ class _ProgressPageState extends State<ProgressPage> {
 //   }
 
 // }
-
-
-
-
-
-
-

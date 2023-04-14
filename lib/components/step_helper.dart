@@ -4,9 +4,17 @@ import '../db/step_db.dart';
 import '../model/step_model.dart' as step;
 import 'package:pedometer/pedometer.dart';
 
+//enum TimeFrame {year,month, week }
+final List<String> timeframe = <String>[
+  'Yearly',
+  'Monthly',
+  'Daily',
+];
+
 class StepHelper with ChangeNotifier {
   bool databasefilled =
       false; //change this to be gotten from shared preferences
+  String choice = "Monthly";
   List<Map<String, dynamic>> constructedbar = _dummyBarData;
   List<Map<String, dynamic>> constructedbarweekly = _dummyBarDataWeekly;
   List<Map<String, Object>> barData = _dummyBarData[0]['data'];
@@ -22,14 +30,15 @@ class StepHelper with ChangeNotifier {
   StepHelper() {
     _innit();
   }
-  _innit() async{
-    await StepDatabase.innit();
+  _innit() async {
+    await StepDatabase.innit().then((value) => fillStepData());
     if (!databasefilled) {
       fillDatabase();
     }
-    fillStepData();
+
     startListening();
   }
+
   void startListening() async {
     await Permission.activityRecognition.request().isGranted;
     _pedometer = Pedometer.stepCountStream;
@@ -53,6 +62,7 @@ class StepHelper with ChangeNotifier {
     print("Stephelper:$steps");
     notifyListeners();
   }
+
   //****************** db functions */
 
   //this gets the values from db so it can be displayed in progress page
@@ -61,32 +71,67 @@ class StepHelper with ChangeNotifier {
 
     availableSteps = await StepDatabase.getAllSteps();
 
-    for (int i = 0; i < 11; i++) {
-      barData[i]['domain'] = _toMonthSt(i + 1);
-      barData[i]['measure'] = await _GetStepCountInMonth(i + 1);
+    await constructBarData(choice);
+  }
+
+  Future<void> constructBarData(String choice) async {
+    // barData = [];
+    DateTime time = DateTime.now();
+    //Yearly
+    if (choice == timeframe[0]) {
+    } else if (choice == timeframe[1]) {
+      //for month
+      for (int i = 0; i < 11; i++) {
+        barData[i]['domain'] = _toMonthSt(i + 1);
+        barData[i]['measure'] = await _getStepCountInMonth(time,i);
+      }
     }
+    //Daily
+    else if (choice == timeframe[2]) {
+      List<DateTime> dates = getDaysInWeek(from: DateTime.now());
+      for (int i = 0; i < dates.length; i++) {
+        // Map<String, Object> entry = {
+        //   'domain': _toDaySt(dates[i].day),
+        //   'measure': await _getStepCountInDay(dates[i])
+        // };
+
+        // barData.add(entry);
+        //? old way list of days
+        barData[i]['domain'] = _toDaySt(dates[i].day);
+        barData[i]['measure'] = await _getStepCountInDay(dates[i]);
+      }
+    }
+
     constructedbar[0]['data'] = barData;
+
     notifyListeners();
   }
 
-  _GetStepCountInMonth(int month) async {
+  _getStepCountInMonth(DateTime date,int month) async {
     int stepcount = 0;
 
-    if (month < 1 || month > 12) return 0;
-
-    var stepsInMonth = await StepDatabase.getStepsInMonth(month);
+    var stepsInMonth = await StepDatabase.getStepsInMonth(date,month);
     for (int i = 0; i < stepsInMonth.length; i++) {
       stepcount = stepcount + stepsInMonth[i].stepCount;
     }
     return stepcount;
   }
 
-  _GetStepCountInWeek(int month, int week) async {
+  _getStepCountInWeek(DateTime date, int month) async {
     int stepcount = 0;
 
-    if (month < 1 || month > 12) return 0;
+    var stepsInMonth = await StepDatabase.getStepsInMonth(DateTime.now(),month);
+    for (int i = 0; i < stepsInMonth.length; i++) {
+      stepcount = stepcount + stepsInMonth[i].stepCount;
+    }
+    return stepcount;
+  }
 
-    var stepsInMonth = await StepDatabase.getStepsInMonth(month);
+  _getStepCountInDay(DateTime date) async {
+    int stepcount = 0;
+    List<DateTime> dates = getDaysInWeek(from: date);
+
+    var stepsInMonth = await StepDatabase.getStepsInDay(date);
     for (int i = 0; i < stepsInMonth.length; i++) {
       stepcount = stepcount + stepsInMonth[i].stepCount;
     }
@@ -101,7 +146,6 @@ class StepHelper with ChangeNotifier {
     }
 
     databasefilled = true;
-    print("db filled");
     return;
   }
 
@@ -150,23 +194,23 @@ class StepHelper with ChangeNotifier {
 
   String _toDaySt(int day) {
     switch (day) {
-      case 1:
+      case 7:
         return "Sunday";
 
-      case 2:
+      case 1:
         return "Monday";
 
-      case 3:
+      case 2:
         return "Tuesday";
 
-      case 4:
+      case 3:
         return "Wednesday";
-      case 5:
+      case 4:
         return "Thursday";
 
-      case 6:
+      case 5:
         return "Friday";
-      case 7:
+      case 6:
         return "Saturday";
       default:
         return " invalid entry";
