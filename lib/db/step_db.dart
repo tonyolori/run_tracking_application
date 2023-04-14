@@ -8,7 +8,6 @@ abstract class StepDatabase {
   static Database? _db;
   static int get _version => 1;
 
-
   static Future<void> innit() async {
     _db = await openDatabase(
       // Set the path to the database. Note: Using the `join` function from the
@@ -66,7 +65,6 @@ abstract class StepDatabase {
 
   // Define a function that inserts dogs into the database
   static Future<bool> insertStep(Step stepdata) async {
-
     List<Step> duplicateStep =
         await getStep(stepdata.year, stepdata.month, stepdata.day);
 
@@ -84,7 +82,6 @@ abstract class StepDatabase {
   }
 
   static Future<List<Step>> getAllSteps() async {
-    
     // Get a reference to the database.
     //final db = await database;
 
@@ -112,12 +109,13 @@ abstract class StepDatabase {
   }
 
   static Future<List<Step>> getStepsInMonth(int month) async {
-
     // Query the table for all The Dogs.
-    final List<Map<String, dynamic>> unFilteredMaps = await _db!.query(tableName);
+    final List<Map<String, dynamic>> unFilteredMaps =
+        await _db!.query(tableName);
     final List<Map<String, dynamic>> filteredMaps = unFilteredMaps.where((map) {
       DateTime stepTime = DateTime.parse(map[columnTime]);
-      return stepTime.month == month;
+      final year = DateTime.now().year;
+      return stepTime.month == month && stepTime.year == year;
     }).toList();
 
     // Convert the List<Map<String, dynamic> into a List<step>.
@@ -126,32 +124,14 @@ abstract class StepDatabase {
 
   /// you write quotes like this `yup yup`
   static Future<List<Step>> getStepsInWeek(int month, int day) async {
-
-    // Query the table for all The Dogs.
-    final List<Map<String, dynamic>> unFilteredMaps = await _db!.query(tableName);
+    final List<Map<String, dynamic>> unFilteredMaps =
+        await _db!.query(tableName);
     final List<Map<String, dynamic>> filteredMaps = unFilteredMaps.where((map) {
       DateTime stepTime = DateTime.parse(map[columnTime]);
+      //monday has a value of 1
+      //i want to display, starting from this monday to next monday, all steps
 
-      if (stepTime.month == month) {
-        //greater than 7 then we can safely minus 7
-        // return true for the days within that
-        if (day > 6) {
-          //the difference between the day we are comparing with and the given day is less than 7
-          int difference = stepTime.day - day;
-
-          if (difference.abs() < 7) {
-            return true;
-          } else {
-            return false;
-          }
-        }
-        //minusing 7 will leader to the former month for now we return true
-        else {
-          return true;
-        }
-      } else {
-        return false;
-      }
+      return true;
     }).toList();
 
     // Convert the List<Map<String, dynamic> into a List<step>.
@@ -168,4 +148,68 @@ abstract class StepDatabase {
       );
     });
   }
+}
+
+DateTime _findPreviousDay({required DateTime from}) {
+  //// Get the number of days to go back to find a saturday
+  ////final daysFromSaturday = (from.weekday - DateTime.saturday) % 7;
+
+  return from.subtract(const Duration(days: 1));
+}
+
+List<DateTime> findPreviousDays({
+  required int count,
+  DateTime? from,
+}) {
+  // End recursion
+  if (count == 0) {
+    return [];
+  }
+
+  // Defaults to now
+  final date = from ?? DateTime.now();
+
+  return [_findPreviousDay(from: date)] +
+      findPreviousDays(
+        count: count - 1,
+        from: date.subtract(Duration(days: 1)),
+      );
+}
+
+///monday  == 1     | Sunday == 7
+///
+///if we are at wednesday which is [3], i want to receive, both the forward 4 and the backward 2 days
+List<DateTime> getDaysInWeek({
+  DateTime? from,
+}) {
+  // Defaults to now
+  final date = from ?? DateTime.now();
+
+  return _daySincePreviousMonday(from: date) + _daysTillNextMonday(from: date);
+}
+
+List<DateTime> _daySincePreviousMonday({required DateTime from}) {
+  // Get the number of days to go back to find a monday
+  final daysFromMonday = (from.weekday - DateTime.monday) % 7;
+  if (daysFromMonday == 0) return [from];
+
+  return [from] +
+      _daySincePreviousMonday(
+        from: from.subtract(const Duration(days: 1)),
+      );
+}
+
+List<DateTime> _daysTillNextMonday({required DateTime from, int? count}) {
+  // Get the number of days to go back to find a monday
+  final daysFromMonday = (from.weekday - DateTime.monday) % 7;
+  // if count is equal to null then this is not the first time the function has been called
+  if (daysFromMonday == 0 && count != null) return [from];
+
+  return [from] +
+      _daysTillNextMonday(from: from.add(const Duration(days: 1)), count: 1);
+}
+
+int main() {
+  print(getDaysInWeek());
+  return 0;
 }
