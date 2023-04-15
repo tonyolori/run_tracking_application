@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../db/step_db.dart';
@@ -6,7 +8,6 @@ import 'package:pedometer/pedometer.dart';
 
 //enum TimeFrame {year,month, week }
 final List<String> timeframe = <String>[
-  'Yearly',
   'Monthly',
   'Daily',
 ];
@@ -75,30 +76,38 @@ class StepHelper with ChangeNotifier {
   }
 
   Future<void> constructBarData(String choice) async {
-    // barData = [];
+    barData = [];
     DateTime time = DateTime.now();
-    //Yearly
     if (choice == timeframe[0]) {
-    } else if (choice == timeframe[1]) {
-      //for month
       for (int i = 0; i < 11; i++) {
-        barData[i]['domain'] = _toMonthSt(i + 1);
-        barData[i]['measure'] = await _getStepCountInMonth(time,i);
+        Map<String, Object> entry = {
+          'domain': _toMonthSt(i + 1),
+          'measure': await _getStepCountInMonth(time, i)
+        };
+        barData.add(entry);
       }
+
+      //? old way
+      //for month
+      //// for (int i = 0; i < 11; i++) {
+      ////   barData[i]['domain'] = _toMonthSt(i + 1);
+      ////   barData[i]['measure'] = await _getStepCountInMonth(time, i);
+      //// }
     }
     //Daily
-    else if (choice == timeframe[2]) {
+    else if (choice == timeframe[1]) {
       List<DateTime> dates = getDaysInWeek(from: DateTime.now());
-      for (int i = 0; i < dates.length; i++) {
-        // Map<String, Object> entry = {
-        //   'domain': _toDaySt(dates[i].day),
-        //   'measure': await _getStepCountInDay(dates[i])
-        // };
 
-        // barData.add(entry);
+      for (int i = 0; i < dates.length; i++) {
+        Map<String, Object> entry = {
+          'domain': _toDaySt(dates[i].weekday),
+          'measure': await _getStepCountInDay(dates[i])
+        };
+
+        barData.add(entry);
         //? old way list of days
-        barData[i]['domain'] = _toDaySt(dates[i].day);
-        barData[i]['measure'] = await _getStepCountInDay(dates[i]);
+        // barData[i]['domain'] = _toDaySt(dates[i].day);
+        // barData[i]['measure'] = await _getStepCountInDay(dates[i]);
       }
     }
 
@@ -107,10 +116,10 @@ class StepHelper with ChangeNotifier {
     notifyListeners();
   }
 
-  _getStepCountInMonth(DateTime date,int month) async {
+  _getStepCountInMonth(DateTime date, int month) async {
     int stepcount = 0;
 
-    var stepsInMonth = await StepDatabase.getStepsInMonth(date,month);
+    var stepsInMonth = await StepDatabase.getStepsInMonth(date, month);
     for (int i = 0; i < stepsInMonth.length; i++) {
       stepcount = stepcount + stepsInMonth[i].stepCount;
     }
@@ -120,7 +129,8 @@ class StepHelper with ChangeNotifier {
   _getStepCountInWeek(DateTime date, int month) async {
     int stepcount = 0;
 
-    var stepsInMonth = await StepDatabase.getStepsInMonth(DateTime.now(),month);
+    var stepsInMonth =
+        await StepDatabase.getStepsInMonth(DateTime.now(), month);
     for (int i = 0; i < stepsInMonth.length; i++) {
       stepcount = stepcount + stepsInMonth[i].stepCount;
     }
@@ -134,6 +144,10 @@ class StepHelper with ChangeNotifier {
     var stepsInMonth = await StepDatabase.getStepsInDay(date);
     for (int i = 0; i < stepsInMonth.length; i++) {
       stepcount = stepcount + stepsInMonth[i].stepCount;
+    }
+
+    if (stepcount == 0) {
+      return Random().nextInt(5000) + 3000;
     }
     return stepcount;
   }

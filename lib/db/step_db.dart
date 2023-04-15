@@ -108,7 +108,8 @@ abstract class StepDatabase {
     return convertToStepList(maps);
   }
 
-  static Future<List<Step>> getStepsInMonth(DateTime date,int month) async {
+  ///Date is used for year, its dateTime for future expansion
+  static Future<List<Step>> getStepsInMonth(DateTime date, int month) async {
     // Query the table for all The Dogs.
     final List<Map<String, dynamic>> unFilteredMaps =
         await _db!.query(tableName);
@@ -210,10 +211,10 @@ List<DateTime> _daySincePreviousMonday({required DateTime from}) {
   final daysFromMonday = (from.weekday - DateTime.monday) % 7;
   if (daysFromMonday == 0) return [from];
 
-  return [from] +
-      _daySincePreviousMonday(
+  return _daySincePreviousMonday(
         from: from.subtract(const Duration(days: 1)),
-      );
+      ) +
+      [from];
 }
 
 List<DateTime> _daysTillNextMonday({required DateTime from, int? count}) {

@@ -13,7 +13,6 @@ class ProgressPage extends StatefulWidget {
 
 class _ProgressPageState extends State<ProgressPage> {
   List<Map<String, dynamic>> constructedBar = [];
-  List<Map<String, dynamic>> constructedBarWeekly = [];
 
   // void addListener() {
   //   context.read<StepHelper>().addListener(updateBarValues);
@@ -25,7 +24,6 @@ class _ProgressPageState extends State<ProgressPage> {
 
   void updateBarValues() {
     constructedBar = context.read<StepHelper>().constructedbar;
-    constructedBarWeekly = context.read<StepHelper>().constructedbarweekly;
     setState(() {});
   }
 
@@ -62,16 +60,13 @@ class _ProgressPageState extends State<ProgressPage> {
                 child: DropdownButton<String>(
                   value: dropdownValue,
                   onChanged: (String? newValue) async {
-                    
                     context.read<StepHelper>().choice = newValue!;
                     await context.read<StepHelper>().constructBarData(newValue);
                     setState(() {
                       dropdownValue = newValue;
-
                     });
                   }, //stop at trying to create weekly graph
                   items: <String>[
-                    'Yearly',
                     'Monthly',
                     'Daily',
                   ].map<DropdownMenuItem<String>>((String value) {
