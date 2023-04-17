@@ -78,6 +78,8 @@ class StepHelper with ChangeNotifier {
   Future<void> constructBarData(String choice) async {
     barData = [];
     DateTime time = DateTime.now();
+
+    //Monthly
     if (choice == timeframe[0]) {
       for (int i = 0; i < 11; i++) {
         Map<String, Object> entry = {
@@ -86,13 +88,6 @@ class StepHelper with ChangeNotifier {
         };
         barData.add(entry);
       }
-
-      //? old way
-      //for month
-      //// for (int i = 0; i < 11; i++) {
-      ////   barData[i]['domain'] = _toMonthSt(i + 1);
-      ////   barData[i]['measure'] = await _getStepCountInMonth(time, i);
-      //// }
     }
     //Daily
     else if (choice == timeframe[1]) {
@@ -105,12 +100,8 @@ class StepHelper with ChangeNotifier {
         };
 
         barData.add(entry);
-        //? old way list of days
-        // barData[i]['domain'] = _toDaySt(dates[i].day);
-        // barData[i]['measure'] = await _getStepCountInDay(dates[i]);
       }
     }
-
     constructedbar[0]['data'] = barData;
 
     notifyListeners();
