@@ -11,7 +11,7 @@ class User {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String name = prefs.getString('name') ?? '';
-    String gender = prefs.getString("gender") ?? "male";
+    String gender = prefs.getString("gender") ?? "Male";// this whole part is bug causing as changes here need to reflect in ui dropdown button
     // int age = prefs.getInt('age') ?? 0;
     String birthday = prefs.getString("birthday") ?? DateTime.now().toString();
     double height = prefs.getDouble("height") ?? 0;
