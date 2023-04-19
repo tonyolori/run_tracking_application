@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../components/step_helper.dart';
 import '../constants.dart';
 import '../db/step_db.dart';
+import '../components/graph_helper.dart';
 
 class ProgressPage extends StatefulWidget {
   const ProgressPage({super.key});
@@ -24,7 +25,7 @@ class _ProgressPageState extends State<ProgressPage> {
   // }
 
   void updateBarValues() {
-    constructedBar = context.read<StepHelper>().constructedbar;
+    constructedBar = context.read<GraphHelper>().constructedbar;
     setState(() {});
   }
 
@@ -63,9 +64,9 @@ class _ProgressPageState extends State<ProgressPage> {
                   child: DropdownButton<String>(
                     value: dropdownValue,
                     onChanged: (String? newValue) async {
-                      context.read<StepHelper>().choice = newValue!;
+                      context.read<GraphHelper>().choice = newValue!;
                       await context
-                          .read<StepHelper>()
+                          .read<GraphHelper>()
                           .constructBarData(newValue);
                       setState(() {
                         dropdownValue = newValue;

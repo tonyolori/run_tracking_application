@@ -29,6 +29,7 @@ class _RunTrackingState extends State<RunTracking> {
     if (!mounted) return;
   }
 
+  @override
   Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(

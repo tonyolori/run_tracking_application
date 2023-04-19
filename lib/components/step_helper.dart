@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../db/step_db.dart';
@@ -15,10 +14,10 @@ final List<String> timeframe = <String>[
 class StepHelper with ChangeNotifier {
   bool databasefilled =
       false; //change this to be gotten from shared preferences
-  String choice = "Monthly";
-  List<Map<String, dynamic>> constructedbar = _dummyBarData;
-  List<Map<String, dynamic>> constructedbarweekly = _dummyBarDataWeekly;
-  List<Map<String, Object>> barData = _dummyBarData[0]['data'];
+  // String choice = "Monthly";
+  // List<Map<String, dynamic>> constructedbar = _dummyBarData;
+  // List<Map<String, dynamic>> constructedbarweekly = _dummyBarDataWeekly;
+  // List<Map<String, Object>> barData = _dummyBarData[0]['data'];
   List<step.Step> availableSteps = [];
   //db
   late Stream<StepCount> _pedometer;
@@ -32,11 +31,10 @@ class StepHelper with ChangeNotifier {
     _innit();
   }
   _innit() async {
-    await StepDatabase.innit().then((value) => fillStepData());
-    if (!databasefilled) {
-      fillDatabase();
-    }
-
+    // await StepDatabase.innit().then((value) => fillStepData());
+    // if (!databasefilled) {
+    //   fillDatabase();
+    // }
     startListening();
   }
 
@@ -66,94 +64,95 @@ class StepHelper with ChangeNotifier {
 
   //****************** db functions */
 
-  //this gets the values from db so it can be displayed in progress page
-  fillStepData() async {
-    await fillDatabase();
+  // //this gets the values from db so it can be displayed in progress page
+  // fillStepData() async {
+  //   await fillDatabase();
 
-    availableSteps = await StepDatabase.getAllSteps();
+  //   availableSteps = await StepDatabase.getAllSteps();
 
-    await constructBarData(choice);
-  }
+  //   await constructBarData(choice);
+  // }
 
-  Future<void> constructBarData(String choice) async {
-    barData = [];
-    DateTime time = DateTime.now();
+  // Future<void> constructBarData(String choice) async {
+  //   barData = [];
+  //   DateTime time = DateTime.now();
 
-    //Monthly
-    if (choice == timeframe[0]) {
-      for (int i = 0; i < 11; i++) {
-        Map<String, Object> entry = {
-          'domain': _toMonthSt(i + 1),
-          'measure': await _getStepCountInMonth(time, i)
-        };
-        barData.add(entry);
-      }
-    }
-    //Daily
-    else if (choice == timeframe[1]) {
-      List<DateTime> dates = getDaysInWeek(from: DateTime.now());
+  //   //Monthly
+  //   if (choice == timeframe[0]) {
+  //     for (int i = 0; i < 11; i++) {
+  //       Map<String, Object> entry = {
+  //         'domain': _toMonthSt(i + 1),
+  //         'measure': await _getStepCountInMonth(time, i)
+  //       };
+  //       barData.add(entry);
+  //     }
+  //   }
+  //   //Daily
+  //   else if (choice == timeframe[1]) {
+  //     List<DateTime> dates = getDaysInWeek(from: DateTime.now());
 
-      for (int i = 0; i < dates.length; i++) {
-        Map<String, Object> entry = {
-          'domain': _toDaySt(dates[i].weekday),
-          'measure': await _getStepCountInDay(dates[i])
-        };
+  //     for (int i = 0; i < dates.length; i++) {
+  //       Map<String, Object> entry = {
+  //         'domain': _toDaySt(dates[i].weekday),
+  //         'measure': await _getStepCountInDay(dates[i])
+  //       };
 
-        barData.add(entry);
-      }
-    }
-    constructedbar[0]['data'] = barData;
+  //       barData.add(entry);
+  //     }
+  //   }
+  //   constructedbar[0]['data'] = barData;
 
-    notifyListeners();
-  }
+  //   notifyListeners();
+  // }
 
-  _getStepCountInMonth(DateTime date, int month) async {
-    int stepcount = 0;
+  // _getStepCountInMonth(DateTime date, int month) async {
+  //   int stepcount = 0;
 
-    var stepsInMonth = await StepDatabase.getStepsInMonth(date, month);
-    for (int i = 0; i < stepsInMonth.length; i++) {
-      stepcount = stepcount + stepsInMonth[i].stepCount;
-    }
-    return stepcount;
-  }
+  //   var stepsInMonth = await StepDatabase.getStepsInMonth(date, month);
+  //   for (int i = 0; i < stepsInMonth.length; i++) {
+  //     stepcount = stepcount + stepsInMonth[i].stepCount;
+  //   }
+  //   return stepcount;
+  // }
 
-  _getStepCountInWeek(DateTime date, int month) async {
-    int stepcount = 0;
+  // _getStepCountInWeek(DateTime date, int month) async {
+  //   int stepcount = 0;
 
-    var stepsInMonth =
-        await StepDatabase.getStepsInMonth(DateTime.now(), month);
-    for (int i = 0; i < stepsInMonth.length; i++) {
-      stepcount = stepcount + stepsInMonth[i].stepCount;
-    }
-    return stepcount;
-  }
+  //   var stepsInMonth =
+  //       await StepDatabase.getStepsInMonth(DateTime.now(), month);
+  //   for (int i = 0; i < stepsInMonth.length; i++) {
+  //     stepcount = stepcount + stepsInMonth[i].stepCount;
+  //   }
+  //   return stepcount;
+  // }
 
-  _getStepCountInDay(DateTime date) async {
-    int stepcount = 0;
-    List<DateTime> dates = getDaysInWeek(from: date);
+  // _getStepCountInDay(DateTime date) async {
+  //   int stepcount = 0;
+  //   List<DateTime> dates = getDaysInWeek(from: date);
 
-    var stepsInMonth = await StepDatabase.getStepsInDay(date);
-    for (int i = 0; i < stepsInMonth.length; i++) {
-      stepcount = stepcount + stepsInMonth[i].stepCount;
-    }
+  //   var stepsInMonth = await StepDatabase.getStepsInDay(date);
+  //   for (int i = 0; i < stepsInMonth.length; i++) {
+  //     stepcount = stepcount + stepsInMonth[i].stepCount;
+  //   }
 
-    if (stepcount == 0) {
-      return Random().nextInt(5000) + 3000;
-    }
-    return stepcount;
-  }
+  //   if (stepcount == 0) {
+  //     return Random().nextInt(5000) + 3000;
+  //   }
+  //   return stepcount;
+  // }
 
-  Future<void> fillDatabase() async {
-    var steps = StepDatabase.convertToStepList(maps);
+  // Future<void> fillDatabase() async {
+  //   var steps = StepDatabase.convertToStepList(maps);
 
-    for (int i = 0; i < steps.length; i++) {
-      StepDatabase.insertStep(steps[i]);
-    }
+  //   for (int i = 0; i < steps.length; i++) {
+  //     StepDatabase.insertStep(steps[i]);
+  //   }
 
-    databasefilled = true;
-    return;
-  }
+  //   databasefilled = true;
+  //   return;
+  // }
 
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   String _toMonthSt(int month) {
     switch (month) {
       case 1:
