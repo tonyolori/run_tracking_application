@@ -25,7 +25,7 @@ class _ProgressPageState extends State<ProgressPage> {
   // }
 
   void updateBarValues() {
-    constructedBar = context.read<GraphHelper>().constructedbar;
+    constructedBar = context.read<GraphHelper>().stepBarData;
     setState(() {});
   }
 
@@ -92,10 +92,10 @@ class _ProgressPageState extends State<ProgressPage> {
             AspectRatio(
               aspectRatio: 4 / 3,
               child: DChartLine(
-                animate: true,
+                // animate: true,
                 areaColor: (lineData, index, id) => Colors.grey,
                 lineWidth: 5.0,
-                animationDuration: const Duration(seconds: 2),
+                //animationDuration: const Duration(seconds: 1),
                 includeArea: true,
                 includePoints: true,
                 data: const [
