@@ -7,7 +7,12 @@ const double kBoxSize = 300;
 ThemeData darkTheme = ThemeData.dark().copyWith();
 ThemeData lightTheme = ThemeData.light().copyWith();
 
-
+TextStyle graphLabel = const TextStyle(
+  //color: Colors.grey, //ColorConstant.gray900,
+  fontSize: 22,
+  fontFamily: 'General Sans',
+  fontWeight: FontWeight.w400,
+);
 TextStyle labelStyle = const TextStyle(
   color: Colors.grey, //ColorConstant.gray900,
   fontSize: 22,

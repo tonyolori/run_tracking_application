@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:d_chart/d_chart.dart';
 import 'package:provider/provider.dart';
 import '../components/step_helper.dart';
+import '../constants.dart';
 import '../db/step_db.dart';
 
 class ProgressPage extends StatefulWidget {
@@ -83,7 +84,39 @@ class _ProgressPageState extends State<ProgressPage> {
                 ),
               ),
             ),
-            Text("Steps"),
+            Text(
+              "Weight ",
+              style: graphLabel,
+            ),
+            AspectRatio(
+              aspectRatio: 4 / 3,
+              child: DChartLine(
+                animate: true,
+                areaColor: (lineData, index, id) => Colors.grey,
+                lineWidth: 5.0,
+                animationDuration: const Duration(seconds: 2),
+                includeArea: true,
+                includePoints: true,
+                data: const [
+                  {
+                    'id': 'Line',
+                    'data': [
+                      {'domain': 0, 'measure': 70},
+                      {'domain': 1.5, 'measure': 67},
+                      {'domain': 2, 'measure': 65},
+                      {'domain': 3, 'measure': 66},
+                      {'domain': 4, 'measure': 68},
+                    ],
+                  },
+                ],
+                lineColor: (lineData, index, id) => Colors.amber,
+              ),
+            ),
+            _whitespace(),
+            Text(
+              "Steps",
+              style: graphLabel,
+            ),
             AspectRatio(
               aspectRatio: 4 / 3,
               child: DChartBar(
@@ -98,11 +131,11 @@ class _ProgressPageState extends State<ProgressPage> {
                 showBarValue: true,
               ),
             ),
-            const SizedBox(
-              height: 30,
-              width: 10,
+            _whitespace(),
+            Text(
+              "Calories burned",
+              style: graphLabel,
             ),
-            Text("Calories burned"),
             AspectRatio(
               aspectRatio: 4 / 3,
               child: DChartBar(
@@ -116,35 +149,17 @@ class _ProgressPageState extends State<ProgressPage> {
                 barColor: (barData, index, id) => Colors.black,
                 showBarValue: true,
               ),
-            ),
-            const SizedBox(
-              height: 30,
-              width: 10,
-            ),
-            AspectRatio(
-              aspectRatio: 4 / 3,
-            child: DChartLine(
-              animate: true,
-              areaColor: (lineData, index, id) => Colors.grey,
-              lineWidth: 5.0,
-              //animationDuration: ,
-              data: const [
-                {
-                  'id': 'Line',
-                  'data': [
-                    {'domain': 0, 'measure': 4.1},
-                    {'domain': 2, 'measure': 4},
-                    {'domain': 3, 'measure': 6},
-                    {'domain': 4, 'measure': 1},
-                  ],
-                },
-              ],
-              lineColor: (lineData, index, id) => Colors.amber,
-            ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  SizedBox _whitespace() {
+    return const SizedBox(
+      height: 30,
+      width: 10,
     );
   }
 }

@@ -5,7 +5,7 @@ import 'constants.dart';
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
 import 'pages/home_page.dart';
-import 'database/user_data.dart';
+import 'db/user_db.dart';
 
 void main() {
   runApp(const MyApp());

@@ -168,9 +168,7 @@ abstract class StepDatabase {
 }
 
 DateTime _findPreviousDay({required DateTime from}) {
-  //// Get the number of days to go back to find a saturday
-  ////final daysFromSaturday = (from.weekday - DateTime.saturday) % 7;
-
+  
   return from.subtract(const Duration(days: 1));
 }
 

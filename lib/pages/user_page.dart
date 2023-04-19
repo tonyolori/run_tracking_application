@@ -2,7 +2,7 @@ import 'package:fit_work/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../database/user_data.dart';
+import '../db/user_db.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({Key? key}) : super(key: key);

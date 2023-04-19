@@ -1,4 +1,4 @@
-import 'package:fit_work/database/user_data.dart';
+import 'package:fit_work/db/user_db.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../constants.dart';
 import 'Step_page.dart';

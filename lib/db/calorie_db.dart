@@ -93,3 +93,62 @@ abstract class CalorieDatabase {
     });
   }
 }
+
+
+DateTime _findPreviousDay({required DateTime from}) {
+  
+  return from.subtract(const Duration(days: 1));
+}
+
+List<DateTime> findPreviousDays({
+  required int count,
+  DateTime? from,
+}) {
+  // End recursion
+  if (count == 0) {
+    return [];
+  }
+
+  // Defaults to now
+  final date = from ?? DateTime.now();
+
+  return [_findPreviousDay(from: date)] +
+      findPreviousDays(
+        count: count - 1,
+        from: date.subtract(Duration(days: 1)),
+      );
+}
+
+///monday  == 1     | Sunday == 7
+///
+///if we are at wednesday which is [3], i want to receive, both the forward 4 and the backward 2 days
+List<DateTime> getDaysInWeek({
+  DateTime? from,
+}) {
+  // Defaults to now
+  final date = from ?? DateTime.now();
+
+  return _daySincePreviousMonday(from: date) +
+      _daysTillNextMonday(from: date.add(const Duration(days: 1)));
+}
+
+List<DateTime> _daySincePreviousMonday({required DateTime from}) {
+  // Get the number of days to go back to find a monday
+  final daysFromMonday = (from.weekday - DateTime.monday) % 7;
+  if (daysFromMonday == 0) return [from];
+
+  return _daySincePreviousMonday(
+        from: from.subtract(const Duration(days: 1)),
+      ) +
+      [from];
+}
+
+List<DateTime> _daysTillNextMonday({required DateTime from, int? count}) {
+  // Get the number of days to go back to find a monday
+  final daysFromMonday = (from.weekday - DateTime.monday) % 7;
+  // if count is equal to null then this is not the first time the function has been called
+  if (daysFromMonday == 0 && count != null) return [from];
+
+  return [from] +
+      _daysTillNextMonday(from: from.add(const Duration(days: 1)), count: 1);
+}
