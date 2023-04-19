@@ -82,7 +82,39 @@ abstract class CalorieDatabase {
     return convertToCalorieList(maps);
   }
 
-  // Convert the List <Map<String, dynamic> into a List<step>.
+  ///Date is used for year, its dateTime for future expansion
+  static Future<List<Calorie>> getCaloriesInMonth(DateTime date, int month) async {
+    // Query the table for all The Dogs.
+    final List<Map<String, dynamic>> unFilteredMaps =
+        await _db!.query(tableName);
+    final List<Map<String, dynamic>> filteredMaps = unFilteredMaps.where((map) {
+      DateTime calorieTime = DateTime.parse(map[columnTime]);
+      return calorieTime.year == date.year && calorieTime.month == month;
+    }).toList();
+
+    // Convert the List<Map<String, dynamic> into a List<step>.
+    return convertToCalorieList(filteredMaps);
+  }
+
+
+  /// Return a list of steps that match, down to the day
+  static Future<List<Calorie>> getCaloriesInDay(DateTime date) async {
+    final List<Map<String, dynamic>> unFilteredMaps =
+        await _db!.query(tableName);
+    final List<Map<String, dynamic>> filteredMaps = unFilteredMaps.where((map) {
+      DateTime calorieTime = DateTime.parse(map[columnTime]);
+
+      return date.year == calorieTime.year &&
+          date.month == calorieTime.month &&
+          date.day == calorieTime.day;
+    }).toList();
+
+    // Convert the List<Map<String, dynamic> into a List<step>.
+    return convertToCalorieList(filteredMaps);
+  }
+
+  /// i have an idea, change the function name to generic. conv to list
+  /// Convert the List <Map<String, dynamic> into a List<step>.
   static List<Calorie> convertToCalorieList(List<Map<String, dynamic>> maps) {
     return List.generate(maps.length, (i) {
       DateTime time = DateTime.parse(maps[i][columnTime]);

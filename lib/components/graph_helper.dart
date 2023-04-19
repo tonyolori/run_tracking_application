@@ -1,10 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import '../db/step_db.dart';
+import '../db/calorie_db.dart';
 import '../model/step_model.dart' as step;
-import 'package:pedometer/pedometer.dart';
+import 'calorie_worker.dart';
 import 'dummy_data.dart';
 import 'step_worker.dart';
 
@@ -17,21 +15,26 @@ final List<String> timeframe = <String>[
 class GraphHelper with ChangeNotifier {
   bool stepDatabasefilled =
       false; //change this to be gotten from shared preferences
+  bool calorieDatabasefilled = false;
   String choice = "Monthly";
 
   //List<step.Step> availableSteps = [];
-  //db
-  int todaysteps = 0;
-  String steps = "0";
+  
 
   StepWorker stepWorker = StepWorker();
   List<Map<String, dynamic>> stepBarData = dummyBarData;
+
+  CalorieWorker calorieWorker = CalorieWorker();
+  List<Map<String, dynamic>> calorieBarData = dummyCalorieData;
 
   GraphHelper() {
     _innit();
   }
   _innit() async {
     await StepDatabase.innit().then((value) => fillStepData());
+    await CalorieDatabase.innit().then((value) => fillCalorieData());
+
+    constructBarData(choice);
   }
 
   //this gets the values from db so it can be displayed in progress page
@@ -40,13 +43,18 @@ class GraphHelper with ChangeNotifier {
       await stepWorker.fillDatabase();
     }
     stepDatabasefilled = true;
+  }
 
-    constructBarData(choice);
-    await stepWorker.constructBarData(choice);
+  fillCalorieData() async {
+    if (!calorieDatabasefilled) {
+      await calorieWorker.fillDatabase();
+    }
+    calorieDatabasefilled = true;
   }
 
   constructBarData(String choice) async {
     stepBarData = await stepWorker.constructBarData(choice);
+    calorieBarData = await calorieWorker.constructBarData(choice);
 
     notifyListeners();
   }

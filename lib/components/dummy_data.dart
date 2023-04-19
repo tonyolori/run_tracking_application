@@ -1,76 +1,75 @@
 import '../model/step_model.dart' as step;
+import '../model/calorie_model.dart';
 
-  
-  String toMonthSt(int month) {
-    switch (month) {
-      case 1:
-        return "jan";
+String toMonthSt(int month) {
+  switch (month) {
+    case 1:
+      return "jan";
 
-      case 2:
-        return "feb";
+    case 2:
+      return "feb";
 
-      case 3:
-        return "mar";
+    case 3:
+      return "mar";
 
-      case 4:
-        return "apr";
+    case 4:
+      return "apr";
 
-      case 5:
-        return "may";
+    case 5:
+      return "may";
 
-      case 6:
-        return "jun";
+    case 6:
+      return "jun";
 
-      case 7:
-        return "jul";
+    case 7:
+      return "jul";
 
-      case 8:
-        return "aug";
+    case 8:
+      return "aug";
 
-      case 9:
-        return "sept";
+    case 9:
+      return "sept";
 
-      case 10:
-        return "oct";
+    case 10:
+      return "oct";
 
-      case 11:
-        return "nov";
+    case 11:
+      return "nov";
 
-      case 12:
-        return "dec";
+    case 12:
+      return "dec";
 
-      default:
-        return "invalid";
-    }
+    default:
+      return "invalid";
   }
+}
 
-  String toDaySt(int day) {
-    switch (day) {
-      case 7:
-        return "Sunday";
+String toDaySt(int day) {
+  switch (day) {
+    case 7:
+      return "Sunday";
 
-      case 1:
-        return "Monday";
+    case 1:
+      return "Monday";
 
-      case 2:
-        return "Tuesday";
+    case 2:
+      return "Tuesday";
 
-      case 3:
-        return "Wednesday";
-      case 4:
-        return "Thursday";
+    case 3:
+      return "Wednesday";
+    case 4:
+      return "Thursday";
 
-      case 5:
-        return "Friday";
-      case 6:
-        return "Saturday";
-      default:
-        return " invalid entry";
-    }
+    case 5:
+      return "Friday";
+    case 6:
+      return "Saturday";
+    default:
+      return " invalid entry";
   }
+}
 
-
-List<Map<String, dynamic>> dummyBarData = [
+final List<Map<String, dynamic>> dummyBarData = [
   {
     'id': 'Bar',
     'data': [
@@ -90,7 +89,27 @@ List<Map<String, dynamic>> dummyBarData = [
   },
 ];
 
-List<Map<String, dynamic>> maps = [
+final List<Map<String, dynamic>> dummyCalorieData = [
+  {
+    'id': 'Bar',
+    'data': [
+      {'domain': 'jan', 'measure': 3},
+      {'domain': 'feb', 'measure': 4},
+      {'domain': 'march', 'measure': 6},
+      {'domain': 'april', 'measure': 0.3},
+      {'domain': 'may', 'measure': 3},
+      {'domain': 'june', 'measure': 4},
+      {'domain': 'july', 'measure': 6},
+      {'domain': 'Aug', 'measure': 0.3},
+      {'domain': 'Sept', 'measure': 3},
+      {'domain': 'Oct', 'measure': 4},
+      {'domain': 'Nov', 'measure': 6},
+      {'domain': 'Dec', 'measure': 0.3},
+    ],
+  },
+];
+
+final List<Map<String, dynamic>> stepMaps = [
   {
     step.columnStepCount: 1900,
     step.columnTime: "2023-01-01 18:08:46.385056",
@@ -178,6 +197,17 @@ List<Map<String, dynamic>> maps = [
   {
     step.columnStepCount: 2100,
     step.columnTime: "2023-06-01 18:08:46.385056",
+  },
+];
+
+final List<Map<String, dynamic>> calorieMaps = [
+  {
+    columnCalorieCount: 1900,
+    columnTime: "2023-05-01 18:08:46.385056",
+  },
+  {
+    columnCalorieCount: 2100,
+    columnTime: "2023-06-01 18:08:46.385056",
   },
 ];
 

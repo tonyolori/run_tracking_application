@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:d_chart/d_chart.dart';
 import 'package:provider/provider.dart';
+import '../components/dummy_data.dart';
 import '../components/step_helper.dart';
 import '../constants.dart';
 import '../db/step_db.dart';
@@ -14,7 +15,8 @@ class ProgressPage extends StatefulWidget {
 }
 
 class _ProgressPageState extends State<ProgressPage> {
-  List<Map<String, dynamic>> constructedBar = [];
+  List<Map<String, dynamic>> constructedStepBar = [];
+  List<Map<String, dynamic>> constructedCalorieBar = [];
 
   // void addListener() {
   //   context.read<StepHelper>().addListener(updateBarValues);
@@ -25,7 +27,8 @@ class _ProgressPageState extends State<ProgressPage> {
   // }
 
   void updateBarValues() {
-    constructedBar = context.read<GraphHelper>().stepBarData;
+    constructedStepBar = context.read<GraphHelper>().stepBarData;
+    constructedCalorieBar = context.read<GraphHelper>().calorieBarData;
     setState(() {});
   }
 
@@ -121,7 +124,7 @@ class _ProgressPageState extends State<ProgressPage> {
             AspectRatio(
               aspectRatio: 4 / 3,
               child: DChartBar(
-                data: constructedBar,
+                data: constructedStepBar,
                 domainLabelPaddingToAxisLine: 16,
                 axisLineTick: 2,
                 axisLinePointTick: 2,
@@ -140,7 +143,7 @@ class _ProgressPageState extends State<ProgressPage> {
             AspectRatio(
               aspectRatio: 4 / 3,
               child: DChartBar(
-                data: constructedBar,
+                data: dummyCalorieData,//constructedCalorieBar,
                 domainLabelPaddingToAxisLine: 16,
                 axisLineTick: 2,
                 axisLinePointTick: 2,

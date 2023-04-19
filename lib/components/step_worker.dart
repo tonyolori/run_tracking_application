@@ -71,7 +71,6 @@ class StepWorker {
 
   _getStepCountInDay(DateTime date) async {
     int stepcount = 0;
-    List<DateTime> dates = getDaysInWeek(from: date);
 
     var stepsInMonth = await StepDatabase.getStepsInDay(date);
     for (int i = 0; i < stepsInMonth.length; i++) {
@@ -85,7 +84,7 @@ class StepWorker {
   }
 
   Future<bool> fillDatabase() async {
-    var steps = StepDatabase.convertToStepList(maps);
+    var steps = StepDatabase.convertToStepList(stepMaps);
 
     for (int i = 0; i < steps.length; i++) {
       StepDatabase.insertStep(steps[i]);
