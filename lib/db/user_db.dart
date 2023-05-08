@@ -55,4 +55,14 @@ class User {
       ..setString("gender", user.gender)
       ..setString("birthday", user.birthday.toString());
   }
+
+  // Future<void> updateUserValuesSF(UserModel user) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance()
+  //     ..setString('name', user.name)
+  //     ..setInt('age', user.age)
+  //     ..setDouble("height", user.height)
+  //     ..setDouble("weight", user.weight)
+  //     ..setString("gender", user.gender)
+  //     ..setString("birthday", user.birthday.toString());
+  // }
 }

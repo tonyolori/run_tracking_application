@@ -1,3 +1,4 @@
+import 'package:fit_work/constants.dart';
 import 'package:fit_work/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -25,6 +26,7 @@ class _UserPageState extends State<UserPage> {
   final _formKey = GlobalKey<FormState>();
 
   // Declare controllers for the text fields
+  final _bMIController = TextEditingController();
   final _nameController = TextEditingController();
   final _birthdayController = TextEditingController();
   final _heightController = TextEditingController();
@@ -38,6 +40,7 @@ class _UserPageState extends State<UserPage> {
 
   setModel() async {
     userModel = await User.getUserValuesSF();
+    _bMIController.text = userModel!.BMI.toString();
     _nameController.text = userModel!.name;
     _birthdayController.text = userModel!.birthday.toString();
     _heightController.text = userModel!.height.toString();
@@ -49,6 +52,7 @@ class _UserPageState extends State<UserPage> {
   @override
   void dispose() {
     // Dispose the controllers when the state is disposed
+    _bMIController.dispose();
     _nameController.dispose();
     _birthdayController.dispose();
     _heightController.dispose();
@@ -74,6 +78,18 @@ class _UserPageState extends State<UserPage> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
+                Text(
+                  "Your bmi is:",
+                  style: labelStyle,
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Your BMI',
+                    border: OutlineInputBorder(),
+                  ),
+                  enabled: false,
+                  controller: _bMIController,
+                ),
                 TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Name',

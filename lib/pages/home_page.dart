@@ -24,7 +24,6 @@ class _HomepageState extends State<Homepage> {
     const RunTracking(),
     const ProgressPage(),
     const SettingsPage(),
-    const SettingsPage(),
   ];
   askPermission() async {
     // var status = await Permission.camera.status;
@@ -115,11 +114,6 @@ class _HomepageState extends State<Homepage> {
                 selectedIcon: Icon(Icons.legend_toggle),
                 icon: Icon(Icons.monitor),
                 label: 'Progress',
-              ),
-              NavigationDestination(
-                selectedIcon: Icon(Icons.bookmark),
-                icon: Icon(Icons.bookmark_border),
-                label: 'Settings',
               ),
               NavigationDestination(
                 selectedIcon: Icon(Icons.bookmark),

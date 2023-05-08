@@ -143,7 +143,7 @@ class _ProgressPageState extends State<ProgressPage> {
             AspectRatio(
               aspectRatio: 4 / 3,
               child: DChartBar(
-                data: dummyCalorieData,//constructedCalorieBar,
+                data: constructedCalorieBar,//dummyCalorieData,//? you have go fix thislater
                 domainLabelPaddingToAxisLine: 16,
                 axisLineTick: 2,
                 axisLinePointTick: 2,
