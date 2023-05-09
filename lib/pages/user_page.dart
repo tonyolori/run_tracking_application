@@ -40,7 +40,8 @@ class _UserPageState extends State<UserPage> {
 
   setModel() async {
     userModel = await User.getUserValuesSF();
-    _bMIController.text = userModel!.BMI.toString();
+    _bMIController.text =
+        userModel!.BMI.toStringAsFixed(2); //toStringAsPrecision(4);
     _nameController.text = userModel!.name;
     _birthdayController.text = userModel!.birthday.toString();
     _heightController.text = userModel!.height.toString();
