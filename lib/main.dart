@@ -7,11 +7,14 @@ import 'package:pedometer/pedometer.dart';
 import 'pages/home_page.dart';
 import 'db/user_db.dart';
 import 'components/graph_helper.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
-
+ 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -27,7 +30,10 @@ class _MyAppState extends State<MyApp> {
     //dynamic locator = LocationService();
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => LocationService(), lazy: false,),
+          ChangeNotifierProvider(
+            create: (_) => LocationService(),
+            lazy: false,
+          ),
           Provider.value(value: Pedometer),
           ChangeNotifierProvider(
             create: (_) => StepHelper(),
@@ -38,9 +44,9 @@ class _MyAppState extends State<MyApp> {
             lazy: false,
           ),
           Provider(
-            create: (_)=>User(),
+            create: (_) => User(),
             lazy: false,
-            )
+          )
           //Provider.value(value: liveTrackingToggle),
         ],
         child: MaterialApp(

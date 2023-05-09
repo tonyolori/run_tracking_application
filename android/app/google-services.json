@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "729122137867",
+    "project_id": "fitwork-maps",
+    "storage_bucket": "fitwork-maps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:729122137867:android:ce9eaa0e74646ac917e40e",
+        "android_client_info": {
+          "package_name": "com.anthony.fit_work"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "729122137867-d7l5vdlrer9i4ku5l2jkuf0k36bsr24e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAp0JCZP2PFdnGN-_5lggZ8tKqVchPuW-0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "729122137867-d7l5vdlrer9i4ku5l2jkuf0k36bsr24e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
