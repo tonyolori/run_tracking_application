@@ -8,7 +8,7 @@ import 'settings_page.dart';
 import 'progress_page.dart';
 import 'user_page.dart';
 import '../model/user_model.dart';
-
+import 'firebase_page.dart';
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
 
@@ -24,6 +24,7 @@ class _HomepageState extends State<Homepage> {
     const RunTracking(),
     const ProgressPage(),
     const SettingsPage(),
+    const FirebasePage(),
   ];
   askPermission() async {
     // var status = await Permission.camera.status;
@@ -114,6 +115,11 @@ class _HomepageState extends State<Homepage> {
                 selectedIcon: Icon(Icons.legend_toggle),
                 icon: Icon(Icons.monitor),
                 label: 'Progress',
+              ),
+              NavigationDestination(
+                selectedIcon: Icon(Icons.bookmark),
+                icon: Icon(Icons.bookmark_border),
+                label: 'Leaderboard',
               ),
               NavigationDestination(
                 selectedIcon: Icon(Icons.bookmark),
