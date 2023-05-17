@@ -9,12 +9,12 @@ import 'db/user_db.dart';
 import 'components/graph_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-Future main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
- 
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
