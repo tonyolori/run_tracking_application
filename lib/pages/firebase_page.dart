@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:fit_work/constants.dart';
 import 'package:flutter/material.dart';
 
 class FirebasePage extends StatefulWidget {
@@ -18,6 +19,25 @@ class _FirebasePageState extends State<FirebasePage> {
   final name = "Name";
   late StreamSubscription _streamSubscription;
   dynamic retrievedName;
+
+  // final leaderboardList = [
+  //   {"name": "Nancy hill", "score": "9000"},
+  //   {"name": "Jonah hill", "score": "90090"}
+  // ];
+
+
+  Future<List<Map<String, dynamic>>> fetchLeaderboardData() async {
+    await Future.delayed(const Duration(seconds: 5)); // Wait for 5 seconds
+
+    // Simulating the data retrieval
+    List<Map<String, dynamic>> leaderboardData = [
+      {'name': 'John', 'score': "100"},
+      {'name': 'Jane', 'score': "200"},
+      {'name': 'Alex', 'score': "150"},
+    ];
+
+    return leaderboardData; // Assign the data to the leaderboard future
+  }
 
   @override
   void initState() {
@@ -45,6 +65,7 @@ class _FirebasePageState extends State<FirebasePage> {
 
   @override
   Widget build(BuildContext context) {
+  Future<List<Map<String, dynamic>>> leaderboardList = fetchLeaderboardData();
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -70,7 +91,11 @@ class _FirebasePageState extends State<FirebasePage> {
           ),
           ElevatedButton(
             onPressed: () {
-              users.orderBy("full_name", descending: true).get().then((event) {
+              users
+                  .orderBy("full_name", descending: true)
+                  .limitToLast(20)
+                  .get()
+                  .then((event) {
                 //QueryDocumentSnapshot data = event.docs[0] as Map<String, dynamic>;
                 final String data = event.docs
                     .map((doc) => doc.data() as Map<String, dynamic>)
@@ -82,6 +107,55 @@ class _FirebasePageState extends State<FirebasePage> {
             },
             child: const Text("Get"),
           ),
+          FutureBuilder<List<Map<String, dynamic>>>(
+            future:
+                leaderboardList, // Assuming leaderboardList is a Future<List<Map<String, dynamic>>>
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done &&
+                  snapshot.hasData) {
+                List<Map<String, dynamic>> data =
+                    snapshot.data!; // Retrieve the data from the snapshot
+
+                return Table(
+                  columnWidths: {
+                    0: FlexColumnWidth(),
+                    1: FlexColumnWidth(),
+                  },
+                  children: [
+                    TableRow(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                      ),
+                      children: [
+                        TableCell(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Name",
+                              style: labelBold,
+                            ),
+                          ),
+                        ),
+                        TableCell(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Score",
+                              style: labelBold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    for (var item in data) // Iterate over the retrieved data
+                      customTableRow(item['name']!, item['score']!),
+                  ],
+                );
+              }
+              return const Text("Loading");
+            },
+          ),
+
           // FutureBuilder(
           //     future: users.doc("users").get(),
           //     builder: ((BuildContext context, snapshot) {
@@ -110,6 +184,51 @@ class _FirebasePageState extends State<FirebasePage> {
           Text(retrievedName ?? ""),
         ],
       ),
+    );
+  }
+
+  TableRow customTableRow(String name, String score) {
+    return TableRow(
+      children: [
+        TableCell(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              name,
+              style: graphLabel,
+            ),
+          ),
+        ),
+        TableCell(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                score,
+                style: graphLabel,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class LeaderboardModel {
+  final String name;
+  final int score;
+
+  LeaderboardModel({
+    required this.name,
+    required this.score,
+  });
+
+  factory LeaderboardModel.fromJson(Map json, bool isUser) {
+    return LeaderboardModel(
+      name: isUser ? 'You' : json['name'],
+      score: json['score'],
     );
   }
 }
