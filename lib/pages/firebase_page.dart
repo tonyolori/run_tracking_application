@@ -15,6 +15,7 @@ class FirebasePage extends StatefulWidget {
 
 class _FirebasePageState extends State<FirebasePage> {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
+  CollectionReference leaderboard = FirebaseFirestore.instance.collection('leaderboard');
   final myController = TextEditingController();
   final name = "Name";
   late StreamSubscription _streamSubscription;
@@ -25,16 +26,29 @@ class _FirebasePageState extends State<FirebasePage> {
   //   {"name": "Jonah hill", "score": "90090"}
   // ];
 
-
   Future<List<Map<String, dynamic>>> fetchLeaderboardData() async {
-    await Future.delayed(const Duration(seconds: 5)); // Wait for 5 seconds
+    List<Map<String, dynamic>> leaderboardData = [];
 
-    // Simulating the data retrieval
-    List<Map<String, dynamic>> leaderboardData = [
-      {'name': 'John', 'score': "100"},
-      {'name': 'Jane', 'score': "200"},
-      {'name': 'Alex', 'score': "150"},
-    ];
+    await leaderboard
+        .orderBy("score", descending: true)
+        .limitToLast(20)
+        .get()
+        .then((event) {
+      //QueryDocumentSnapshot data = event.docs[0] as Map<String, dynamic>;
+      leaderboardData =
+          event.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    });
+    // Get data from docs and convert map to List
+    //final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+    //await Future.delayed(const Duration(seconds: 5)); // Wait for 5 seconds
+
+    //  Simulating the data retrieval
+    // List<Map<String, dynamic>> leaderboardData = [
+    //   {'name': 'John', 'score': "100"},
+    //   {'name': 'Jane', 'score': "200"},
+    //   {'name': 'Alex', 'score': "150"},
+    // ];
 
     return leaderboardData; // Assign the data to the leaderboard future
   }
@@ -65,7 +79,7 @@ class _FirebasePageState extends State<FirebasePage> {
 
   @override
   Widget build(BuildContext context) {
-  Future<List<Map<String, dynamic>>> leaderboardList = fetchLeaderboardData();
+    Future<List<Map<String, dynamic>>> leaderboardList = fetchLeaderboardData();
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -109,13 +123,13 @@ class _FirebasePageState extends State<FirebasePage> {
           ),
           FutureBuilder<List<Map<String, dynamic>>>(
             future:
-                leaderboardList, // Assuming leaderboardList is a Future<List<Map<String, dynamic>>>
+                leaderboardList, // leaderboardList is a Future<List<Map<String, dynamic>>>
             builder: (context, snapshot) {
+              
               if (snapshot.connectionState == ConnectionState.done &&
                   snapshot.hasData) {
                 List<Map<String, dynamic>> data =
-                    snapshot.data!; // Retrieve the data from the snapshot
-
+                    snapshot.data!; // Retrieve the data from the snapshot 
                 return Table(
                   columnWidths: {
                     0: FlexColumnWidth(),
