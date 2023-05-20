@@ -47,6 +47,7 @@ class User {
   }
 
   Future<void> setUserValuesSF(UserModel user) async {
+    // ignore: unused_local_variable
     SharedPreferences prefs = await SharedPreferences.getInstance()
       ..setString('name', user.name)
       ..setInt('age', user.age)

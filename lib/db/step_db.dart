@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../model/step_model.dart';
@@ -128,7 +127,8 @@ abstract class StepDatabase {
     final List<Map<String, dynamic>> unFilteredMaps =
         await _db!.query(tableName);
     final List<Map<String, dynamic>> filteredMaps = unFilteredMaps.where((map) {
-      DateTime stepTime = DateTime.parse(map[columnTime]);
+      //TODO: Write a getStepsInWeek function
+      //DateTime stepTime = DateTime.parse(map[columnTime]);
       //monday has a value of 1
       //i want to display, starting from this monday to next monday, all steps
 

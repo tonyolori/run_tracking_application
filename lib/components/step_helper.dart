@@ -1,7 +1,5 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../db/step_db.dart';
 import '../model/step_model.dart' as step;
 import 'package:pedometer/pedometer.dart';
 

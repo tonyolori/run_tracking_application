@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
 import '../components/map_helper.dart';
 import '../api_key.dart';
 import '../model/entry.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart'; // for date format
 
 GoogleMapController? googleMapController;

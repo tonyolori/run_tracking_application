@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:d_chart/d_chart.dart';
 import 'package:provider/provider.dart';
-import '../components/dummy_data.dart';
-import '../components/step_helper.dart';
 import '../constants.dart';
-import '../db/step_db.dart';
 import '../components/graph_helper.dart';
 
 class ProgressPage extends StatefulWidget {

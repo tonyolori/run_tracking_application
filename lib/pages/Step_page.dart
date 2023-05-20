@@ -2,11 +2,9 @@
 
 import 'package:fit_work/constants.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import '../components/step_helper.dart';
-import '../db/step_db.dart';
 
 class RunTracking extends StatefulWidget {
   const RunTracking({super.key});
@@ -16,7 +14,8 @@ class RunTracking extends StatefulWidget {
 }
 
 class _RunTrackingState extends State<RunTracking> {
-  String _status = '?', _steps = '?';
+  // ignore: unused_field
+  String  _steps = '?';
 
   @override
   void initState() {
@@ -264,9 +263,9 @@ class SmallIcon extends StatelessWidget {
 
 
 class Association extends StatefulWidget {
-  String label;
-  String value;
-  Association({super.key, required this.label, required this.value});
+  final String label;
+  final String value;
+  const Association({super.key, required this.label, required this.value});
 
   @override
   State<Association> createState() => _AssociationState();

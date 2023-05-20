@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:fit_work/db/user_db.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../constants.dart';

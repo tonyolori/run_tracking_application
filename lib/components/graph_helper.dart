@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../db/step_db.dart';
 import '../db/calorie_db.dart';
-import '../model/step_model.dart' as step;
 import 'calorie_worker.dart';
 import 'dummy_data.dart';
 import 'step_worker.dart';

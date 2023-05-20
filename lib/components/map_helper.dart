@@ -2,10 +2,6 @@ import 'dart:async';
 import 'dart:math' show cos, sqrt, asin;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-import 'package:location/location.dart';
-import '../model/entry.dart';
 
 import '../components/location_service.dart';
 
@@ -19,10 +15,11 @@ class RunHelper with ChangeNotifier {
   double dist = 0;
   String displayTime = "";
   int time = 0;
+  // ignore: unused_field
   int _lastTime = 0;
   double speed = 0;
-  double _avgSpeed = 0;
-  int _speedCounter = 0;
+  // double _avgSpeed = 0;
+  // int _speedCounter = 0;
   int rawtime = 0;
 
   List<LatLng> liveCoordinates = []; //live distance calcs and polyline tracking
