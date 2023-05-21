@@ -8,6 +8,7 @@ import 'pages/home_page.dart';
 import 'db/user_db.dart';
 import 'components/graph_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'widget_tree.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,7 +53,7 @@ class _MyAppState extends State<MyApp> {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: lightTheme,
-          home: const Homepage(),
+          home: const WidgetTree(),
         ));
   }
 }
