@@ -1,7 +1,9 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fit_work/constants.dart';
 import 'package:flutter/material.dart';
+import '../firestore.dart';
+import '../auth.dart';
 
 class FirebasePage extends StatefulWidget {
   const FirebasePage({super.key});
@@ -11,29 +13,12 @@ class FirebasePage extends StatefulWidget {
 }
 
 class _FirebasePageState extends State<FirebasePage> {
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
-  CollectionReference leaderboard =
-      FirebaseFirestore.instance.collection('leaderboard');
   final myController = TextEditingController();
   final name = "name";
   final distanceRun = "total_distance_run";
+  final User? user = Auth().currentUser;
 
   dynamic retrievedName;
-
-  Future<List<Map<String, dynamic>>> fetchLeaderboardData() async {
-    List<Map<String, dynamic>> leaderboardData = [];
-
-    await leaderboard
-        .orderBy(distanceRun, descending: true)
-        .limitToLast(20)
-        .get()
-        .then((event) {
-      //QueryDocumentSnapshot data = event.docs[0] as Map<String, dynamic>;
-      leaderboardData =
-          event.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-    });
-    return leaderboardData; // Assign the data to the leaderboard future
-  }
 
   @override
   void initState() {
@@ -46,10 +31,12 @@ class _FirebasePageState extends State<FirebasePage> {
     myController.dispose();
     super.dispose();
   }
+  
 
   @override
   Widget build(BuildContext context) {
-    Future<List<Map<String, dynamic>>> leaderboardList = fetchLeaderboardData();
+    Future<List<Map<String, dynamic>>> leaderboardList =
+        Firestore().fetchLeaderboardData();
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -61,34 +48,19 @@ class _FirebasePageState extends State<FirebasePage> {
               Expanded(child: TextField(controller: myController)),
             ],
           ),
-          ElevatedButton(
-            onPressed: () {
-              users
-                  .add({
-                    'full_name': myController.text,
-                    'last_name': myController.text,
-                  })
-                  .then((value) => print("User Added"))
-                  .catchError((error) => print("Failed to add user: $error"));
-            },
-            child: Text("Submit"),
-          ),
+          //? sample code for adding a user
           // ElevatedButton(
           //   onPressed: () {
-          //     users
-          //         .orderBy("full_name", descending: true)
-          //         .limitToLast(20)
-          //         .get()
-          //         .then((event) {
-          //       final String data = event.docs
-          //           .map((doc) => doc.data() as Map<String, dynamic>)
-          //           .toList()[0]['full_name'];
-          //       setState(() {
-          //         retrievedName = data;
-          //       });
-          //     });
+          //     Firestore()
+          //         .users
+          //         .add({
+          //           'full_name': myController.text,
+          //           'last_name': myController.text,
+          //         })
+          //         .then((value) => print("User Added"))
+          //         .catchError((error) => print("Failed to add user: $error"));
           //   },
-          //   child: const Text("Get"),
+          //   child: Text("Submit"),
           // ),
           FutureBuilder<List<Map<String, dynamic>>>(
             future:
@@ -99,7 +71,7 @@ class _FirebasePageState extends State<FirebasePage> {
                 List<Map<String, dynamic>> data =
                     snapshot.data!; // Retrieve the data from the snapshot
                 return Table(
-                  columnWidths: {
+                  columnWidths: const {
                     0: FlexColumnWidth(),
                     1: FlexColumnWidth(),
                   },
@@ -138,6 +110,7 @@ class _FirebasePageState extends State<FirebasePage> {
             },
           ),
           Text(retrievedName ?? ""),
+          
         ],
       ),
     );

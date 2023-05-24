@@ -2,6 +2,8 @@ import 'package:fit_work/pages/user_page.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // /// Initializes shared_preference
 // void sharedPrefInit() async {
@@ -49,6 +51,21 @@ class _SettingsPageState extends State<SettingsPage> {
     getBoolValuesSF();
   }
 
+  Future<void> signout() async {
+    await Auth().signOut();
+  }
+
+  Widget _title() {
+    return const Text('Firebase Auth');
+  }
+
+  Widget _signOutButton() {
+    return ElevatedButton(
+      onPressed: signout,
+      child: const Text('Sign Out'),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +78,10 @@ class _SettingsPageState extends State<SettingsPage> {
               SettingsTile(
                 title: const Text('Profile'),
                 onPressed: (context) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const UserPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const UserPage()));
                 },
               ),
               SettingsTile.navigation(
@@ -80,6 +100,35 @@ class _SettingsPageState extends State<SettingsPage> {
                 initialValue: liveTrackingToggle,
                 leading: const Icon(Icons.location_city),
                 title: const Text('Maps live tracking'),
+              ),
+              SettingsTile.switchTile(
+                onToggle: (value) async {
+                  liveTrackingToggle = value;
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  prefs.setBool('liveTrackingToggle', value);
+                  setState(() {});
+                },
+                initialValue: liveTrackingToggle,
+                leading: const Icon(Icons.location_city),
+                title: const Text('Maps live tracking'),
+              ),
+            ],
+          ),
+          SettingsSection(
+            title: Text('Account'),
+            tiles: <SettingsTile>[
+              SettingsTile.navigation(
+                leading: Icon(Icons.language),
+                title: Text('Language'),
+                value: Text('English'),
+              ),
+              SettingsTile(
+                onPressed: (context) {
+                  signout();
+                },
+                leading: Icon(Icons.logout),
+                title: Text('Sign Out'),
               ),
             ],
           ),

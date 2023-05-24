@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../auth.dart';
+import '../firestore.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+  final TextEditingController _controllerName = TextEditingController();
 
   Future<void> signInWithEmailAndPassword() async {
     try {
@@ -55,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _errorMessage() {
-    return Text(errorMessage == '' ? '' : 'uhm: $errorMessage');
+    return Text(errorMessage == '' ? '' : '$errorMessage');
   }
 
   Widget _submitButton() {
@@ -73,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
           isLogin = !isLogin;
         });
       },
-      child: Text(isLogin ? 'login' : 'register'),
+      child: Text(isLogin ? 'register' : 'login'),
     );
   }
 
@@ -91,6 +93,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            isLogin ? Container() : _entryField('Name', _controllerName),
             _entryField('email', _controllerEmail),
             _entryField('password', _controllerPassword),
             _errorMessage(),
