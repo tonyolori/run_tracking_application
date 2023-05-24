@@ -38,6 +38,14 @@ class _LoginPageState extends State<LoginPage> {
         errorMessage = e.message;
       });
     }
+    try {
+      await Firestore().users.add({
+        'email': _controllerEmail.text,
+        'name': _controllerName.text,
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   Widget _title() {

@@ -18,7 +18,6 @@ class _FirebasePageState extends State<FirebasePage> {
   final distanceRun = "total_distance_run";
   final User? user = Auth().currentUser;
 
-  dynamic retrievedName;
 
   @override
   void initState() {
@@ -31,6 +30,10 @@ class _FirebasePageState extends State<FirebasePage> {
     myController.dispose();
     super.dispose();
   }
+  Widget _title() {
+    return const Text('Top Runs');
+  }
+
   
 
   @override
@@ -38,16 +41,11 @@ class _FirebasePageState extends State<FirebasePage> {
     Future<List<Map<String, dynamic>>> leaderboardList =
         Firestore().fetchLeaderboardData();
     return Scaffold(
+      appBar: AppBar(
+        title: _title(),
+      ),
       body: Column(
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(name),
-              const SizedBox(width: 20),
-              Expanded(child: TextField(controller: myController)),
-            ],
-          ),
           //? sample code for adding a user
           // ElevatedButton(
           //   onPressed: () {
@@ -109,7 +107,6 @@ class _FirebasePageState extends State<FirebasePage> {
               return const Text("Loading");
             },
           ),
-          Text(retrievedName ?? ""),
           
         ],
       ),

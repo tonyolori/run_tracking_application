@@ -21,7 +21,7 @@ abstract class DB {
   static FutureOr<void> onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE entries (
-        id INTEGER PRIMARY KEY NOT NULL,
+        id STRING PRIMARY KEY NOT NULL,
         date STRING, 
         duration STRING, 
         speed REAL, 
