@@ -272,6 +272,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                                       runHelper.stopRun();
 
                                       Entry en = Entry(
+                                        id:generateRandomString(),
                                           date: (DateFormat().format(DateTime
                                               .now())), //DateFormat.yMMMMd('en_US').format(DateTime.now()),
                                           duration: runHelper.displayTime,

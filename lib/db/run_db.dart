@@ -34,4 +34,6 @@ abstract class DB {
       await _db!.query(table);
   static Future<int> insert(String table, Entry item) async =>
       await _db!.insert(table, item.toMap());
+  static Future<int> delete(String table, String id) async =>
+      await _db!.delete(table,where: "id=?",whereArgs: [id]);
 }

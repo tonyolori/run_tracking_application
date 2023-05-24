@@ -28,33 +28,47 @@ class _MapHomePageState extends State<MapHomePage> {
     for (int i = 0; i < _data.length; i++) {
       _cards.add(
         Dismissible(
-          key: Key(i.toString()),
+          key: UniqueKey(), //Key(_data[i].id),
           direction: DismissDirection.endToStart,
-          child: EntryCard(entry: _data[i]),
           background: Container(
             color: Colors.redAccent,
-            child: const Icon(Icons.delete,color: Colors.white,),
+            child: const Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
           ),
           confirmDismiss: (direction) {
-              return showDialog(
-                context: context,
-                builder: (context)=> AlertDialog(title: Text("Please Confirm "),
+            return showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text("Please Confirm "),
                 content: Text("Are you sure you want to delete?"),
                 actions: [
-                  ElevatedButton(onPressed: (){
-                    Navigator.of(context).pop(false);
-                  }, child: Text("Cancel")),
-                  ElevatedButton(onPressed: (){
-                    Navigator.of(context).pop(true);
-                  }, child: Text("Cancel")),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text("Cancel")),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: Text("Confirm")),
                 ],
-                ),);
+              ),
+            );
           },
-          onDismissed: ((direction) {
+          onDismissed: ((direction) async {
             if (direction == DismissDirection.endToStart) {
+              await DB.delete(Entry.table, _data[i].id);
+              setState(() {
+                _cards.removeAt(i);
+                _data.removeAt(i);
+                _results.removeAt(i);
+              });
             }
-            }
-          )
+          }),
+          child: EntryCard(entry: _data[i]),
         ),
       );
     }
