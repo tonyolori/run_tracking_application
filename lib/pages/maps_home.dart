@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../db/run_db.dart';
 import '../model/entry.dart';
@@ -64,7 +65,6 @@ class _MapHomePageState extends State<MapHomePage> {
               setState(() {
                 _cards.removeAt(i);
                 _data.removeAt(i);
-                _results.removeAt(i);
               });
             }
           }),
@@ -103,10 +103,12 @@ class _MapHomePageState extends State<MapHomePage> {
       appBar: AppBar(
         title: Text("Runs"),
       ),
-      body: ListView(
-        children: _cards,
-      ),
-      floatingActionButton: FloatingActionButton(
+      body: ListView.builder(
+        itemCount: _cards.length,
+        itemBuilder: (context, index) {
+          return _cards[index];
+        }),
+           floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(
