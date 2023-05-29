@@ -1,5 +1,4 @@
 // ignore_for_file: unused_import
-
 import 'package:fit_work/components/step_helper.dart';
 import 'package:provider/provider.dart';
 import 'components/location_service.dart';
@@ -24,6 +23,7 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 }
+
 
 var liveTrackingToggle = true;
 

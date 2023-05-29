@@ -8,17 +8,19 @@ String generateRandomString() {
 class Entry {
   static String table = "entries";
 
-  String id;
+  String uid;
+  String rid;
   String date;
   String duration;
   double speed;
   double distance;
 
-  Entry({required this.id, required this.date, required this.duration, required this.speed, required this.distance}){}
+  Entry({required this.uid,required this.rid, required this.date, required this.duration, required this.speed, required this.distance}){}
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
-      'id': id,
+      'uid': uid,
+      'rid': rid,
       'date': date,
       'duration': duration,
       'speed': speed,
@@ -31,7 +33,8 @@ class Entry {
 
   static Entry fromMap(Map<String, dynamic> map) {
     return Entry(
-        id: map['id'],
+        uid: map['uid'],
+        rid: map['rid'],
         date: map['date'],
         duration: map['duration'],
         speed: map['speed'],

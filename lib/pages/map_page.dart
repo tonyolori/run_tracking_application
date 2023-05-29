@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../auth.dart';
 import '../components/location_service.dart';
 import '../constants.dart';
 import 'package:provider/provider.dart';
@@ -272,7 +273,8 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                                       runHelper.stopRun();
 
                                       Entry en = Entry(
-                                        id:generateRandomString(),
+                                        uid: Auth().currentUser?.uid ?? '0',
+                                        rid:generateRandomString(),
                                           date: (DateFormat().format(DateTime
                                               .now())), //DateFormat.yMMMMd('en_US').format(DateTime.now()),
                                           duration: runHelper.displayTime,

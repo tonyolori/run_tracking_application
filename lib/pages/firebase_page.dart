@@ -18,7 +18,6 @@ class _FirebasePageState extends State<FirebasePage> {
   final distanceRun = "total_distance_run";
   final User? user = Auth().currentUser;
 
-
   @override
   void initState() {
     super.initState();
@@ -30,11 +29,10 @@ class _FirebasePageState extends State<FirebasePage> {
     myController.dispose();
     super.dispose();
   }
+
   Widget _title() {
     return const Text('Top Runs');
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +105,6 @@ class _FirebasePageState extends State<FirebasePage> {
               return const Text("Loading");
             },
           ),
-          
         ],
       ),
     );

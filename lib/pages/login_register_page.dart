@@ -17,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
   final TextEditingController _controllerName = TextEditingController();
+  final TextEditingController _controllerNickname = TextEditingController();
 
   Future<void> signInWithEmailAndPassword() async {
     try {
@@ -26,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         errorMessage = e.message;
       });
+
     }
   }
 
@@ -38,10 +40,19 @@ class _LoginPageState extends State<LoginPage> {
         errorMessage = e.message;
       });
     }
+    final user = FirebaseAuth.instance.currentUser;
+    //create a new firestore document with the users name
+    if (user == null) {
+      return;
+    }
+
+    String uid = user.uid;
+    await user.updateDisplayName(_controllerNickname.text);
     try {
-      await Firestore().users.add({
+      await Firestore().users.doc(uid).set({
         'email': _controllerEmail.text,
         'name': _controllerName.text,
+        'nickname': _controllerNickname.text,
       });
     } catch (e) {
       print(e);
@@ -102,6 +113,9 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             isLogin ? Container() : _entryField('Name', _controllerName),
+            isLogin
+                ? Container()
+                : _entryField('Nickname', _controllerNickname),
             _entryField('email', _controllerEmail),
             _entryField('password', _controllerPassword),
             _errorMessage(),

@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'package:fit_work/auth.dart';
 import 'package:flutter/material.dart';
 import '../db/run_db.dart';
 import '../model/entry.dart';
@@ -24,76 +24,105 @@ class _MapHomePageState extends State<MapHomePage> {
 
   void _fetchEntries() async {
     _cards = [];
-    List<Map<String, dynamic>> _results = await DB.query(Entry.table);
-    _data = _results.map((item) => Entry.fromMap(item)).toList();
+    final user = Auth().currentUser;
+    if (user == null) {
+      return;
+    }
+    
+    final filteredResults =  await DB.getRunListForUser(user.uid);
+
+    _data = filteredResults.map((item) => Entry.fromMap(item)).toList();
     for (int i = 0; i < _data.length; i++) {
       _cards.add(
-        Dismissible(
-          key: UniqueKey(), //Key(_data[i].id),
-          direction: DismissDirection.endToStart,
-          background: Container(
-            color: Colors.redAccent,
-            child: const Icon(
-              Icons.delete,
-              color: Colors.white,
-            ),
-          ),
-          confirmDismiss: (direction) {
-            return showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text("Please Confirm "),
-                content: Text("Are you sure you want to delete?"),
-                actions: [
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(false);
-                      },
-                      child: Text("Cancel")),
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(true);
-                      },
-                      child: Text("Confirm")),
-                ],
-              ),
-            );
-          },
-          onDismissed: ((direction) async {
-            if (direction == DismissDirection.endToStart) {
-              await DB.delete(Entry.table, _data[i].id);
-              setState(() {
-                _cards.removeAt(i);
-                _data.removeAt(i);
-              });
-            }
-          }),
-          child: EntryCard(entry: _data[i]),
-        ),
+        _dismissableWidget(i),
       );
     }
     if (mounted) setState(() {});
   }
 
-  void pushRunToFirebase(String email, String name) async {
-    await Firestore()
-        .users
-        .doc('9999')
-        .get()
-        .then((value) => null)
-        .onError((error, stackTrace) {
-      print("print:");
-      print(error);
+  Dismissible _dismissableWidget(int i) {
+    return Dismissible(
+      key: UniqueKey(), //Key(_data[i].id),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        color: Colors.redAccent,
+        child: const Icon(
+          Icons.delete,
+          color: Colors.white,
+        ),
+      ),
+      confirmDismiss: (direction) {
+        return showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Please Confirm "),
+            content: Text("Are you sure you want to delete?"),
+            actions: [
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text("Cancel")),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text("Confirm")),
+            ],
+          ),
+        );
+      },
+      onDismissed: ((direction) async {
+        if (direction == DismissDirection.endToStart) {
+          await DB.delete(Entry.table, _data[i].rid);
+          setState(() {
+            _cards.removeAt(i);
+            _data.removeAt(i);
+          });
+        }
+      }),
+      child: EntryCard(entry: _data[i]),
+    );
+  }
+
+  void pushRunToFirebase(Entry en) async {
+    final user = Auth().currentUser;
+    if (user == null) {
+      return;
+    }
+    
+    List<Map<String, dynamic>> filteredResults =  await DB.getRunListForUser(user.uid);
+    for (var run in filteredResults) {
+      if (run["distance"]>en.distance){
+        return;
+      }
+    }
+
+    //to possibly get first before pushing
+    // await Firestore()
+    //     .users
+    //     .doc(user.uid)
+    //     .get()
+    //     .then((value) => null)
+    //     .onError((error, stackTrace) {
+    //   print("print:");
+    //   print(error);
+    // });
+
+    //just push the run to firebase
+    Firestore().leaderboard.doc(user.uid).set({
+      'email': user.email,
+      'name': user.displayName,
+      'total_distance_run': (en.distance*1000).toInt()
     });
-    Firestore().users.doc('ajf').set({'name': 'test'});
   }
 
   void _addEntries(Entry? en) async {
     if (en == null) {
       return;
     }
-    DB.insert(Entry.table, en);
-    pushRunToFirebase('ggg', 'yyyy');
+    await DB.insert(Entry.table, en);
+    pushRunToFirebase(en);
     _fetchEntries();
   }
 
@@ -104,11 +133,11 @@ class _MapHomePageState extends State<MapHomePage> {
         title: Text("Runs"),
       ),
       body: ListView.builder(
-        itemCount: _cards.length,
-        itemBuilder: (context, index) {
-          return _cards[index];
-        }),
-           floatingActionButton: FloatingActionButton(
+          itemCount: _cards.length,
+          itemBuilder: (context, index) {
+            return _cards[index];
+          }),
+      floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -116,7 +145,7 @@ class _MapHomePageState extends State<MapHomePage> {
             .then((value) => _addEntries(value)),
         tooltip: 'Increment',
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
