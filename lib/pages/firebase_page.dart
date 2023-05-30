@@ -15,7 +15,7 @@ class FirebasePage extends StatefulWidget {
 class _FirebasePageState extends State<FirebasePage> {
   final myController = TextEditingController();
   final name = "name";
-  final distanceRun = "total_distance_run";
+  final topRun = "topRunKm";
   final User? user = Auth().currentUser;
 
   @override
@@ -90,7 +90,7 @@ class _FirebasePageState extends State<FirebasePage> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "Distance Ran this week",
+                              "Top Run(KM)",
                               style: labelBold,
                             ),
                           ),
@@ -98,7 +98,7 @@ class _FirebasePageState extends State<FirebasePage> {
                       ],
                     ),
                     for (var item in data) // Iterate over the retrieved data
-                      customTableRow(item[name] ?? '', item[distanceRun] ?? 0),
+                      customTableRow(item[name] ?? '', item[topRun] ?? 0),
                   ],
                 );
               }

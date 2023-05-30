@@ -11,6 +11,8 @@ import 'progress_page.dart';
 import 'user_page.dart';
 import '../model/user_model.dart';
 import 'firebase_page.dart';
+import 'discover_page.dart';
+
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
 
@@ -27,32 +29,38 @@ class _HomepageState extends State<Homepage> {
     const ProgressPage(),
     const SettingsPage(),
     const FirebasePage(),
+    DiscoverPage(),
   ];
-  List<Widget> destinations= const [
-              NavigationDestination(
-                icon: Icon(Icons.explore),
-                label: 'Maps',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.commit),
-                label: 'Steps',
-              ),
-              NavigationDestination(
-                selectedIcon: Icon(Icons.legend_toggle),
-                icon: Icon(Icons.monitor),
-                label: 'Progress',
-              ),
-              NavigationDestination(
-                selectedIcon: Icon(Icons.bookmark),
-                icon: Icon(Icons.bookmark_border),
-                label: 'Leaderboard',
-              ),
-              NavigationDestination(
-                selectedIcon: Icon(Icons.bookmark),
-                icon: Icon(Icons.bookmark_border),
-                label: 'Settings',
-              ),
-            ];
+  List<Widget> destinations = const [
+    NavigationDestination(
+      icon: Icon(Icons.explore),
+      label: 'Maps',
+    ),
+    NavigationDestination(
+      icon: Icon(Icons.commit),
+      label: 'Steps',
+    ),
+    NavigationDestination(
+      selectedIcon: Icon(Icons.legend_toggle),
+      icon: Icon(Icons.monitor),
+      label: 'Progress',
+    ),
+    NavigationDestination(
+      selectedIcon: Icon(Icons.bookmark),
+      icon: Icon(Icons.bookmark_border),
+      label: 'Leaderboard',
+    ),
+    NavigationDestination(
+      selectedIcon: Icon(Icons.bookmark),
+      icon: Icon(Icons.bookmark_border),
+      label: 'Settings',
+    ),
+    // NavigationDestination(
+    //   selectedIcon: Icon(Icons.golf_course),
+    //   icon: Icon(Icons.bookmark_border),
+    //   label: 'discover',
+    // ),
+  ];
   askPermission() async {
     // var status = await Permission.camera.status;
     var status = await Permission.activityRecognition.request();
@@ -69,13 +77,13 @@ class _HomepageState extends State<Homepage> {
     return SafeArea(
       child: Scaffold(
         bottomNavigationBar: NavigationBar(
-            onDestinationSelected: (int index) {
-              setState(() {
-                selectedIndex = index;
-              });
-            },
-            selectedIndex: selectedIndex,
-            destinations: destinations,
+          onDestinationSelected: (int index) {
+            setState(() {
+              selectedIndex = index;
+            });
+          },
+          selectedIndex: selectedIndex,
+          destinations: destinations,
         ),
         body: _screens[selectedIndex],
       ),

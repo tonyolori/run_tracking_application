@@ -28,8 +28,8 @@ class _MapHomePageState extends State<MapHomePage> {
     if (user == null) {
       return;
     }
-    
-    final filteredResults =  await DB.getRunListForUser(user.uid);
+
+    final filteredResults = await DB.getRunListForUser(user.uid);
 
     _data = filteredResults.map((item) => Entry.fromMap(item)).toList();
     for (int i = 0; i < _data.length; i++) {
@@ -90,10 +90,11 @@ class _MapHomePageState extends State<MapHomePage> {
     if (user == null) {
       return;
     }
-    
-    List<Map<String, dynamic>> filteredResults =  await DB.getRunListForUser(user.uid);
+
+    List<Map<String, dynamic>> filteredResults =
+        await DB.getRunListForUser(user.uid);
     for (var run in filteredResults) {
-      if (run["distance"]>en.distance){
+      if (run["distance"] > en.distance) {
         return;
       }
     }
@@ -109,12 +110,17 @@ class _MapHomePageState extends State<MapHomePage> {
     //   print(error);
     // });
 
-    //just push the run to firebase
+    //push the run to leaderboard
     Firestore().leaderboard.doc(user.uid).set({
       'email': user.email,
       'name': user.displayName,
-      'total_distance_run': (en.distance*1000).toInt()
+      'topRunKm': (en.distance * 1000).toInt()
     });
+
+    Firestore()
+        .users
+        .doc(user.uid)
+        .update({'topRunKm': (en.distance * 1000).toInt()});
   }
 
   void _addEntries(Entry? en) async {

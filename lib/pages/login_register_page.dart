@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../auth.dart';
 import '../firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
+File? _imageFile;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,7 +22,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
   final TextEditingController _controllerName = TextEditingController();
-  final TextEditingController _controllerNickname = TextEditingController();
+  final TextEditingController _controllerUserName = TextEditingController();
+  final TextEditingController _controllerArea = TextEditingController();
 
   Future<void> signInWithEmailAndPassword() async {
     try {
@@ -27,7 +33,44 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         errorMessage = e.message;
       });
+    }
+  }
 
+  void _selectImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<String> uploadImageToFirebase(File imageFile, String userId) async {
+    String fileName = "$userId-${DateTime.now().millisecondsSinceEpoch.toString()}";
+    Reference reference = FirebaseStorage.instance.ref().child('profile_images/$fileName');
+
+    UploadTask uploadTask = reference.putFile(imageFile);
+    TaskSnapshot storageTaskSnapshot = await uploadTask;
+    String imageUrl = await storageTaskSnapshot.ref.getDownloadURL();
+    return imageUrl;
+  }
+
+  void _uploadImage() async {
+    if (_imageFile != null) {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        return;
+      }
+
+      String userId =
+          user.uid; // Replace with your logic to get the current user's ID
+
+      String imageUrl = await uploadImageToFirebase(_imageFile!, userId);
+      // Save the image URL to the user's profile data in Firestore
+      await Firestore().users.doc(userId).update({
+        'profileImageUrl': imageUrl,
+      });
     }
   }
 
@@ -47,12 +90,14 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     String uid = user.uid;
-    await user.updateDisplayName(_controllerNickname.text);
+    await user.updateDisplayName(_controllerUserName.text);
     try {
       await Firestore().users.doc(uid).set({
         'email': _controllerEmail.text,
         'name': _controllerName.text,
-        'nickname': _controllerNickname.text,
+        'username': _controllerUserName.text,
+        'area': _controllerArea.text,
+        'topRunKM': 0,
       });
     } catch (e) {
       print(e);
@@ -97,31 +142,68 @@ class _LoginPageState extends State<LoginPage> {
       child: Text(isLogin ? 'register' : 'login'),
     );
   }
+  Widget _buildNameTextField() {
+    return _entryField('Name', _controllerName);
+  }
+  Widget _buildUserNameTextField() {
+    return _entryField('Username', _controllerUserName);
+  }
+  Widget _buildAreaTextField() {
+    return _entryField('Area', _controllerArea);
+  }
+  Widget _buildEmailTextField() {
+    return _entryField('Email', _controllerEmail);
+  }
+  Widget _buildPasswordTextField() {
+    return _entryField('Password', _controllerPassword);
+  }
+   Widget _buildProfileImage() {
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 50,
+          backgroundImage: _imageFile != null ? FileImage(_imageFile!) : null,
+        ),
+        TextButton(
+          onPressed: _selectImage,
+          child: Text('Choose Profile Image'),
+        ),
+      ],
+    );
+  }
 
   @override
-  Widget build(BuildContext context) {
+   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _title(),
+        title: Text(isLogin ? 'Login' : 'Register'),
       ),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            isLogin ? Container() : _entryField('Name', _controllerName),
-            isLogin
-                ? Container()
-                : _entryField('Nickname', _controllerNickname),
-            _entryField('email', _controllerEmail),
-            _entryField('password', _controllerPassword),
-            _errorMessage(),
-            _submitButton(),
-            _loginOrRegsiterButton(),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (!isLogin) _buildProfileImage(),
+              if (!isLogin) _buildNameTextField(),
+              if (!isLogin) _buildUserNameTextField(),
+              if (!isLogin) _buildAreaTextField(),
+              _buildEmailTextField(),
+              _buildPasswordTextField(),
+              _errorMessage(),
+              SizedBox(height: 20),
+              _submitButton(),
+              SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    isLogin = !isLogin;
+                  });
+                },
+                child: Text(isLogin ? 'Create an account' : 'Already have an account?'),
+              ),
+            ],
+          ),
         ),
       ),
     );
