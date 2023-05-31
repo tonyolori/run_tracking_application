@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_work/auth.dart';
 import 'package:flutter/material.dart';
 import '../db/run_db.dart';
@@ -85,6 +86,15 @@ class _MapHomePageState extends State<MapHomePage> {
     );
   }
 
+  Future<String> _getImageUrl() async {
+    final user = Auth().currentUser;
+    DocumentSnapshot snapshot = await Firestore().users.doc(user!.uid).get();
+
+    //_area = snapshot['area'];
+    //_profileImageURL = snapshot['profileImageURL'];
+    return snapshot['profileImageURL'];
+  }
+
   void pushRunToFirebase(Entry en) async {
     final user = Auth().currentUser;
     if (user == null) {
@@ -110,11 +120,14 @@ class _MapHomePageState extends State<MapHomePage> {
     //   print(error);
     // });
 
+    //get the profile image url
+    final imageUrl = await _getImageUrl();
     //push the run to leaderboard
     Firestore().leaderboard.doc(user.uid).set({
       'email': user.email,
       'name': user.displayName,
-      'topRunKm': (en.distance * 1000).toInt()
+      'topRunKm': (en.distance * 1000).toInt(),
+      'profileImageURL': imageUrl,
     });
 
     Firestore()

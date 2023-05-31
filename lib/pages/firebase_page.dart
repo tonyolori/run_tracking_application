@@ -44,20 +44,6 @@ class _FirebasePageState extends State<FirebasePage> {
       ),
       body: Column(
         children: <Widget>[
-          //? sample code for adding a user
-          // ElevatedButton(
-          //   onPressed: () {
-          //     Firestore()
-          //         .users
-          //         .add({
-          //           'full_name': myController.text,
-          //           'last_name': myController.text,
-          //         })
-          //         .then((value) => print("User Added"))
-          //         .catchError((error) => print("Failed to add user: $error"));
-          //   },
-          //   child: Text("Submit"),
-          // ),
           FutureBuilder<List<Map<String, dynamic>>>(
             future:
                 leaderboardList, // leaderboardList is a Future<List<Map<String, dynamic>>>
