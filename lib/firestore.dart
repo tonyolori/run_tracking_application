@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
-
-class Firestore  {
-  static final FirebaseFirestore _firebaseAuth = FirebaseFirestore.instance;
-  CollectionReference get users => _firebaseAuth.collection('users');
+class Firestore {
+  static final FirebaseFirestore _firebaseFirestore =
+      FirebaseFirestore.instance;
+  CollectionReference get users => _firebaseFirestore.collection('users');
   CollectionReference get leaderboard =>
-      _firebaseAuth.collection('leaderboard');
+      _firebaseFirestore.collection('leaderboard');
   final name = "name";
-  final distanceRun = "total_distance_run";
+  final distanceRun = "topRunKm";
 
   dynamic retrievedName;
 
@@ -27,6 +26,4 @@ class Firestore  {
     });
     return leaderboardData; // Assign the data to the leaderboard future
   }
-
-
 }

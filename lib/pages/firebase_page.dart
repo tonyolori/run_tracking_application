@@ -56,11 +56,13 @@ class _FirebasePageState extends State<FirebasePage> {
                     var item = data[index];
                     return ListTile(
                       leading: CircleAvatar(
-                        backgroundImage: NetworkImage(item['profileImageURL']?? const NetworkImage("gs://fitwork-maps.appspot.com/profile_images/ZF0ynO7YykVpxBf6EvEDmr1YJBl1-1685534265718")),
+                        backgroundImage: NetworkImage(item['profileImageURL'] ??
+                            "gs://fitwork-maps.appspot.com/profile_images/ZF0ynO7YykVpxBf6EvEDmr1YJBl1-1685534265718"),
                       ),
                       title: Text(
                         item[name] ?? '',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
                         "Top Run: ${item[topRun] ?? 0} KM",
