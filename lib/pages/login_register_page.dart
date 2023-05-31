@@ -95,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
 
     String uid = user.uid;
     await user.updateDisplayName(_controllerNickname.text);
-    final imageUrl = _uploadImage();
+    final imageUrl = await _uploadImage();
     try {
       await Firestore().users.doc(uid).set({
         'email': _controllerEmail.text,
