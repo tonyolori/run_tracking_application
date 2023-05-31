@@ -6,7 +6,6 @@ import 'constants.dart';
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
 import 'pages/home_page.dart';
-import 'db/user_db.dart';
 import 'components/graph_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'widget_tree.dart';
@@ -23,7 +22,6 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 }
-
 
 var liveTrackingToggle = true;
 
@@ -46,10 +44,6 @@ class _MyAppState extends State<MyApp> {
             create: (_) => GraphHelper(),
             lazy: false,
           ),
-          Provider(
-            create: (_) => User(),
-            lazy: false,
-          )
           //Provider.value(value: liveTrackingToggle),
         ],
         child: MaterialApp(

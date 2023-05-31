@@ -1,5 +1,5 @@
 import 'package:fit_work/pages/firebase_home.dart';
-import 'package:fit_work/pages/user_page.dart';
+import 'package:fit_work/pages/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -78,10 +78,8 @@ class _SettingsPageState extends State<SettingsPage> {
               SettingsTile(
                 title: const Text('Profile'),
                 onPressed: (context) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const UserPage()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ProfilePage()));
                 },
               ),
               SettingsTile.navigation(
@@ -122,7 +120,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 leading: Icon(Icons.logout),
                 title: Text('Sign Out'),
               ),
-              
             ],
           ),
         ],

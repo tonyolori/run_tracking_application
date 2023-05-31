@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
   final TextEditingController _controllerName = TextEditingController();
-  final TextEditingController _controllerUserName = TextEditingController();
+  final TextEditingController _controllerNickname = TextEditingController();
   final TextEditingController _controllerArea = TextEditingController();
 
   Future<void> signInWithEmailAndPassword() async {
@@ -58,23 +58,24 @@ class _LoginPageState extends State<LoginPage> {
     return imageUrl;
   }
 
-  void _uploadImage() async {
+  Future<String> _uploadImage() async {
     if (_imageFile != null) {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        return;
-      }
+      final user = Auth().currentUser;
 
       String userId =
-          user.uid; // Replace with your logic to get the current user's ID
+          user!.uid; // Replace with your logic to get the current user's ID
 
       String imageUrl = await uploadImageToFirebase(_imageFile!, userId);
+      return imageUrl;
       // Save the image URL to the user's profile data in Firestore
-      await Firestore().users.doc(userId).update({
-        'profileImageUrl': imageUrl,
-      });
+      //   await Firestore().users.doc(userId).update({
+      //     'profileImageUrl': imageUrl,
+      //   });
+      // }
+    } else {
+      //TODO: write a function that gives the imaeg url as a default one
+      return '';
     }
-    
   }
 
   Future<void> createUserWithEmailAndPassword() async {
@@ -86,28 +87,28 @@ class _LoginPageState extends State<LoginPage> {
         errorMessage = e.message;
       });
     }
-    final user = FirebaseAuth.instance.currentUser;
+    final user = Auth().currentUser;
     //create a new firestore document with the users name
     if (user == null) {
       return;
     }
 
     String uid = user.uid;
-    await user.updateDisplayName(_controllerUserName.text);
+    await user.updateDisplayName(_controllerNickname.text);
+    final imageUrl = _uploadImage();
     try {
       await Firestore().users.doc(uid).set({
         'email': _controllerEmail.text,
         'name': _controllerName.text,
-        'username': _controllerUserName.text,
+        'nickname': _controllerNickname.text,
         'area': _controllerArea.text,
         'topRunKM': 0,
+        'profileImageURL': imageUrl,
       });
     } catch (e) {
       print(e);
     }
-    try {
-      _uploadImage();
-    } catch (e) {
+    try {} catch (e) {
       print(e);
     }
   }
@@ -156,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildUserNameTextField() {
-    return _entryField('Username', _controllerUserName);
+    return _entryField('Username', _controllerNickname);
   }
 
   Widget _buildAreaTextField() {

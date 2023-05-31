@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'maps_home.dart';
 import 'settings_page.dart';
 import 'progress_page.dart';
-import 'user_page.dart';
+import 'profile_page.dart';
 import 'firebase_page.dart';
 import 'discover_page.dart';
 

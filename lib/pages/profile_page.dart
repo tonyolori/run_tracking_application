@@ -1,11 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fit_work/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
+import '../firestore.dart';
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -34,8 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _getUserProfile() async {
     _user = _auth.currentUser;
-    DocumentSnapshot snapshot = await _firestore
-        .collection('users')
+    DocumentSnapshot snapshot = await Firestore().users
         .doc(_user!.uid)
         .get();
 
@@ -55,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
     _nickname = _nicknameController.text;
     _area = _areaController.text;
 
-    await _firestore.collection('users').doc(_user!.uid).update({
+    await Firestore().users.doc(_user!.uid).update({
       'name': _name,
       'nickname': _nickname,
       'area': _area,
@@ -122,59 +121,3 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 
-class UserPage extends StatefulWidget {
-  const UserPage({Key? key}) : super(key: key);
-
-  @override
-  _UserPageState createState() => _UserPageState();
-}
-
-class _UserPageState extends State<UserPage> {
-  // Declare variables to store user input
-  String? name;
-  DateTime? birthday;
-  double? height;
-  String? gender = 'Male';
-  double? weight;
-
-  //user details
-  UserModel? userModel;
-  // Declare a global key for the form
-  final _formKey = GlobalKey<FormState>();
-
-  // Declare controllers for the text fields
-  final _bMIController = TextEditingController();
-  final _nameController = TextEditingController();
-  final _birthdayController = TextEditingController();
-  final _heightController = TextEditingController();
-  final _weightController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    setModel();
-  }
-
-  setModel() async {
-    userModel = await User.getUserValuesSF();
-    _bMIController.text =
-        userModel!.BMI.toStringAsFixed(2); //toStringAsPrecision(4);
-    _nameController.text = userModel!.name;
-    _birthdayController.text = userModel!.birthday.toString();
-    _heightController.text = userModel!.height.toString();
-    _weightController.text = userModel!.weight.toString();
-    gender = userModel!.gender;
-    if (mounted) setState(() {});
-  }
-
-  @override
-  void dispose() {
-    // Dispose the controllers when the state is disposed
-    _bMIController.dispose();
-    _nameController.dispose();
-    _birthdayController.dispose();
-    _heightController.dispose();
-    _weightController.dispose();
-    super.dispose();
-  }
-}
