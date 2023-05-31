@@ -47,8 +47,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<String> uploadImageToFirebase(File imageFile, String userId) async {
-    String fileName = "$userId-${DateTime.now().millisecondsSinceEpoch.toString()}";
-    Reference reference = FirebaseStorage.instance.ref().child('profile_images/$fileName');
+    String fileName =
+        "$userId-${DateTime.now().millisecondsSinceEpoch.toString()}";
+    Reference reference =
+        FirebaseStorage.instance.ref().child('profile_images/$fileName');
 
     UploadTask uploadTask = reference.putFile(imageFile);
     TaskSnapshot storageTaskSnapshot = await uploadTask;
@@ -72,6 +74,7 @@ class _LoginPageState extends State<LoginPage> {
         'profileImageUrl': imageUrl,
       });
     }
+    
   }
 
   Future<void> createUserWithEmailAndPassword() async {
@@ -99,6 +102,11 @@ class _LoginPageState extends State<LoginPage> {
         'area': _controllerArea.text,
         'topRunKM': 0,
       });
+    } catch (e) {
+      print(e);
+    }
+    try {
+      _uploadImage();
     } catch (e) {
       print(e);
     }
@@ -142,22 +150,28 @@ class _LoginPageState extends State<LoginPage> {
       child: Text(isLogin ? 'register' : 'login'),
     );
   }
+
   Widget _buildNameTextField() {
     return _entryField('Name', _controllerName);
   }
+
   Widget _buildUserNameTextField() {
     return _entryField('Username', _controllerUserName);
   }
+
   Widget _buildAreaTextField() {
     return _entryField('Area', _controllerArea);
   }
+
   Widget _buildEmailTextField() {
     return _entryField('Email', _controllerEmail);
   }
+
   Widget _buildPasswordTextField() {
     return _entryField('Password', _controllerPassword);
   }
-   Widget _buildProfileImage() {
+
+  Widget _buildProfileImage() {
     return Column(
       children: [
         CircleAvatar(
@@ -173,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
-   Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(isLogin ? 'Login' : 'Register'),
@@ -200,7 +214,8 @@ class _LoginPageState extends State<LoginPage> {
                     isLogin = !isLogin;
                   });
                 },
-                child: Text(isLogin ? 'Create an account' : 'Already have an account?'),
+                child: Text(
+                    isLogin ? 'Create an account' : 'Already have an account?'),
               ),
             ],
           ),

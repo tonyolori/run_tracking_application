@@ -1,6 +1,5 @@
 // ignore_for_file: unused_import
 
-import 'package:fit_work/db/user_db.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../constants.dart';
 import 'Step_page.dart';
@@ -9,7 +8,6 @@ import 'maps_home.dart';
 import 'settings_page.dart';
 import 'progress_page.dart';
 import 'user_page.dart';
-import '../model/user_model.dart';
 import 'firebase_page.dart';
 import 'discover_page.dart';
 

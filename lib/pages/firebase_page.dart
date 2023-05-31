@@ -15,7 +15,7 @@ class FirebasePage extends StatefulWidget {
 class _FirebasePageState extends State<FirebasePage> {
   final myController = TextEditingController();
   final name = "name";
-  final topRun = "topRunKm";
+  final topRun = "total_distance_run";
   final User? user = Auth().currentUser;
 
   @override
