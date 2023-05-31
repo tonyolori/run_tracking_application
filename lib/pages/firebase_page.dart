@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fit_work/constants.dart';
 import 'package:flutter/material.dart';
 import '../firestore.dart';
 import '../auth.dart';
@@ -45,82 +44,37 @@ class _FirebasePageState extends State<FirebasePage> {
       body: Column(
         children: <Widget>[
           FutureBuilder<List<Map<String, dynamic>>>(
-            future:
-                leaderboardList, // leaderboardList is a Future<List<Map<String, dynamic>>>
+            future: leaderboardList,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done &&
                   snapshot.hasData) {
-                List<Map<String, dynamic>> data =
-                    snapshot.data!; // Retrieve the data from the snapshot
-                return Table(
-                  columnWidths: const {
-                    0: FlexColumnWidth(),
-                    1: FlexColumnWidth(),
-                  },
-                  children: [
-                    TableRow(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
+                List<Map<String, dynamic>> data = snapshot.data!;
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    var item = data[index];
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(item['profileImageURL']?? const NetworkImage("gs://fitwork-maps.appspot.com/profile_images/ZF0ynO7YykVpxBf6EvEDmr1YJBl1-1685534265718")),
                       ),
-                      children: [
-                        TableCell(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Name",
-                              style: labelBold,
-                            ),
-                          ),
-                        ),
-                        TableCell(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Top Run(KM)",
-                              style: labelBold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    for (var item in data) // Iterate over the retrieved data
-                      customTableRow(item[name] ?? '', item[topRun] ?? 0),
-                  ],
+                      title: Text(
+                        item[name] ?? '',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        "Top Run: ${item[topRun] ?? 0} KM",
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    );
+                  },
                 );
               }
-              return const Text("Loading");
+              return const Center(child: CircularProgressIndicator());
             },
           ),
         ],
       ),
-    );
-  }
-
-  TableRow customTableRow(String name, int score) {
-    return TableRow(
-      children: [
-        TableCell(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              name,
-              style: graphLabel,
-            ),
-          ),
-        ),
-        TableCell(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                score.toString(),
-                style: graphLabel,
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

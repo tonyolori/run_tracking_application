@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
+import '../firestore.dart';
 class SettingsPage extends StatefulWidget {
   @override
   _SettingsPageState createState() => _SettingsPageState();
@@ -9,7 +8,6 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   final _auth = FirebaseAuth.instance;
-  final _firestore = FirebaseFirestore.instance;
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _nicknameController = TextEditingController();
@@ -27,7 +25,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _getUserData() async {
     final user = _auth.currentUser;
     if (user != null) {
-      final userData = await _firestore.collection('users').doc(user.uid).get();
+      final userData = await Firestore().users.doc(user.uid).get();
       setState(() {
         _email = user.email ?? '';
         _name = userData['name'];
@@ -39,7 +37,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _updateUserData() async {
     final user = _auth.currentUser;
     if (user != null) {
-      await _firestore.collection('users').doc(user.uid).update({
+      await Firestore().users.doc(user.uid).update({
         'name': _nameController.text,
         'nickname': _nicknameController.text,
       });
