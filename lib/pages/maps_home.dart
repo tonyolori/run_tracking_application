@@ -86,13 +86,15 @@ class _MapHomePageState extends State<MapHomePage> {
     );
   }
 
-  Future<String> _getImageUrl() async {
+  Future<Map<String,String>> _getImageUrlAndArea() async {
     final user = Auth().currentUser;
     DocumentSnapshot snapshot = await Firestore().users.doc(user!.uid).get();
 
-    //_area = snapshot['area'];
-    //_profileImageURL = snapshot['profileImageURL'];
-    return snapshot['profileImageURL'];
+    Map<String, String> temp = {
+  'area': snapshot['area'],
+  'profileImageURL': snapshot['profileImageURL'],
+};
+    return temp;
   }
 
   void pushRunToFirebase(Entry en) async {
@@ -121,13 +123,14 @@ class _MapHomePageState extends State<MapHomePage> {
     // });
 
     //get the profile image url
-    final imageUrl = await _getImageUrl();
+    final imageUrlandArea = await _getImageUrlAndArea();
     //push the run to leaderboard
     Firestore().leaderboard.doc(user.uid).set({
       'email': user.email,
       'name': user.displayName,
+      'area': imageUrlandArea['area'],
       'topRunKm': (en.distance * 1000).toInt(),
-      'profileImageURL': imageUrl,
+      'profileImageURL': imageUrlandArea['profileImageURL'],
     });
 
     Firestore()

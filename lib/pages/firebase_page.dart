@@ -4,6 +4,14 @@ import 'package:flutter/material.dart';
 import '../firestore.dart';
 import '../auth.dart';
 
+List<String> acceptedOptions = [
+    'Lefke',
+    'Lefkosa',
+    'Gönyeli',
+    'Girne',
+    'Güzelyurt',
+    'İskele',
+  ];
 class FirebasePage extends StatefulWidget {
   const FirebasePage({super.key});
 
@@ -16,7 +24,7 @@ class _FirebasePageState extends State<FirebasePage> {
   final name = "name";
   final topRun = "total_distance_run";
   final User? user = Auth().currentUser;
-  String selectedArea = ''; // Store the selected area
+  String selectedArea = acceptedOptions[0]; // provide default area, change later to users option
   bool showMostActiveOnly = false; // Flag for showing most active only
 
 
@@ -77,12 +85,7 @@ class _FirebasePageState extends State<FirebasePage> {
                 selectedArea = newValue!;
               });
             },
-            items: <String>[
-              'lefke',
-              'Area 2',
-              'Area 3',
-              // Add more areas from the list stored in Firebase
-            ].map<DropdownMenuItem<String>>((String value) {
+            items: acceptedOptions.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
