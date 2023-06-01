@@ -160,10 +160,6 @@ class _LoginPageState extends State<LoginPage> {
     return _entryField('Username', _controllerNickname);
   }
 
-  Widget _buildAreaTextField() {
-    return _entryField('Area', _controllerArea);
-  }
-
   Widget _buildEmailTextField() {
     return _entryField('Email', _controllerEmail);
   }
@@ -184,6 +180,44 @@ class _LoginPageState extends State<LoginPage> {
           child: Text('Choose Profile Image'),
         ),
       ],
+    );
+  }
+
+  List<String> acceptedOptions = [
+    'Lefke',
+    'Lefkosa',
+    'Gönyeli',
+    'Girne',
+    'Güzelyurt',
+    'İskele',
+  ];
+
+  Widget _buildAreaTextField() {
+    _controllerArea.text = acceptedOptions[0];
+    return _areaField('Area', _controllerArea);
+  }
+
+  Widget _areaField(
+    String title,
+    TextEditingController controller,
+  ) {
+    String? selectedValue = controller.text;
+    return DropdownButtonFormField<String>(
+      value: selectedValue,
+      decoration: InputDecoration(
+        labelText: title,
+      ),
+      items: acceptedOptions.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      onChanged: (String? newValue) {
+        if (newValue != null) {
+          controller.text = newValue;
+        }
+      },
     );
   }
 
