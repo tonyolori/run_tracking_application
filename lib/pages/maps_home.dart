@@ -103,13 +103,13 @@ class _MapHomePageState extends State<MapHomePage> {
       return;
     }
 
-    List<Map<String, dynamic>> filteredResults =
-        await DB.getRunListForUser(user.uid);
-    for (var run in filteredResults) {
-      if (run["distance"] > en.distance) {
-        return;
-      }
-    }
+    // List<Map<String, dynamic>> filteredResults =
+    //     await DB.getRunListForUser(user.uid);
+    // for (var run in filteredResults) {
+    //   if (run["distance"] > en.distance) {
+    //     return;
+    //   }
+    // }
 
     //to possibly get first before pushing
     // await Firestore()
@@ -139,14 +139,62 @@ class _MapHomePageState extends State<MapHomePage> {
         .update({'topRunKm': (en.distance * 1000).toInt()});
   }
 
+  // void _addEntries(Entry? en) async {
+  //   if (en == null) {
+  //     return;
+  //   }
+  //   await DB.insert(Entry.table, en);
+  //   pushRunToFirebase(en);
+  //   _fetchEntries();
+  // }
   void _addEntries(Entry? en) async {
-    if (en == null) {
+  if (en == null) {
+    return;
+  }
+
+  await DB.insert(Entry.table, en);
+  _fetchEntries();
+
+  final currentContext = context; // Capture the current context
+
+  final user = Auth().currentUser;
+    if (user == null) {
       return;
     }
-    await DB.insert(Entry.table, en);
-    pushRunToFirebase(en);
-    _fetchEntries();
-  }
+
+  List<Map<String, dynamic>> filteredResults =
+        await DB.getRunListForUser(user.uid);
+    for (var run in filteredResults) {
+      if (run["distance"] > en.distance) {
+        return;
+      }
+    }
+  showDialog(
+    context: currentContext,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Confirm Upload'),
+        content: Text('You got a new top run. Do you want to Upload the run to the server?'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(currentContext).pop(); // Use the captured context
+            },
+          ),
+          TextButton(
+            child: Text('Confirm'),
+            onPressed: () async {
+              Navigator.of(currentContext).pop(); // Use the captured context
+              pushRunToFirebase(en);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
