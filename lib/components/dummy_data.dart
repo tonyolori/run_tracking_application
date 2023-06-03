@@ -1,4 +1,3 @@
-import '../model/step_model.dart' as step;
 import '../model/calorie_model.dart';
 
 String toMonthSt(int month) {
@@ -109,96 +108,6 @@ final List<Map<String, dynamic>> dummyCalorieData = [
   },
 ];
 
-final List<Map<String, dynamic>> stepMaps = [
-  {
-    step.columnStepCount: 1900,
-    step.columnTime: "2023-01-01 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 1400,
-    step.columnTime: "2023-02-01 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 1100,
-    step.columnTime: "2023-03-01 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 1340,
-    step.columnTime: "2023-03-02 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 1300,
-    step.columnTime: "2023-03-03 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 1400,
-    step.columnTime: "2023-03-04 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 2500,
-    step.columnTime: "2023-03-05 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 1900,
-    step.columnTime: "2023-03-06 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 2000,
-    step.columnTime: "2023-03-07 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 2500,
-    step.columnTime: "2023-03-08 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 3000,
-    step.columnTime: "2023-03-09 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 2000,
-    step.columnTime: "2023-03-10 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 1500,
-    step.columnTime: "2023-03-11 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 1100,
-    step.columnTime: "2023-03-12 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 2300,
-    step.columnTime: "2023-03-13 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 1400,
-    step.columnTime: "2023-03-14 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 1900,
-    step.columnTime: "2023-03-15 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 1000,
-    step.columnTime: "2023-03-16 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 3000,
-    step.columnTime: "2023-03-17 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 1200,
-    step.columnTime: "2023-04-01 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 1900,
-    step.columnTime: "2023-05-01 18:08:46.385056",
-  },
-  {
-    step.columnStepCount: 2100,
-    step.columnTime: "2023-06-01 18:08:46.385056",
-  },
-];
 
 final List<Map<String, dynamic>> calorieMaps = [
   {

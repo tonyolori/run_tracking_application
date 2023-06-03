@@ -1,5 +1,4 @@
 // ignore_for_file: unused_import
-import 'package:fit_work/components/step_helper.dart';
 import 'package:provider/provider.dart';
 import 'components/location_service.dart';
 import 'constants.dart';
@@ -36,10 +35,6 @@ class _MyAppState extends State<MyApp> {
             lazy: false,
           ),
           Provider.value(value: Pedometer),
-          ChangeNotifierProvider(
-            create: (_) => StepHelper(),
-            lazy: true,
-          ),
           ChangeNotifierProvider(
             create: (_) => GraphHelper(),
             lazy: false,

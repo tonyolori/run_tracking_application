@@ -69,7 +69,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return const Center(child: SizedBox(height:20,width:20,child: CircularProgressIndicator()));
                 }
 
                 if (snapshot.data ==null) {

@@ -2,7 +2,6 @@
 
 import 'package:permission_handler/permission_handler.dart';
 import '../constants.dart';
-import 'Step_page.dart';
 import 'package:flutter/material.dart';
 import 'maps_home.dart';
 import 'settings_page.dart';
@@ -23,7 +22,6 @@ class _HomepageState extends State<Homepage> {
 
   final List<Widget> _screens = [
     MapHomePage(),
-    const RunTracking(),
     const ProgressPage(),
     const SettingsPage(),
     const FirebasePage(),
@@ -33,10 +31,6 @@ class _HomepageState extends State<Homepage> {
     NavigationDestination(
       icon: Icon(Icons.explore),
       label: 'Maps',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.commit),
-      label: 'Steps',
     ),
     NavigationDestination(
       selectedIcon: Icon(Icons.legend_toggle),
@@ -53,11 +47,11 @@ class _HomepageState extends State<Homepage> {
       icon: Icon(Icons.bookmark_border),
       label: 'Settings',
     ),
-    // NavigationDestination(
-    //   selectedIcon: Icon(Icons.golf_course),
-    //   icon: Icon(Icons.bookmark_border),
-    //   label: 'discover',
-    // ),
+    NavigationDestination(
+      selectedIcon: Icon(Icons.golf_course),
+      icon: Icon(Icons.bookmark_border),
+      label: 'discover',
+    ),
   ];
   askPermission() async {
     // var status = await Permission.camera.status;
