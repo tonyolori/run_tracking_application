@@ -1,14 +1,24 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+const fname = "name";
+const fusername = "nickname";
+const fTopRun = "topRunKm";
+const fprofileImageURL = "profileImageURL";
+const friendsCollection = "friends";
+const fstatus = "status";
+const fblocked = "blocked";
+const faccecpted = "accepted";
+const fpending = "pending";
+const frejected = "rejected";
+const fnone = "none";
+
 class Firestore {
   static final FirebaseFirestore _firebaseFirestore =
       FirebaseFirestore.instance;
   CollectionReference get users => _firebaseFirestore.collection('users');
   CollectionReference get leaderboard =>
       _firebaseFirestore.collection('leaderboard');
-  final name = "name";
-  final distanceRun = "topRunKm";
 
   dynamic retrievedName;
 
@@ -16,7 +26,7 @@ class Firestore {
     List<Map<String, dynamic>> leaderboardData = [];
 
     await leaderboard
-        .orderBy(distanceRun, descending: true)
+        .orderBy(fTopRun, descending: true)
         .limitToLast(20)
         .get()
         .then((event) {
@@ -25,5 +35,100 @@ class Firestore {
           event.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
     });
     return leaderboardData; // Assign the data to the leaderboard future
+  }
+
+  Future<void> sendFriendRequest(
+      String senderUserId, String receiverUserId) async {
+    // Update for sender
+    CollectionReference senderFriends =
+        users.doc(senderUserId).collection(friendsCollection);
+
+    // Update for receiver
+    CollectionReference receiverRequests =
+        users.doc(receiverUserId).collection(friendsCollection);
+
+    // Create a map with the friend request data
+    Map<String, dynamic> request = {
+      'timestamp': DateTime.now(),
+      fstatus: fpending,
+    };
+
+    // Store the friend request in Firestore for sender
+    await senderFriends.doc(receiverUserId).set(request);
+
+    // Store the friend request in Firestore for receiver
+    await receiverRequests.doc(senderUserId).set(request);
+  }
+
+  Future<void> cancelFriendRequest(
+      String senderUserId, String receiverUserId) async {
+    // Update for sender
+    CollectionReference senderFriends =
+        users.doc(senderUserId).collection(friendsCollection);
+
+    // Update for receiver
+    CollectionReference receiverRequests =
+        users.doc(receiverUserId).collection(friendsCollection);
+
+    // Create a map with the friend request data
+    Map<String, dynamic> request = {
+      'timestamp': DateTime.now(),
+      fstatus: frejected,
+    };
+
+    // Store the friend request in Firestore for sender
+    await senderFriends.doc(receiverUserId).set(request);
+
+    // Store the friend request in Firestore for receiver
+    await receiverRequests.doc(senderUserId).set(request);
+  }
+
+  Future<String> checkFriendRequestSent(
+      String senderUserId, String receiverUserId) async {
+    // Check if a friend request has already been sent from sender to receiver
+    CollectionReference senderFriends =
+        users.doc(senderUserId).collection(friendsCollection);
+    DocumentSnapshot senderDoc = await senderFriends.doc(receiverUserId).get();
+    if (senderDoc.exists) {
+      String status = senderDoc.get(fstatus);
+      return status;
+    }
+    // Check if a friend request has already been sent from receiver to sender
+    CollectionReference receiverRequests =
+        users.doc(receiverUserId).collection(friendsCollection);
+    DocumentSnapshot receiverDoc =
+        await receiverRequests.doc(senderUserId).get();
+    if (receiverDoc.exists) {
+      String status = receiverDoc.get(fstatus);
+      return status;
+    }
+    // No friend request found
+    return fnone;
+  }
+
+  Future<void> acceptFriendRequest(
+      String receiverUserId, String senderUserId) async {
+    // Update the friend request status to 'accepted' in the receiver's friends subcollection
+    CollectionReference receiverFriends =
+        users.doc(receiverUserId).collection(friendsCollection);
+    DocumentReference requestDoc = receiverFriends.doc(senderUserId);
+    await requestDoc.update({fstatus: faccecpted});
+    // Add the receiver to the sender's friends subcollection with 'status' set to 'accepted'
+    CollectionReference senderFriends =
+        users.doc(senderUserId).collection(friendsCollection);
+    DocumentReference friendDoc = senderFriends.doc(receiverUserId);
+    await friendDoc.set({fstatus: faccecpted});
+  }
+
+  Future<void> blockFriend(String userId, String friendUserId) async {
+    // Update the friend status to 'blocked' in both users' friends subcollections
+    CollectionReference userFriends =
+        users.doc(userId).collection(friendsCollection);
+    DocumentReference friendDoc = userFriends.doc(friendUserId);
+    await friendDoc.update({'status': 'blocked'});
+    CollectionReference friendFriends =
+        users.doc(friendUserId).collection(friendsCollection);
+    DocumentReference userDoc = friendFriends.doc(userId);
+    await userDoc.update({'status': 'blocked'});
   }
 }

@@ -38,19 +38,19 @@ class _HomepageState extends State<Homepage> {
       label: 'Progress',
     ),
     NavigationDestination(
-      selectedIcon: Icon(Icons.bookmark),
-      icon: Icon(Icons.bookmark_border),
+      selectedIcon: Icon(Icons.leaderboard),
+      icon: Icon(Icons.leaderboard),
       label: 'Leaderboard',
     ),
     NavigationDestination(
-      selectedIcon: Icon(Icons.bookmark),
-      icon: Icon(Icons.bookmark_border),
-      label: 'Settings',
+      selectedIcon: Icon(Icons.public),
+      icon: Icon(Icons.public),
+      label: 'discover',
     ),
     NavigationDestination(
-      selectedIcon: Icon(Icons.golf_course),
-      icon: Icon(Icons.bookmark_border),
-      label: 'discover',
+      selectedIcon: Icon(Icons.settings),
+      icon: Icon(Icons.settings),
+      label: 'Settings',
     ),
   ];
   askPermission() async {
