@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 const fname = "name";
 const fusername = "nickname";
 const fTopRun = "topRunKm";
+const fArea = "area";
 const fprofileImageURL = "profileImageURL";
 const friendsCollection = "friends";
 const fstatus = "status";
@@ -11,7 +12,15 @@ const fblocked = "blocked";
 const faccecpted = "accepted";
 const fpending = "pending";
 const frejected = "rejected";
+const fsent = "sent";
 const fnone = "none";
+
+enum RequestStatus {
+  pending,
+  rejected,
+  accepted,
+  none,
+}
 
 class Firestore {
   static final FirebaseFirestore _firebaseFirestore =
@@ -50,7 +59,7 @@ class Firestore {
     // Create a map with the friend request data
     Map<String, dynamic> request = {
       'timestamp': DateTime.now(),
-      fstatus: fpending,
+      fstatus: fsent,
     };
 
     // Store the friend request in Firestore for sender
@@ -71,16 +80,17 @@ class Firestore {
         users.doc(receiverUserId).collection(friendsCollection);
 
     // Create a map with the friend request data
-    Map<String, dynamic> request = {
-      'timestamp': DateTime.now(),
-      fstatus: frejected,
-    };
+    //can be used with .set but rn im deleting
+    // Map<String, dynamic> request = {
+    //   'timestamp': DateTime.now(),
+    //   fstatus: fnone,
+    // };
 
     // Store the friend request in Firestore for sender
-    await senderFriends.doc(receiverUserId).set(request);
+    await senderFriends.doc(receiverUserId).delete();
 
     // Store the friend request in Firestore for receiver
-    await receiverRequests.doc(senderUserId).set(request);
+    await receiverRequests.doc(senderUserId).delete();
   }
 
   Future<String> checkFriendRequestSent(
@@ -104,6 +114,35 @@ class Firestore {
     }
     // No friend request found
     return fnone;
+  }
+  Future<List<String>> fetchFriendsList(String userId) async {
+  final snapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .collection('friends')
+      .get();
+
+  final friendsList = snapshot.docs.map((doc) => doc.id).toList();
+  return friendsList;
+}
+
+  static RequestStatus convertToRequest(String stringValue) {
+    RequestStatus status;
+    switch (stringValue) {
+      case fpending:
+        status = RequestStatus.pending;
+        break;
+      case frejected:
+        status = RequestStatus.rejected;
+        break;
+      case faccecpted:
+        status = RequestStatus.accepted;
+        break;
+      default:
+        // Handle any other cases or set a default value
+        status = RequestStatus.none;
+    }
+    return status;
   }
 
   Future<void> acceptFriendRequest(
