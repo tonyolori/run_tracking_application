@@ -68,25 +68,6 @@ String toDaySt(int day) {
   }
 }
 
-final List<Map<String, dynamic>> dummyBarData = [
-  {
-    'id': 'Bar',
-    'data': [
-      {'domain': 'jan', 'measure': 3},
-      {'domain': 'feb', 'measure': 4},
-      {'domain': 'march', 'measure': 6},
-      {'domain': 'april', 'measure': 0.3},
-      {'domain': 'may', 'measure': 3},
-      {'domain': 'june', 'measure': 4},
-      {'domain': 'july', 'measure': 6},
-      {'domain': 'Aug', 'measure': 0.3},
-      {'domain': 'Sept', 'measure': 3},
-      {'domain': 'Oct', 'measure': 4},
-      {'domain': 'Nov', 'measure': 6},
-      {'domain': 'Dec', 'measure': 0.3},
-    ],
-  },
-];
 
 final List<Map<String, dynamic>> dummyCalorieData = [
   {

@@ -12,19 +12,10 @@ class ProgressPage extends StatefulWidget {
 }
 
 class _ProgressPageState extends State<ProgressPage> {
-  List<Map<String, dynamic>> constructedStepBar = [];
   List<Map<String, dynamic>> constructedCalorieBar = [];
 
-  // void addListener() {
-  //   context.read<StepHelper>().addListener(updateBarValues);
-  // }
-
-  // void removeListener() {
-  //   context.read<StepHelper>().removeListener(updateBarValues);
-  // }
 
   void updateBarValues() {
-    constructedStepBar = context.read<GraphHelper>().stepBarData;
     constructedCalorieBar = context.read<GraphHelper>().calorieBarData;
     setState(() {});
   }
@@ -32,15 +23,11 @@ class _ProgressPageState extends State<ProgressPage> {
   @override
   void initState() {
     super.initState();
-    //addListener();
     updateBarValues();
-    //? example
-    //DB.init().then((value) => _fetchEntries());
   }
 
   @override
   void dispose() {
-    //removeListener();
     super.dispose();
   }
 
@@ -114,24 +101,7 @@ class _ProgressPageState extends State<ProgressPage> {
               ),
             ),
             _whitespace(),
-            Text(
-              "Steps",
-              style: graphLabel,
-            ),
-            AspectRatio(
-              aspectRatio: 4 / 3,
-              child: DChartBar(
-                data: constructedStepBar,
-                domainLabelPaddingToAxisLine: 16,
-                axisLineTick: 2,
-                axisLinePointTick: 2,
-                axisLinePointWidth: 10,
-                axisLineColor: Colors.black,
-                measureLabelPaddingToAxisLine: 16,
-                barColor: (barData, index, id) => Colors.black,
-                showBarValue: true,
-              ),
-            ),
+            
             _whitespace(),
             Text(
               "Calories burned",

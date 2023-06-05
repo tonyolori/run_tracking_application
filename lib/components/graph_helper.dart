@@ -10,15 +10,10 @@ final List<String> timeframe = <String>[
 ];
 
 class GraphHelper with ChangeNotifier {
-  bool stepDatabasefilled =
-      false; //change this to be gotten from shared preferences
   bool calorieDatabasefilled = false;
   String choice = "Monthly";
 
-  //List<step.Step> availableSteps = [];
-  
 
-  List<Map<String, dynamic>> stepBarData = dummyBarData;
 
   CalorieWorker calorieWorker = CalorieWorker();
   List<Map<String, dynamic>> calorieBarData = dummyCalorieData;
