@@ -70,17 +70,18 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _profileImageURL != null
-                ? Image.network(
-                    _profileImageURL!,
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.cover,
-                  )
-                : Placeholder(
-                    fallbackHeight: 100,
-                    fallbackWidth: 100,
-                  ),
+            Center(
+              child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: _profileImageURL != null
+                      ? NetworkImage(_profileImageURL!)
+                      : null,
+                  child: _profileImageURL == null
+                      ? Placeholder(fallbackHeight: 100, fallbackWidth: 100)
+                      : null,
+                ),
+            ),
+            
             SizedBox(height: 16.0),
             TextFormField(
               controller: _nameController,

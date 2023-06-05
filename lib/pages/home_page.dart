@@ -7,7 +7,7 @@ import 'maps_home.dart';
 import 'settings_page.dart';
 import 'progress_page.dart';
 import 'profile_page.dart';
-import 'firebase_page.dart';
+import 'leaderboard_page.dart';
 import 'discover_page.dart';
 
 class Homepage extends StatefulWidget {
@@ -23,9 +23,9 @@ class _HomepageState extends State<Homepage> {
   final List<Widget> _screens = [
     MapHomePage(),
     const ProgressPage(),
-    const SettingsPage(),
-    const FirebasePage(),
+    const LeaderboardPage(),
     DiscoverPage(),
+    const SettingsPage(),
   ];
   List<Widget> destinations = const [
     NavigationDestination(
