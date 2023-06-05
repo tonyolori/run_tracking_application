@@ -34,12 +34,10 @@ class _MyAppState extends State<MyApp> {
             create: (_) => LocationService(),
             lazy: false,
           ),
-          Provider.value(value: Pedometer),
           ChangeNotifierProvider(
             create: (_) => GraphHelper(),
             lazy: false,
           ),
-          //Provider.value(value: liveTrackingToggle),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
