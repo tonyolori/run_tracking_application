@@ -12,8 +12,9 @@ const fblocked = "blocked";
 const faccecpted = "accepted";
 const fpending = "pending";
 const frejected = "rejected";
-const fsent = "sent";
+const fsenderId = "senderId";
 const fnone = "none";
+const fid = "id";
 
 enum RequestStatus {
   pending,
@@ -59,7 +60,8 @@ class Firestore {
     // Create a map with the friend request data
     Map<String, dynamic> request = {
       'timestamp': DateTime.now(),
-      fstatus: fsent,
+      fstatus: fpending,
+      fsenderId: senderUserId
     };
 
     // Store the friend request in Firestore for sender
@@ -69,8 +71,7 @@ class Firestore {
     await receiverRequests.doc(senderUserId).set(request);
   }
 
-  Future<void> cancelFriendRequest(
-      String senderUserId, String receiverUserId) async {
+  Future<void> removeFriend(String senderUserId, String receiverUserId) async {
     // Update for sender
     CollectionReference senderFriends =
         users.doc(senderUserId).collection(friendsCollection);
@@ -79,53 +80,72 @@ class Firestore {
     CollectionReference receiverRequests =
         users.doc(receiverUserId).collection(friendsCollection);
 
-    // Create a map with the friend request data
-    //can be used with .set but rn im deleting
-    // Map<String, dynamic> request = {
-    //   'timestamp': DateTime.now(),
-    //   fstatus: fnone,
-    // };
-
-    // Store the friend request in Firestore for sender
+    // delete the friend doc in Firestore for sender
     await senderFriends.doc(receiverUserId).delete();
 
-    // Store the friend request in Firestore for receiver
+    // delete the friend doc in Firestore for receiver
     await receiverRequests.doc(senderUserId).delete();
   }
 
-  Future<String> checkFriendRequestSent(
-      String senderUserId, String receiverUserId) async {
+  Future<RequestStatus> checkFriendStatus(String userId, String otherId) async {
     // Check if a friend request has already been sent from sender to receiver
-    CollectionReference senderFriends =
-        users.doc(senderUserId).collection(friendsCollection);
-    DocumentSnapshot senderDoc = await senderFriends.doc(receiverUserId).get();
-    if (senderDoc.exists) {
-      String status = senderDoc.get(fstatus);
-      return status;
+    CollectionReference userFriends =
+        users.doc(userId).collection(friendsCollection);
+    DocumentSnapshot otherDoc = await userFriends.doc(otherId).get();
+    if (otherDoc.exists) {
+      String status = otherDoc.get(fstatus);
+      return convertToRequest(status);
     }
-    // Check if a friend request has already been sent from receiver to sender
-    CollectionReference receiverRequests =
-        users.doc(receiverUserId).collection(friendsCollection);
-    DocumentSnapshot receiverDoc =
-        await receiverRequests.doc(senderUserId).get();
-    if (receiverDoc.exists) {
-      String status = receiverDoc.get(fstatus);
-      return status;
-    }
+
     // No friend request found
-    return fnone;
+    return convertToRequest(fnone);
   }
-  Future<List<String>> fetchFriendsList(String userId) async {
-  final snapshot = await FirebaseFirestore.instance
-      .collection('users')
-      .doc(userId)
-      .collection('friends')
-      .get();
 
-  final friendsList = snapshot.docs.map((doc) => doc.id).toList();
-  return friendsList;
-}
+  Future<List<String>> fetchFriendIds(String userId) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('friends')
+        .get();
 
+    final friendsList = snapshot.docs.map((doc) => doc.id).toList();
+    return friendsList;
+  }
+
+  Future<List<String>> _fetchRequestIds(String userId) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('friends')
+        .get();
+
+    final requestList = snapshot.docs
+        .where((doc) => doc[fstatus] == fpending)
+        .map((doc) => doc.id)
+        .toList();
+
+    return requestList;
+  }
+
+  Future<List<Map<String, dynamic>>> fetchFriendRequestsList(
+      String userId) async {
+    final snapshot = await FirebaseFirestore.instance.collection('users').get();
+    final userList = snapshot.docs.toList();
+    final requestIds = await _fetchRequestIds(userId);
+
+    //get profiles of users who have sent a request
+    final requestList =
+        userList.where((doc) => requestIds.contains(doc.id)).map((doc) {
+      final data = doc.data();
+      data[fid] = doc.id;
+      return data;
+    }).toList();
+
+    return requestList;
+  }
+
+// final friendRequestsList = userFriendsList.where((user) => user[]);
+//  return friendRequestsList;
   static RequestStatus convertToRequest(String stringValue) {
     RequestStatus status;
     switch (stringValue) {
@@ -156,7 +176,7 @@ class Firestore {
     CollectionReference senderFriends =
         users.doc(senderUserId).collection(friendsCollection);
     DocumentReference friendDoc = senderFriends.doc(receiverUserId);
-    await friendDoc.set({fstatus: faccecpted});
+    await friendDoc.update({fstatus: faccecpted});
   }
 
   Future<void> blockFriend(String userId, String friendUserId) async {

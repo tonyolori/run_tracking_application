@@ -14,7 +14,6 @@ class ProgressPage extends StatefulWidget {
 class _ProgressPageState extends State<ProgressPage> {
   List<Map<String, dynamic>> constructedCalorieBar = [];
 
-
   void updateBarValues() {
     constructedCalorieBar = context.read<GraphHelper>().calorieBarData;
     setState(() {});
@@ -101,8 +100,6 @@ class _ProgressPageState extends State<ProgressPage> {
               ),
             ),
             _whitespace(),
-            
-            _whitespace(),
             Text(
               "Calories burned",
               style: graphLabel,
@@ -110,7 +107,8 @@ class _ProgressPageState extends State<ProgressPage> {
             AspectRatio(
               aspectRatio: 4 / 3,
               child: DChartBar(
-                data: constructedCalorieBar,//dummyCalorieData,//? you have go fix thislater
+                data:
+                    constructedCalorieBar, //dummyCalorieData,//? you have go fix thislater
                 domainLabelPaddingToAxisLine: 16,
                 axisLineTick: 2,
                 axisLinePointTick: 2,
