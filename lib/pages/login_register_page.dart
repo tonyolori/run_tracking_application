@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
       //   });
       // }
     } else {
-      //TODO: write a function that gives the imaeg url as a default one
+      //TODO: write a function that gives the image url as a default one
       return '';
     }
   }
@@ -104,6 +104,7 @@ class _LoginPageState extends State<LoginPage> {
         'area': _controllerArea.text,
         'topRunKM': 0,
         'profileImageURL': imageUrl,
+        'id':uid,
       });
     } catch (e) {
       print(e);

@@ -14,7 +14,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
   List<bool> isRequestSentList = [];
   List<Map<String, dynamic>> friendRequests = [];
   final userID = Auth().currentUser!.uid;
-  List<String> friendsList = [];
+  List<String> friendsList = ['hafhdhasf'];
   final noneFriendsList = <String>[];
   bool friendsListFetched = false;
 
@@ -35,6 +35,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
   void initState() {
     super.initState();
     fetchFriendsList();
+    fetchfriendRequests();
   }
 
   void _showFriendRequestsDialog(BuildContext context) {
@@ -51,13 +52,13 @@ class _DiscoverPageState extends State<DiscoverPage> {
               itemBuilder: (BuildContext context, int index) {
                 final request = friendRequests[index];
                 String username = request[fusername];
-                String profileImageUrl = request[fprofileImageURL]??"gs://fitwork-maps.appspot.com/profile_images/ZF0ynO7YykVpxBf6EvEDmr1YJBl1-1685534265718";
+                String profileImageUrl = request[fprofileImageURL] ??
+                    "gs://fitwork-maps.appspot.com/profile_images/ZF0ynO7YykVpxBf6EvEDmr1YJBl1-1685534265718";
                 String receiverId = request[fid];
                 return ListTile(
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(profileImageUrl),
                   ),
-                  //title: Text(status.username),
                   title: Text(username),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -69,6 +70,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                           Firestore().acceptFriendRequest(userID, receiverId);
                           setState(() {
                             friendRequests.removeAt(index);
+                            Navigator.of(context).pop();
                           });
                         },
                       ),
@@ -76,9 +78,10 @@ class _DiscoverPageState extends State<DiscoverPage> {
                         icon: Icon(Icons.close),
                         onPressed: () {
                           // Reject friend request
-                          //Firestore().rejectFriendRequest(status.senderId, userID);
+                          Firestore().removeFriend(userID, receiverId);
                           setState(() {
                             friendRequests.removeAt(index);
+                            Navigator.of(context).pop();
                           });
                         },
                       ),
@@ -105,7 +108,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Discover'),
+        title: Text('Find friends'),
         actions: [
           IconButton(
             icon: Icon(Icons.notifications),
@@ -197,6 +200,11 @@ class _DiscoverPageState extends State<DiscoverPage> {
                       area = userData[fArea];
                     }
 
+                    // make a long enough list
+                    if (isRequestSentList.length <= index) {
+                      isRequestSentList.add(false);
+                    }
+
                     // This filters for only people not in the friends list
                     if (friendsList.contains(receiverId) ||
                         receiverId == senderId) {
@@ -204,12 +212,6 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     } else {
                       noneFriendsList.add(receiverId);
                     }
-
-                    // Check if friend request has been sent
-                    bool isRequestSent = isRequestSentList.length > index &&
-                        isRequestSentList[index] == true;
-                    isRequestSentList.add(isRequestSent);
-
                     return ListTile(
                       leading: CircleAvatar(
                         backgroundImage: NetworkImage(profileImageUrl),
@@ -219,24 +221,22 @@ class _DiscoverPageState extends State<DiscoverPage> {
                           ? Text('Area: $area')
                           : Text('Top Run: $topRunKms km'),
                       trailing: IconButton(
-                        icon: isRequestSent
+                        icon: isRequestSentList[index]
                             ? const Icon(Icons
                                 .check) // Icon to show when request is sent
                             : const Icon(Icons.person_add),
                         onPressed: () {
-                          if (!isRequestSent) {
-                            Firestore().sendFriendRequest(senderId, receiverId);
-                            setState(() {
-                              isRequestSentList[index] = true;
-                              isRequestSent = true;
-                            });
-                          } else {
-                            Firestore().removeFriend(senderId, receiverId);
-                            setState(() {
-                              isRequestSentList[index] = false;
-                              isRequestSent = false;
-                            });
-                          }
+                          setState(() {
+                            if (!isRequestSentList[index]) {
+                              Firestore()
+                                  .sendFriendRequest(senderId, receiverId);
+                            } else {
+                              Firestore().removeFriend(senderId, receiverId);
+                            }
+                            isRequestSentList[index] =
+                                !isRequestSentList[index];
+                            print(index);
+                          });
                         },
                       ),
                     );

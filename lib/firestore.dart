@@ -120,7 +120,7 @@ class Firestore {
         .get();
 
     final requestList = snapshot.docs
-        .where((doc) => doc[fstatus] == fpending)
+        .where((doc) => doc[fstatus] == fpending && doc[fsenderId]!=userId)
         .map((doc) => doc.id)
         .toList();
 
