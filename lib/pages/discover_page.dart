@@ -14,7 +14,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
   List<bool> isRequestSentList = [];
   List<Map<String, dynamic>> friendRequests = [];
   final userID = Auth().currentUser!.uid;
-  List<String> friendsList = ['hafhdhasf'];
+  List<String> friendsList = ['hafhdhasf'];//TODO:check this out later
   final noneFriendsList = <String>[];
   bool friendsListFetched = false;
 
@@ -245,7 +245,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
               },
             ),
           ),
-          noneFriendsList.isEmpty
+          noneFriendsList.isEmpty && friendsListFetched
               ? const Center(child: Text("All Users Added"))
               : const SizedBox.shrink(),
         ],

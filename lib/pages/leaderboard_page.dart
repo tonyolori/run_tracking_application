@@ -25,9 +25,21 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
   final name = "name";
   final topRun = "total_distance_run";
   final User? user = Auth().currentUser;
+  List<String> friendsList = [''];
   String selectedArea =
       acceptedOptions[0]; // provide default area, change later to users option
   bool showMostActiveOnly = false; // Flag for showing most active only
+
+  bool friendsListFetched = false;
+  void fetchFriendsList() async {
+    friendsList = await Firestore().fetchFriendIds(user!.uid);
+
+    
+    setState(() {
+      friendsListFetched = true;
+    });
+    print("state set");
+  }
 
   @override
   void dispose() {
@@ -39,6 +51,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
   @override
   void initState() {
     super.initState();
+    fetchFriendsList();
   }
 
   @override
@@ -56,6 +69,9 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
             child: FutureBuilder<List<Map<String, dynamic>>>(
               future: leaderboardList,
               builder: (context, snapshot) {
+                if (!friendsListFetched) {
+                  return const Center(child: CircularProgressIndicator());
+                }
                 if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {
                   List<Map<String, dynamic>> data = snapshot.data!;
@@ -110,8 +126,10 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
     // Apply filters based on selectedArea and showMostActiveOnly
     List<Map<String, dynamic>> filteredData = data;
     if (selectedArea.isNotEmpty) {
-      filteredData =
-          filteredData.where((item) => item['area'] == selectedArea).toList();
+      filteredData = filteredData
+          .where((item) =>
+              item['area'] == selectedArea && friendsList.contains(item['id']))
+          .toList();
     }
     if (showMostActiveOnly) {
       filteredData
