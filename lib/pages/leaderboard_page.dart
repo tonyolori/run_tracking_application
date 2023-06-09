@@ -34,11 +34,11 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
   void fetchFriendsList() async {
     friendsList = await Firestore().fetchFriendIds(user!.uid);
 
-    
-    setState(() {
-      friendsListFetched = true;
-    });
-    print("state set");
+    if (mounted) {
+      setState(() {
+        friendsListFetched = true;
+      });
+    }
   }
 
   @override
@@ -158,7 +158,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           subtitle: Text(
-            "Top Run: ${item['topRun'] ?? 0} KM",
+            "Top Run: ${item[fTopRun] ?? 0} KM",
             style: TextStyle(fontSize: 14),
           ),
         );
@@ -167,6 +167,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
   }
 
   Widget _title() {
-    return Text('Your App Title');
+    return Text('Your Friends in the past week');
   }
 }

@@ -156,6 +156,7 @@ class MapTrackingPageState extends State<MapTrackingPage> {
     super.dispose();
   }
 
+//TODO the average distance change per time is this 0.015647489560720845, you can look for a value lower than that
   @override
   Widget build(BuildContext context) {
     userLocation = context.watch<LocationService>().currentlocation;
@@ -193,7 +194,6 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                       ),
                     },
                     onMapCreated: ((mapController) {
-                      //_controller.complete(mapController);
                       googleMapController = mapController;
                       addMapListener();
                       getPolylinePoints();

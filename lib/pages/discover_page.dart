@@ -9,21 +9,23 @@ class DiscoverPage extends StatefulWidget {
 }
 
 class _DiscoverPageState extends State<DiscoverPage> {
-  bool isInYourAreaSelected = false;
+  bool isInYourAreaSelected = true;
   bool isMostActiveSelected = false;
   List<bool> isRequestSentList = [];
   List<Map<String, dynamic>> friendRequests = [];
   final userID = Auth().currentUser!.uid;
-  List<String> friendsList = ['hafhdhasf'];//TODO:check this out later
+  List<String> friendsList = ['hafhdhasf']; //TODO:check this out later
   final noneFriendsList = <String>[];
   bool friendsListFetched = false;
 
   void fetchFriendsList() async {
     friendsList = await Firestore().fetchFriendIds(userID);
 
-    setState(() {
-      friendsListFetched = true;
-    });
+    if (mounted) {
+      setState(() {
+        friendsListFetched = true;
+      });
+    }
   }
 
   void fetchfriendRequests() async {
@@ -134,7 +136,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 style: ButtonStyle(
                   backgroundColor: isInYourAreaSelected
                       ? MaterialStateProperty.all(Colors.blue)
-                      : null,
+                      : MaterialStateProperty.all(Colors.grey),
                 ),
               ),
               ElevatedButton(
@@ -148,7 +150,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 style: ButtonStyle(
                   backgroundColor: isMostActiveSelected
                       ? MaterialStateProperty.all(Colors.blue)
-                      : null,
+                      : MaterialStateProperty.all(Colors.grey),
                 ),
               ),
             ],

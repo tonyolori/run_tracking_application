@@ -86,14 +86,14 @@ class _MapHomePageState extends State<MapHomePage> {
     );
   }
 
-  Future<Map<String,String>> _getImageUrlAndArea() async {
+  Future<Map<String, String>> _getImageUrlAndArea() async {
     final user = Auth().currentUser;
     DocumentSnapshot snapshot = await Firestore().users.doc(user!.uid).get();
 
     Map<String, String> temp = {
-  'area': snapshot['area'],
-  'profileImageURL': snapshot['profileImageURL'],
-};
+      'area': snapshot['area'],
+      'profileImageURL': snapshot['profileImageURL'],
+    };
     return temp;
   }
 
@@ -103,25 +103,6 @@ class _MapHomePageState extends State<MapHomePage> {
       return;
     }
 
-    // List<Map<String, dynamic>> filteredResults =
-    //     await DB.getRunListForUser(user.uid);
-    // for (var run in filteredResults) {
-    //   if (run["distance"] > en.distance) {
-    //     return;
-    //   }
-    // }
-
-    //to possibly get first before pushing
-    // await Firestore()
-    //     .users
-    //     .doc(user.uid)
-    //     .get()
-    //     .then((value) => null)
-    //     .onError((error, stackTrace) {
-    //   print("print:");
-    //   print(error);
-    // });
-
     //get the profile image url
     final imageUrlandArea = await _getImageUrlAndArea();
     //push the run to leaderboard
@@ -129,8 +110,9 @@ class _MapHomePageState extends State<MapHomePage> {
       'email': user.email,
       'name': user.displayName,
       'area': imageUrlandArea['area'],
-      'topRunKm': (en.distance * 1000).toInt(),
+      'topRunKm': en.distance,
       'profileImageURL': imageUrlandArea['profileImageURL'],
+      
     });
 
     Firestore()
@@ -139,74 +121,72 @@ class _MapHomePageState extends State<MapHomePage> {
         .update({'topRunKm': (en.distance * 1000).toInt()});
   }
 
-  // void _addEntries(Entry? en) async {
-  //   if (en == null) {
-  //     return;
-  //   }
-  //   await DB.insert(Entry.table, en);
-  //   pushRunToFirebase(en);
-  //   _fetchEntries();
-  // }
   void _addEntries(Entry? en) async {
-  if (en == null) {
-    return;
-  }
+    if (en == null) {
+      return;
+    }
 
-  await DB.insert(Entry.table, en);
-  _fetchEntries();
+    await DB.insert(Entry.table, en);
+    _fetchEntries();
 
-  final currentContext = context; // Capture the current context
+    final currentContext = context; // Capture the current context
 
-  final user = Auth().currentUser;
+    final user = Auth().currentUser;
     if (user == null) {
       return;
     }
 
-  List<Map<String, dynamic>> filteredResults =
+    List<Map<String, dynamic>> filteredResults =
         await DB.getRunListForUser(user.uid);
     for (var run in filteredResults) {
       if (run["distance"] > en.distance) {
         return;
       }
     }
-  showDialog(
-    context: currentContext,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Confirm Upload'),
-        content: Text('You got a new top run. Do you want to Upload the run to the server?'),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Cancel'),
-            onPressed: () {
-              Navigator.of(currentContext).pop(); // Use the captured context
-            },
-          ),
-          TextButton(
-            child: Text('Confirm'),
-            onPressed: () async {
-              Navigator.of(currentContext).pop(); // Use the captured context
-              pushRunToFirebase(en);
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
-
+    showDialog(
+      context: currentContext,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Upload'),
+          content: Text(
+              'You got a new top run. Do you want to Upload the run to the server?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(currentContext).pop(); // Use the captured context
+              },
+            ),
+            TextButton(
+              child: Text('Confirm'),
+              onPressed: () async {
+                Navigator.of(currentContext).pop(); // Use the captured context
+                pushRunToFirebase(en);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Runs"),
+        title: const Text("Run History"),
       ),
-      body: ListView.builder(
-          itemCount: _cards.length,
-          itemBuilder: (context, index) {
-            return _cards[index];
-          }),
+      body: _cards.isNotEmpty
+          ? ListView.builder(
+              itemCount: _cards.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return _cards[index];
+              })
+          : const Center(
+              child: Text(
+                  "You can add your first run by clicking on the + button",
+                  textAlign: TextAlign.center,),),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
                 context,
@@ -214,7 +194,7 @@ class _MapHomePageState extends State<MapHomePage> {
                     builder: (context) => const MapTrackingPage()))
             .then((value) => _addEntries(value)),
         tooltip: 'Increment',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

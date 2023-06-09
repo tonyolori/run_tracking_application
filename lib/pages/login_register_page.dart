@@ -66,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
           user!.uid; // Replace with your logic to get the current user's ID
 
       String imageUrl = await uploadImageToFirebase(_imageFile!, userId);
+      print(imageUrl);
       return imageUrl;
       // Save the image URL to the user's profile data in Firestore
       //   await Firestore().users.doc(userId).update({
@@ -73,8 +74,8 @@ class _LoginPageState extends State<LoginPage> {
       //   });
       // }
     } else {
-      //TODO: write a function that gives the image url as a default one
-      return '';
+      String imageUrl = "https://firebasestorage.googleapis.com/v0/b/fitwork-maps.appspot.com/o/profile_images%2FzWIbt5rPNXNKtvpad9xz3KSsaXs1-1686219268146?alt=media&token=0cfc0e38-5b95-4d28-a6fe-863470009dce";
+      return imageUrl;
     }
   }
 
@@ -104,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
         'area': _controllerArea.text,
         'topRunKM': 0,
         'profileImageURL': imageUrl,
-        'id':uid,
+        'id': uid,
       });
     } catch (e) {
       print(e);

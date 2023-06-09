@@ -11,11 +11,9 @@ class RunHelper with ChangeNotifier {
   int elapsedSeconds = 0;
   Timer? timer;
   final stopwatch = Stopwatch();
-  //un tested stuff
   double dist = 0;
   String displayTime = "";
   int time = 0;
-  // ignore: unused_field
   int _lastTime = 0;
   double speed = 0;
   // double _avgSpeed = 0;
@@ -36,7 +34,7 @@ class RunHelper with ChangeNotifier {
           "${stopwatch.elapsed.inHours % 24}:${stopwatch.elapsed.inMinutes % 60}:${stopwatch.elapsed.inSeconds % 60}";
 
       elapsedSeconds += 1;
-      speed = dist / (elapsedSeconds/60/60);
+      speed = dist / (elapsedSeconds / 60 / 60);
       notifyListeners();
     });
   }
@@ -60,28 +58,12 @@ class RunHelper with ChangeNotifier {
           userLocation!.latitude,
           userLocation.longitude);
       dist = dist + appendDist;
-      // int timeDuration = (time - _lastTime);
-
-      // if (timeDuration != 0) {
-      //   speed = (appendDist / (timeDuration / 100)) * 3.6;
-      //   if (speed != 0) {
-      //     _avgSpeed = _avgSpeed + speed;
-      //     _speedCounter++;
-      //   }
-      // }
+      print(appendDist);
+      if (appendDist > 0) {
+        _lastTime = time;
+      }
     }
     liveCoordinates.add(userLocation!.latLng());
-
-    _lastTime = time;
-
-    // if (liveCoordinates.length > 2) {
-    //   totalDistance += getDistance(
-    //       liveCoordinates[liveCoordinates.length - 2].latitude,
-    //       liveCoordinates[liveCoordinates.length - 2].longitude,
-    //       liveCoordinates[liveCoordinates.length - 1].latitude,
-    //       liveCoordinates[liveCoordinates.length - 1].longitude);
-    // }
-    //notifyListeners();
   }
 
   //KM
