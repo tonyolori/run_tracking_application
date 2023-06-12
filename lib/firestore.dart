@@ -47,6 +47,8 @@ class Firestore {
     return leaderboardData; // Assign the data to the leaderboard future
   }
 
+  
+
   Future<void> sendFriendRequest(
       String senderUserId, String receiverUserId) async {
     // Update for sender
@@ -191,3 +193,4 @@ class Firestore {
     await userDoc.update({'status': 'blocked'});
   }
 }
+//

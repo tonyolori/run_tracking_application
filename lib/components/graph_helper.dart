@@ -1,45 +1,39 @@
-import 'package:flutter/material.dart';
-import '../db/calorie_db.dart';
-import 'calorie_worker.dart';
-import 'dummy_data.dart';
+// import 'package:flutter/material.dart';
+// import '../db/calorie_db.dart';
+// import 'calorie_worker.dart';
+// import 'dummy_data.dart';
 
-//enum TimeFrame {year,month, week }
-final List<String> timeframe = <String>[
-  'Monthly',
-  'Daily',
-];
+// //enum TimeFrame {year,month, week }
+// final List<String> timeframe = <String>[
+//   'Monthly',
+//   'Daily',
+// ];
 
-class GraphHelper with ChangeNotifier {
-  bool calorieDatabasefilled = false;
-  String choice = "Monthly";
+// class GraphHelper with ChangeNotifier {
+//   bool calorieDatabasefilled = false;
+//   String choice = "Monthly";
 
+//   CalorieWorker calorieWorker = CalorieWorker();
+//   List<Map<String, dynamic>> calorieBarData = [];
 
+//   GraphHelper() {
+//     _innit();
+//   }
+ 
 
-  CalorieWorker calorieWorker = CalorieWorker();
-  List<Map<String, dynamic>> calorieBarData = dummyCalorieData;
+//   //this gets the values from db so it can be displayed in progress page
 
-  GraphHelper() {
-    _innit();
-  }
-  _innit() async {
-    await CalorieDatabase.innit().then((value) => fillCalorieData());
+//   fillCalorieData() async {
+//     if (!calorieDatabasefilled) {
+//       await calorieWorker.fillDatabase();
+//     }
+//     calorieDatabasefilled = true;
+//   }
 
-    constructBarData(choice);
-  }
+//   constructBarData(String choice) async {
+//     calorieBarData = await calorieWorker.constructBarData(choice);
 
-  //this gets the values from db so it can be displayed in progress page
-  
-
-  fillCalorieData() async {
-    if (!calorieDatabasefilled) {
-      await calorieWorker.fillDatabase();
-    }
-    calorieDatabasefilled = true;
-  }
-
-  constructBarData(String choice) async {
-    calorieBarData = await calorieWorker.constructBarData(choice);
-
-    notifyListeners();
-  }
-}
+//     notifyListeners();
+//     return;
+//   }
+// }

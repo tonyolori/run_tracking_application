@@ -34,10 +34,6 @@ class _MyAppState extends State<MyApp> {
             create: (_) => LocationService(),
             lazy: false,
           ),
-          ChangeNotifierProvider(
-            create: (_) => GraphHelper(),
-            lazy: false,
-          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

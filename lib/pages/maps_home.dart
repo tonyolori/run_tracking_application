@@ -112,7 +112,7 @@ class _MapHomePageState extends State<MapHomePage> {
       'area': imageUrlandArea['area'],
       'topRunKm': en.distance,
       'profileImageURL': imageUrlandArea['profileImageURL'],
-      
+      'id': user.uid,
     });
 
     Firestore()
@@ -185,9 +185,22 @@ class _MapHomePageState extends State<MapHomePage> {
               })
           : const Center(
               child: Text(
-                  "You can add your first run by clicking on the + button",
-                  textAlign: TextAlign.center,),),
+                "You can add your first run by clicking on the + button",
+                textAlign: TextAlign.center,
+              ),
+            ),
       floatingActionButton: FloatingActionButton(
+        // onPressed: () {
+        //   Map<String, dynamic> map = {
+        //     'uid': "2Id8cK0ovHf88ZWzoScRF2dj5Kk2",
+        //     'rid': "hgjhkgkgk",
+        //     'date': "June 11, 2023 7:41:00 PM",
+        //     'duration': "0:3:21",
+        //     'speed': 6.2,
+        //     'distance': 7.0,
+        //   };
+        //   _addEntries(Entry.fromMap(map));
+        // },
         onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(

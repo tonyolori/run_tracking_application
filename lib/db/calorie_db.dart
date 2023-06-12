@@ -42,9 +42,18 @@ abstract class CalorieDatabase {
     List<Calorie> duplicateCalorie =
         await getCalorie(calorieData.year, calorieData.month, calorieData.day);
 
-    if ((duplicateCalorie.isNotEmpty) &&
-        (duplicateCalorie[0].calorieCount >= calorieData.calorieCount)) {
-      return false;
+    if ((duplicateCalorie.isNotEmpty)) {
+      Calorie newCalorie = Calorie(
+        calorieCount:
+            calorieData.calorieCount + duplicateCalorie[0].calorieCount,
+        time: DateTime.now(),
+      );
+      await _db!.insert(
+        tableName,
+        newCalorie.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      return true;
     }
 
     await _db!.insert(
@@ -59,8 +68,9 @@ abstract class CalorieDatabase {
     // Get a reference to the database.
     //final db = await database;
 
-    // Query the table for all The Dogs.
     final List<Map<String, dynamic>> maps = await _db!.query(tableName);
+    print(maps);
+
 
     // Convert the List<Map<String, dynamic> into a List<step>.
     return convertToCalorieList(maps);
@@ -78,12 +88,12 @@ abstract class CalorieDatabase {
       // maps = await _db!.rawQuery(
       //     'SELECT * FROM $tableName WHERE $columnYear = $year and $columnMonth = $month and  $columnDay = $day');
     }
-
     return convertToCalorieList(maps);
   }
 
   ///Date is used for year, its dateTime for future expansion
-  static Future<List<Calorie>> getCaloriesInMonth(DateTime date, int month) async {
+  static Future<List<Calorie>> getCaloriesInMonth(
+      DateTime date, int month) async {
     // Query the table for all The Dogs.
     final List<Map<String, dynamic>> unFilteredMaps =
         await _db!.query(tableName);
@@ -92,10 +102,9 @@ abstract class CalorieDatabase {
       return calorieTime.year == date.year && calorieTime.month == month;
     }).toList();
 
-    // Convert the List<Map<String, dynamic> into a List<step>.
+    // Convert the List<Map<String, dynamic> into a List<Calorie>.
     return convertToCalorieList(filteredMaps);
   }
-
 
   /// Return a list of steps that match, down to the day
   static Future<List<Calorie>> getCaloriesInDay(DateTime date) async {
@@ -126,9 +135,7 @@ abstract class CalorieDatabase {
   }
 }
 
-
 DateTime _findPreviousDay({required DateTime from}) {
-  
   return from.subtract(const Duration(days: 1));
 }
 

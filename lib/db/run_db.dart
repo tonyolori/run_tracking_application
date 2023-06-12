@@ -13,7 +13,7 @@ abstract class DB {
       String dbpath = p.join(path, 'run_database.db');
       _db = await openDatabase(dbpath, version: _version, onCreate: onCreate);
     } catch (ex) {
-      print(ex);
+      print(ex);//
     }
   }
 

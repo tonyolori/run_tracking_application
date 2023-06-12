@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:d_chart/d_chart.dart';
-import 'package:provider/provider.dart';
+import "package:fit_work/components/calorie_worker.dart";
 import '../constants.dart';
-import '../components/graph_helper.dart';
+import '../db/calorie_db.dart';
 
 class ProgressPage extends StatefulWidget {
   const ProgressPage({super.key});
@@ -13,16 +13,26 @@ class ProgressPage extends StatefulWidget {
 
 class _ProgressPageState extends State<ProgressPage> {
   List<Map<String, dynamic>> constructedCalorieBar = [];
+  CalorieWorker calorieWorker = CalorieWorker();
 
-  void updateBarValues() {
-    constructedCalorieBar = context.read<GraphHelper>().calorieBarData;
-    setState(() {});
+  _innit() async {
+    // await CalorieDatabase.innit().then((value) => constructBarData('Monthly'));//calorieWorker.fillDatabase()
+    await CalorieDatabase.innit().then((value) => calorieWorker.fillDatabase());
+    constructBarData('Monthly');
+    if (mounted) setState(() {});
+  }
+
+  constructBarData(String choice) async {
+    constructedCalorieBar = await calorieWorker.constructBarData(choice);
+    if (mounted) setState(() {});
+
+    return;
   }
 
   @override
   void initState() {
     super.initState();
-    updateBarValues();
+    _innit();
   }
 
   @override
@@ -50,10 +60,7 @@ class _ProgressPageState extends State<ProgressPage> {
                   child: DropdownButton<String>(
                     value: dropdownValue,
                     onChanged: (String? newValue) async {
-                      context.read<GraphHelper>().choice = newValue!;
-                      await context
-                          .read<GraphHelper>()
-                          .constructBarData(newValue);
+                      await constructBarData(newValue!);
                       setState(() {
                         dropdownValue = newValue;
                       });
@@ -71,10 +78,36 @@ class _ProgressPageState extends State<ProgressPage> {
                 ),
               ),
             ),
+          
+            Text(
+              "Calories burned",
+              style: graphLabel,
+            ),
+            AspectRatio(
+              aspectRatio: 4 / 3,
+              child: DChartBar(
+                data:
+                    constructedCalorieBar, //dummyCalorieData,//? you have go fix thislater
+                domainLabelPaddingToAxisLine: 16,
+                axisLineTick: 2,
+                axisLinePointTick: 2,
+                axisLinePointWidth: 10,
+                axisLineColor: Colors.black,
+                measureLabelPaddingToAxisLine: 16,
+                barColor: (barData, index, id) => Colors.black,
+                showBarValue: true,
+              ),
+            ),
+            _whitespace(),
+            _whitespace(),
             Text(
               "Weight ",
               style: graphLabel,
             ),
+            // OutlinedButton(onPressed: (){
+            //       await CalorieDatabase.innit().then((value) => calorieWorker.fillDatabase());
+
+            // }, child: Text("print database"))
             AspectRatio(
               aspectRatio: 4 / 3,
               child: DChartLine(
@@ -99,26 +132,6 @@ class _ProgressPageState extends State<ProgressPage> {
                 lineColor: (lineData, index, id) => Colors.amber,
               ),
             ),
-            _whitespace(),
-            Text(
-              "Calories burned",
-              style: graphLabel,
-            ),
-            AspectRatio(
-              aspectRatio: 4 / 3,
-              child: DChartBar(
-                data:
-                    constructedCalorieBar, //dummyCalorieData,//? you have go fix thislater
-                domainLabelPaddingToAxisLine: 16,
-                axisLineTick: 2,
-                axisLinePointTick: 2,
-                axisLinePointWidth: 10,
-                axisLineColor: Colors.black,
-                measureLabelPaddingToAxisLine: 16,
-                barColor: (barData, index, id) => Colors.black,
-                showBarValue: true,
-              ),
-            ),
           ],
         ),
       ),
@@ -127,7 +140,7 @@ class _ProgressPageState extends State<ProgressPage> {
 
   SizedBox _whitespace() {
     return const SizedBox(
-      height: 30,
+      height: 50,
       width: 10,
     );
   }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:fit_work/model/calorie_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,8 +10,9 @@ import '../auth.dart';
 import '../components/location_service.dart';
 import '../constants.dart';
 import 'package:provider/provider.dart';
-import '../components/map_helper.dart';
+import '../components/run_helper.dart';
 import '../api_key.dart';
+import '../db/calorie_db.dart';
 import '../model/entry.dart';
 import 'package:intl/intl.dart'; // for date format
 
@@ -29,7 +31,8 @@ bool liveTrackingToggle = true;
 
 class MapTrackingPageState extends State<MapTrackingPage> {
   bool ongoingRun = false;
-  //late var loc;
+  double weight = 70;
+
   static const LatLng sourceLocation = LatLng(35.118339, 32.850870);
   static const LatLng destination = LatLng(35.106985, 32.856650);
 
@@ -41,7 +44,8 @@ class MapTrackingPageState extends State<MapTrackingPage> {
   BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
 
-  UserLocation? userLocation = UserLocation(longitude: 35.118339, latitude: 32.850870);
+  UserLocation? userLocation =
+      UserLocation(longitude: 35.118339, latitude: 32.850870);
   //Location? userLocation;
   late Location location;
   void setController() async {
@@ -73,7 +77,6 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
   void setStateMapValues() {
     userLocation = context.read<LocationService>().currentlocation;
-
     if (runHelper.isRunning) {
       runHelper.addLiveCoordinates(userLocation);
     }
@@ -133,6 +136,16 @@ class MapTrackingPageState extends State<MapTrackingPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     liveTrackingToggle = prefs.getBool('liveTrackingToggle') ?? true;
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  //shared preferences
+  getWeightSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    weight = prefs.getDouble('weight') ?? 70;
     if (mounted) {
       setState(() {});
     }
@@ -270,16 +283,23 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                                 OutlinedButton(
                                   onPressed: () {
                                     if (ongoingRun) {
-                                      runHelper.stopRun();
+                                      double caloriesBurned =
+                                          runHelper.stopRun(weight);
+                                      Calorie calorieObject = Calorie(
+                                          calorieCount: caloriesBurned.toInt(),
+                                          time: DateTime.now());
+                                      CalorieDatabase.innit().then((_) =>
+                                          CalorieDatabase.insertCalorie(
+                                              calorieObject));
 
                                       Entry en = Entry(
-                                        uid: Auth().currentUser?.uid ?? '0',
-                                        rid:generateRandomString(),
+                                          uid: Auth().currentUser?.uid ?? '0',
+                                          rid: generateRandomString(),
                                           date: (DateFormat().format(DateTime
                                               .now())), //DateFormat.yMMMMd('en_US').format(DateTime.now()),
                                           duration: runHelper.displayTime,
                                           speed: runHelper.speed,
-                                          distance: runHelper.dist);
+                                          distance: runHelper.dist,);//distance conversi
                                       Navigator.pop(context, en);
                                     } else {
                                       runHelper.startRun();

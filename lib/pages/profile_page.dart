@@ -81,7 +81,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       : null,
                 ),
             ),
-            
             SizedBox(height: 16.0),
             TextFormField(
               controller: _nameController,

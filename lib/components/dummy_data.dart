@@ -68,7 +68,6 @@ String toDaySt(int day) {
   }
 }
 
-
 final List<Map<String, dynamic>> dummyCalorieData = [
   {
     'id': 'Bar',
@@ -89,15 +88,39 @@ final List<Map<String, dynamic>> dummyCalorieData = [
   },
 ];
 
-
+//This is the main list that would appear in the final
 final List<Map<String, dynamic>> calorieMaps = [
   {
     columnCalorieCount: 1900,
+    columnTime: "2023-01-01 18:08:46.385056",
+  },
+  {
+    columnCalorieCount: 2700,
+    columnTime: "2023-02-01 18:08:46.385056",
+  },
+  {
+    columnCalorieCount: 4000,
+    columnTime: "2023-03-01 18:08:46.385056",
+  },
+  {
+    columnCalorieCount: 1900,
+    columnTime: "2023-04-01 18:08:46.385056",
+  },
+  {
+    columnCalorieCount: 2000,
     columnTime: "2023-05-01 18:08:46.385056",
   },
   {
     columnCalorieCount: 2100,
     columnTime: "2023-06-01 18:08:46.385056",
+  },
+  {
+    columnCalorieCount: 2200,
+    columnTime: "2023-07-01 18:08:46.385056",
+  },
+  {
+    columnCalorieCount: 2000,
+    columnTime: "2023-08-01 18:08:46.385056",
   },
 ];
 

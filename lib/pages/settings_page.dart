@@ -5,22 +5,7 @@ import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../auth.dart';
 
-// /// Initializes shared_preference
-// void sharedPrefInit() async {
-//     try {
-//         /// Checks if shared preference exist
-//         Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-//         final SharedPreferences prefs = await _prefs;
-//         prefs.getString("app-name");
-//     } catch (err) {
-//         /// setMockInitialValues initiates shared preference
-//         /// Adds app-name
-//         SharedPreferences.setMockInitialValues({});
-//         Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-//         final SharedPreferences prefs = await _prefs;
-//         prefs.setString("app-name", "my-app");
-//     }
-// }
+
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -53,18 +38,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> signout() async {
     await Auth().signOut();
-  }
-
-  Widget _title() {
-    return const Text('Firebase Auth');
-  }
-
-  Widget _signOutButton() {
-    return ElevatedButton(
-      onPressed: signout,
-      child: const Text('Sign Out'),
-    );
-  }
+  }  
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +76,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ],
           ),
           SettingsSection(
-            title: Text('Account'),
+            title: const Text('Account'),
             tiles: <SettingsTile>[
               SettingsTile(
                 title: const Text('Firebase Settings'),
@@ -117,8 +91,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 onPressed: (context) {
                   signout();
                 },
-                leading: Icon(Icons.logout),
-                title: Text('Sign Out'),
+                leading: const Icon(Icons.logout),
+                title: const Text('Sign Out'),
               ),
             ],
           ),

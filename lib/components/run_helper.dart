@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'dart:async';
 import 'dart:math' show cos, sqrt, asin;
 import 'package:flutter/material.dart';
@@ -16,9 +18,6 @@ class RunHelper with ChangeNotifier {
   int time = 0;
   int _lastTime = 0;
   double speed = 0;
-  // double _avgSpeed = 0;
-  // int _speedCounter = 0;
-  int rawtime = 0;
 
   List<LatLng> liveCoordinates = []; //live distance calcs and polyline tracking
 
@@ -39,13 +38,20 @@ class RunHelper with ChangeNotifier {
     });
   }
 
-  stopRun() {
+
+  ///returns the calories burned for that run
+  double stopRun(double weight) {
     isRunning = false;
 
     stopwatch.elapsed.inSeconds;
     stopwatch.stop();
     timer?.cancel();
     liveCoordinates.clear();
+    return getMet(speed)*weight *(stopwatch.elapsed.inSeconds.toDouble()/60/60);
+  }
+
+  getMet(double speed) {
+    return 1.0208333333 * speed;
   }
 
   addLiveCoordinates(UserLocation? userLocation) {
@@ -58,7 +64,6 @@ class RunHelper with ChangeNotifier {
           userLocation!.latitude,
           userLocation.longitude);
       dist = dist + appendDist;
-      print(appendDist);
       if (appendDist > 0) {
         _lastTime = time;
       }

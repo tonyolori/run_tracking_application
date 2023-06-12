@@ -40,4 +40,5 @@ class Entry {
         speed: map['speed'],
         distance: map['distance']);
   }
+  //
 }

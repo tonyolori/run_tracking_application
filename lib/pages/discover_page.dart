@@ -132,12 +132,12 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     isMostActiveSelected = false;
                   });
                 },
-                child: Text('In Your Area'),
                 style: ButtonStyle(
                   backgroundColor: isInYourAreaSelected
                       ? MaterialStateProperty.all(Colors.blue)
                       : MaterialStateProperty.all(Colors.grey),
                 ),
+                child: const Text('In Your Area'),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -146,16 +146,16 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     isMostActiveSelected = true;
                   });
                 },
-                child: Text('Most Active'),
                 style: ButtonStyle(
                   backgroundColor: isMostActiveSelected
                       ? MaterialStateProperty.all(Colors.blue)
                       : MaterialStateProperty.all(Colors.grey),
                 ),
+                child: const Text('Most Active'),
               ),
             ],
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: Firestore()
@@ -237,7 +237,6 @@ class _DiscoverPageState extends State<DiscoverPage> {
                             }
                             isRequestSentList[index] =
                                 !isRequestSentList[index];
-                            print(index);
                           });
                         },
                       ),
@@ -247,9 +246,10 @@ class _DiscoverPageState extends State<DiscoverPage> {
               },
             ),
           ),
-          noneFriendsList.isEmpty && friendsListFetched
-              ? const Center(child: Text("All Users Added"))
-              : const SizedBox.shrink(),
+          //?figure this out in the demo
+          // noneFriendsList.isEmpty && friendsListFetched
+          //     /? const Center(child: Text("All Users Added"))
+          //     : const SizedBox.shrink(),
         ],
       ),
     );

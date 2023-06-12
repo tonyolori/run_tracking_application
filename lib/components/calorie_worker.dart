@@ -1,4 +1,3 @@
-import 'dart:math';
 import '../db/calorie_db.dart';
 import 'dummy_data.dart';
 
@@ -9,10 +8,8 @@ final List<String> timeframe = <String>[
 ];
 
 class CalorieWorker {
-  bool databasefilled =
-      false; //change this to be gotten from shared preferences
   List<Map<String, dynamic>> constructedbar = dummyCalorieData;
-  List<Map<String, Object>> barData = []; //dummyBarData[0]['data'];
+  List<Map<String, Object>> barData = dummyCalorieData[0]['data'];
 
   CalorieWorker();
 
@@ -22,9 +19,9 @@ class CalorieWorker {
 
     //Monthly
     if (choice == timeframe[0]) {
-      for (int i = 0; i < 11; i++) {
+      for (int i = 1; i <= 12; i++) {
         Map<String, Object> entry = {
-          'domain': toMonthSt(i + 1),
+          'domain': toMonthSt(i),
           'measure': await _getCalorieCountInMonth(time, i)
         };
         barData.add(entry);
@@ -39,12 +36,10 @@ class CalorieWorker {
           'domain': toDaySt(dates[i].weekday),
           'measure': await _getCalorieCountInDay(dates[i])
         };
-
         barData.add(entry);
       }
     }
     constructedbar[0]['data'] = barData;
-
     return constructedbar;
   }
 
@@ -52,13 +47,10 @@ class CalorieWorker {
   Future<void> fillDatabase() async {
     var calories = CalorieDatabase.convertToCalorieList(calorieMaps);
 
-    /// i have an idea, change the function name to generic. conv to list
-
     for (int i = 0; i < calories.length; i++) {
       CalorieDatabase.insertCalorie(calories[i]);
     }
 
-    databasefilled = true;
     return;
   }
 
@@ -76,14 +68,11 @@ class CalorieWorker {
     int caloriecount = 0;
     //List<DateTime> dates = getDaysInWeek(from: date);
 
-    var caloriesInMonth = await CalorieDatabase.getCaloriesInDay(date);
-    for (int i = 0; i < caloriesInMonth.length; i++) {
-      caloriecount = caloriecount + caloriesInMonth[i].calorieCount;
+    var caloriesInDay = await CalorieDatabase.getCaloriesInDay(date);
+    for (int i = 0; i < caloriesInDay.length; i++) {
+      caloriecount = caloriecount + caloriesInDay[i].calorieCount;
     }
 
-    if (caloriecount == 0) {
-      return Random().nextInt(5000) + 3000;
-    }
     return caloriecount;
   }
 }

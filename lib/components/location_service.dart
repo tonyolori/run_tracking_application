@@ -4,14 +4,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 class LocationService with ChangeNotifier {
-  UserLocation? _currentLocation= UserLocation(longitude: 35.118339, latitude: 32.850870);
+  UserLocation? _currentLocation =
+      UserLocation(longitude: 35.118339, latitude: 32.850870);
 
   var location = Location();
 
   UserLocation? get currentlocation => _currentLocation;
 
   LocationService() {
-    print("locacalled");
     // Request permission to use location
     location.requestPermission().then((permissionStatus) {
       if (permissionStatus == PermissionStatus.granted) {

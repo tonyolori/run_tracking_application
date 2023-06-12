@@ -167,6 +167,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
   }
 
   Widget _title() {
-    return Text('Your Friends in the past week');
+    return Text('Your Friends');
   }
 }
