@@ -132,8 +132,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
           .toList();
     }
     if (showMostActiveOnly) {
-      filteredData
-          .sort((a, b) => b['activityLevel'].compareTo(a['activityLevel']));
+      filteredData.sort((a, b) => b['topRunKm'].compareTo(a['topRunKm']));
       filteredData =
           filteredData.take(10).toList(); // Show top 10 most active only
     }
