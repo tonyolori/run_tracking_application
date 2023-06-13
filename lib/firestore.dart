@@ -47,8 +47,6 @@ class Firestore {
     return leaderboardData; // Assign the data to the leaderboard future
   }
 
-  
-
   Future<void> sendFriendRequest(
       String senderUserId, String receiverUserId) async {
     // Update for sender
@@ -110,7 +108,11 @@ class Firestore {
         .collection('friends')
         .get();
 
-    final friendsList = snapshot.docs.map((doc) => doc.id).toList();
+    //final friendsList = snapshot.docs.map((doc) => doc.id).toList();
+    final friendsList = snapshot.docs
+        .where((doc) => doc[fstatus] == faccecpted)
+        .map((doc) => doc.id)
+        .toList();
     return friendsList;
   }
 
@@ -122,7 +124,7 @@ class Firestore {
         .get();
 
     final requestList = snapshot.docs
-        .where((doc) => doc[fstatus] == fpending && doc[fsenderId]!=userId)
+        .where((doc) => doc[fstatus] == fpending && doc[fsenderId] != userId)
         .map((doc) => doc.id)
         .toList();
 

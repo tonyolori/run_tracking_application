@@ -93,21 +93,21 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          DropdownButton<String>(
-            value: selectedArea,
-            onChanged: (String? newValue) {
-              setState(() {
-                selectedArea = newValue!;
-              });
-            },
-            items:
-                acceptedOptions.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          ),
+          // DropdownButton<String>(
+          //   value: selectedArea,
+          //   onChanged: (String? newValue) {
+          //     setState(() {
+          //       selectedArea = newValue!;
+          //     });
+          //   },
+          //   items:
+          //       acceptedOptions.map<DropdownMenuItem<String>>((String value) {
+          //     return DropdownMenuItem<String>(
+          //       value: value,
+          //       child: Text(value),
+          //     );
+          //   }).toList(),
+          // ),
           Checkbox(
             value: showMostActiveOnly,
             onChanged: (bool? newValue) {
@@ -128,13 +128,13 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
     if (selectedArea.isNotEmpty) {
       filteredData = filteredData
           .where((item) =>
-              item['area'] == selectedArea && friendsList.contains(item['id']))
+              friendsList.contains(item['id'])) //&&item['area'] == selectedArea
           .toList();
     }
     if (showMostActiveOnly) {
       filteredData.sort((a, b) => b['topRunKm'].compareTo(a['topRunKm']));
       filteredData =
-          filteredData.take(10).toList(); // Show top 10 most active only
+          filteredData.take(3).toList(); // Show top 10 most active only
     }
     return filteredData;
   }

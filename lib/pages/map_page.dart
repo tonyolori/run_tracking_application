@@ -98,18 +98,22 @@ class MapTrackingPageState extends State<MapTrackingPage> {
 
   void getPolylinePoints() async {
     PolylinePoints polylinePoints = PolylinePoints();
-    // add try catch
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        google_api_key,
-        PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
-        PointLatLng(destination.latitude, destination.longitude));
+    try {
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+          google_api_key,
+          PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
+          PointLatLng(destination.latitude, destination.longitude));
 
-    if (result.points.isNotEmpty) {
-      for (var point in result.points) {
-        runHelper.routePolylineCoordinates
-            .add(LatLng(point.latitude, point.longitude));
+      if (result.points.isNotEmpty) {
+        for (var point in result.points) {
+          runHelper.routePolylineCoordinates
+              .add(LatLng(point.latitude, point.longitude));
+        }
       }
+    } catch (e) {
+      print(e);
     }
+
     if (mounted) setState(() {});
   }
 
@@ -293,13 +297,14 @@ class MapTrackingPageState extends State<MapTrackingPage> {
                                               calorieObject));
 
                                       Entry en = Entry(
-                                          uid: Auth().currentUser?.uid ?? '0',
-                                          rid: generateRandomString(),
-                                          date: (DateFormat().format(DateTime
-                                              .now())), //DateFormat.yMMMMd('en_US').format(DateTime.now()),
-                                          duration: runHelper.displayTime,
-                                          speed: runHelper.speed,
-                                          distance: runHelper.dist,);//distance conversi
+                                        uid: Auth().currentUser?.uid ?? '0',
+                                        rid: generateRandomString(),
+                                        date: (DateFormat().format(DateTime
+                                            .now())), //DateFormat.yMMMMd('en_US').format(DateTime.now()),
+                                        duration: runHelper.displayTime,
+                                        speed: runHelper.speed,
+                                        distance: runHelper.dist,
+                                      ); //distance conversi
                                       Navigator.pop(context, en);
                                     } else {
                                       runHelper.startRun();

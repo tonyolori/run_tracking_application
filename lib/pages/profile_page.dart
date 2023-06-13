@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../firestore.dart';
+
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -28,19 +29,19 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _getUserProfile() async {
     _user = _auth.currentUser;
-    DocumentSnapshot snapshot = await Firestore().users
-        .doc(_user!.uid)
-        .get();
+    DocumentSnapshot snapshot = await Firestore().users.doc(_user!.uid).get();
 
-    setState(() {
-      _name = snapshot['name'];
-      _nickname = snapshot['nickname'];
-      _area = snapshot['area'];
-      _profileImageURL = snapshot['profileImageURL'];
-      _nameController.text = _name!;
-      _nicknameController.text = _nickname!;
-      _areaController.text = _area!;
-    });
+    if (mounted) {
+      setState(() {
+        _name = snapshot['name'];
+        _nickname = snapshot['nickname'];
+        _area = snapshot['area'];
+        _profileImageURL = snapshot['profileImageURL'];
+        _nameController.text = _name!;
+        _nicknameController.text = _nickname!;
+        _areaController.text = _area!;
+      });
+    }
   }
 
   Future<void> _updateUserProfile() async {
@@ -72,14 +73,14 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             Center(
               child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: _profileImageURL != null
-                      ? NetworkImage(_profileImageURL!)
-                      : null,
-                  child: _profileImageURL == null
-                      ? Placeholder(fallbackHeight: 100, fallbackWidth: 100)
-                      : null,
-                ),
+                radius: 50,
+                backgroundImage: _profileImageURL != null
+                    ? NetworkImage(_profileImageURL!)
+                    : null,
+                child: _profileImageURL == null
+                    ? Placeholder(fallbackHeight: 100, fallbackWidth: 100)
+                    : null,
+              ),
             ),
             SizedBox(height: 16.0),
             TextFormField(
@@ -113,5 +114,3 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
-
-

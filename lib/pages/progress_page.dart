@@ -16,8 +16,9 @@ class _ProgressPageState extends State<ProgressPage> {
   CalorieWorker calorieWorker = CalorieWorker();
 
   _innit() async {
-    // await CalorieDatabase.innit().then((value) => constructBarData('Monthly'));//calorieWorker.fillDatabase()
-    await CalorieDatabase.innit().then((value) => calorieWorker.fillDatabase());
+    await CalorieDatabase.innit().then(
+        (value) => constructBarData('Monthly')); //calorieWorker.fillDatabase()
+    // await CalorieDatabase.innit().then((value) => calorieWorker.fillDatabase());
     constructBarData('Monthly');
     if (mounted) setState(() {});
   }
@@ -78,7 +79,7 @@ class _ProgressPageState extends State<ProgressPage> {
                 ),
               ),
             ),
-          
+
             Text(
               "Calories burned",
               style: graphLabel,
