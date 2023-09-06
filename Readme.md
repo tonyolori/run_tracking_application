@@ -1,12 +1,11 @@
-# fit_work
+# Fit_work
 
-A new Flutter project.
-
+A Mobile Application
 A mobile application by Anthony Olori
 
 # Features
 
-Step Tracking
+
 Location Tracking 
 Red Step History and Track Habit
 
