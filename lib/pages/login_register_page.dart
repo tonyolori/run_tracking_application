@@ -179,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         TextButton(
           onPressed: _selectImage,
-          child: Text('Choose Profile Image'),
+          child: const Text('Choose Profile Image'),
         ),
       ],
     );
@@ -242,9 +242,9 @@ class _LoginPageState extends State<LoginPage> {
               _buildEmailTextField(),
               _buildPasswordTextField(),
               _errorMessage(),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _submitButton(),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
                   setState(() {

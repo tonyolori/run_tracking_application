@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../firestore.dart';
 
 class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -17,9 +19,9 @@ class _ProfilePageState extends State<ProfilePage> {
   String? _area;
   String? _profileImageURL;
 
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _nicknameController = TextEditingController();
-  TextEditingController _areaController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _nicknameController = TextEditingController();
+  final TextEditingController _areaController = TextEditingController();
 
   @override
   void initState() {
@@ -56,7 +58,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Profile updated successfully!')),
+      const SnackBar(content: Text('Profile updated successfully!')),
     );
   }
 
@@ -64,10 +66,10 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -78,35 +80,35 @@ class _ProfilePageState extends State<ProfilePage> {
                     ? NetworkImage(_profileImageURL!)
                     : null,
                 child: _profileImageURL == null
-                    ? Placeholder(fallbackHeight: 100, fallbackWidth: 100)
+                    ? const Placeholder(fallbackHeight: 100, fallbackWidth: 100)
                     : null,
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextFormField(
               controller: _nameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Name',
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextFormField(
               controller: _nicknameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Nickname',
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextFormField(
               controller: _areaController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Area',
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: _updateUserProfile,
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         ),

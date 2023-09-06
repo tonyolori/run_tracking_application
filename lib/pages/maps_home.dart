@@ -8,7 +8,7 @@ import '../widgets/entry_card.dart';
 import '../firestore.dart';
 
 class MapHomePage extends StatefulWidget {
-  MapHomePage({Key? key}) : super(key: key);
+  const MapHomePage({Key? key}) : super(key: key);
 
   @override
   _MapHomePageState createState() => _MapHomePageState();
@@ -18,6 +18,7 @@ class _MapHomePageState extends State<MapHomePage> {
   late List<Entry> _data;
   List<Dismissible> _cards = [];
 
+  @override
   void initState() {
     super.initState();
     DB.init().then((value) => _fetchEntries());
@@ -56,19 +57,19 @@ class _MapHomePageState extends State<MapHomePage> {
         return showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text("Please Confirm "),
-            content: Text("Are you sure you want to delete?"),
+            title: const Text("Please Confirm "),
+            content: const Text("Are you sure you want to delete?"),
             actions: [
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop(false);
                   },
-                  child: Text("Cancel")),
+                  child: const Text("Cancel")),
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop(true);
                   },
-                  child: Text("Confirm")),
+                  child: const Text("Confirm")),
             ],
           ),
         );
@@ -147,18 +148,18 @@ class _MapHomePageState extends State<MapHomePage> {
       context: currentContext,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Upload'),
-          content: Text(
+          title: const Text('Confirm Upload'),
+          content: const Text(
               'You got a new top run. Do you want to Upload the run to the server?'),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(currentContext).pop(); // Use the captured context
               },
             ),
             TextButton(
-              child: Text('Confirm'),
+              child: const Text('Confirm'),
               onPressed: () async {
                 Navigator.of(currentContext).pop(); // Use the captured context
                 pushRunToFirebase(en);

@@ -53,7 +53,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: const Text('Profile'),
                 onPressed: (context) {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ProfilePage()));
+                      MaterialPageRoute(builder: (context) => const ProfilePage()));
                 },
               ),
               SettingsTile.navigation(

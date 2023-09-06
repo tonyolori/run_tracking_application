@@ -21,10 +21,10 @@ class _HomepageState extends State<Homepage> {
   int selectedIndex = 0;
 
   final List<Widget> _screens = [
-    MapHomePage(),
+    const MapHomePage(),
     const ProgressPage(),
     const LeaderboardPage(),
-    DiscoverPage(),
+    const DiscoverPage(),
     const SettingsPage(),
   ];
   List<Widget> destinations = const [

@@ -4,21 +4,21 @@ import '../model/entry.dart';
 
 class EntryCard extends StatelessWidget {
   final Entry entry;
-  const EntryCard({required this.entry});
+  const EntryCard({super.key, required this.entry});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(entry.date, style: GoogleFonts.montserrat(fontSize: 18)),
-                  Text((entry.distance).toStringAsFixed(2) + " km",
+                  Text("${(entry.distance).toStringAsFixed(2)} km",
                       style: GoogleFonts.montserrat(fontSize: 18)),
                 ],
               ),
@@ -27,7 +27,7 @@ class EntryCard extends StatelessWidget {
                 children: [
                   Text(entry.duration,
                       style: GoogleFonts.montserrat(fontSize: 14)),
-                  Text(entry.speed.toStringAsFixed(2) + " km/h",
+                  Text("${entry.speed.toStringAsFixed(2)} km/h",
                       style: GoogleFonts.montserrat(fontSize: 14)),
                 ],
               )

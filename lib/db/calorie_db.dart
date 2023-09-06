@@ -154,7 +154,7 @@ List<DateTime> findPreviousDays({
   return [_findPreviousDay(from: date)] +
       findPreviousDays(
         count: count - 1,
-        from: date.subtract(Duration(days: 1)),
+        from: date.subtract(const Duration(days: 1)),
       );
 }
 

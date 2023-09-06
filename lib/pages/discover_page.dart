@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../firestore.dart';
 
 class DiscoverPage extends StatefulWidget {
+  const DiscoverPage({super.key});
+
   @override
   _DiscoverPageState createState() => _DiscoverPageState();
 }
@@ -45,8 +47,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Friend Requests'),
-          content: Container(
+          title: const Text('Friend Requests'),
+          content: SizedBox(
             width: double.maxFinite,
             child: ListView.builder(
               shrinkWrap: true,
@@ -66,7 +68,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.check),
+                        icon: const Icon(Icons.check),
                         onPressed: () {
                           // Accept friend request
                           Firestore().acceptFriendRequest(userID, receiverId);
@@ -77,7 +79,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.close),
+                        icon: const Icon(Icons.close),
                         onPressed: () {
                           // Reject friend request
                           Firestore().removeFriend(userID, receiverId);
@@ -98,7 +100,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         );
@@ -110,10 +112,10 @@ class _DiscoverPageState extends State<DiscoverPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Find friends'),
+        title: const Text('Find friends'),
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications),
+            icon: const Icon(Icons.notifications),
             onPressed: () {
               _showFriendRequestsDialog(context);
             },

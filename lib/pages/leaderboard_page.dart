@@ -116,7 +116,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
               });
             },
           ),
-          Text('Show Most Active Only'),
+          const Text('Show Most Active Only'),
         ],
       ),
     );
@@ -154,11 +154,11 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
           ),
           title: Text(
             item['name'] ?? '',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           subtitle: Text(
             "Top Run: ${item[fTopRun] ?? 0} KM",
-            style: TextStyle(fontSize: 14),
+            style: const TextStyle(fontSize: 14),
           ),
         );
       },
@@ -166,6 +166,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
   }
 
   Widget _title() {
-    return Text('Your Friends');
+    return const Text('Your Friends');
   }
 }
