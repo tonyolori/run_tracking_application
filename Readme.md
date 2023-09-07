@@ -1,13 +1,26 @@
 # Fit_work
 
-A Mobile Application
 A mobile application by Anthony Olori
 
 # Features
 
 
-Location Tracking 
-Red Step History and Track Habit
+The project follows a modular approach to track user fitness activities and provide an engaging experience. The following modules are implemented:
+
+Run Tracker:
+Tracks user's running activities, including distance, speed, and location. Provides real-time feedback during the run, it also features a run distance calculator as a submodule.
+ ![Alt text](image.png)
+ 
+
+Location Tracker:
+Collects and stores the user's location data for analysis and display on the map.
+![Alt text](image-1.png) 
+
+Firestore Module: Stores user data, including exercise history and calculated calories, in the cloud using Firebase Firestore.
+![Alt text](image-2.png)
+
+
+Firebase Authentication Module: Handles user sign-in and account creation using Firebase Authentication.
 
 
 # NOTE : IF YOU CLONE
@@ -26,9 +39,4 @@ Click Close.
 
 The new API key is listed on the Credentials page under API keys.
 (Remember to restrict the API key before using it in production.)
-
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
 
