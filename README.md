@@ -14,9 +14,12 @@ Tracks user's running activities, including distance, speed, and location. Provi
 
 Location Tracker:
 Collects and stores the user's location data for analysis and display on the map.
+* It uses locaion data to track and store the users speed and distance travelled in real time.
+* It uses the google maps api to display travel path as the user travels, emulating the google maps experience for easy use
 ![Alt text](image-1.png) 
 
 Firestore Module: Stores user data, including exercise history and calculated calories, in the cloud using Firebase Firestore.
+
 ![Alt text](image-2.png)
 
 
